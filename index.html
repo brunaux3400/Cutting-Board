@@ -2,853 +2,1192 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cutting Board">
 <meta name="theme-color" content="#0f0f0f">
-<title>BarberBook</title>
+<title>Cutting Board</title>
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon">
+<link rel="icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0f0f;
-    --bg2: #1a1a1a;
-    --bg3: #242424;
-    --card: #1e1e1e;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --gold: #c9a84c;
-    --gold2: #e8c76a;
-    --text: #f0ede8;
-    --text2: #9a9690;
-    --text3: #6a6764;
-    --green: #4caf82;
-    --red: #e05252;
-    --amber: #e09a2e;
-    --blue: #4a8fd4;
-    --radius: 14px;
-    --radius-sm: 9px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  
-  /* Header */
-  .header { background: var(--bg); border-bottom: 0.5px solid var(--border); padding: calc(var(--safe-top) + 16px) 20px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
-  .header-left { display: flex; align-items: center; gap: 10px; }
-  .logo-mark { width: 34px; height: 34px; background: var(--gold); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
-  .logo-mark svg { width: 20px; height: 20px; fill: #0f0f0f; }
-  .header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-  .header-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
-  .header-actions { display: flex; gap: 8px; }
-  .icon-btn { width: 36px; height: 36px; border-radius: 10px; background: var(--bg3); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .icon-btn svg { width: 18px; height: 18px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:root{
+  --bg:#0f0f0f;--bg2:#171717;--bg3:#232323;--card:#1b1b1b;
+  --text:#f2efe9;--text2:#a29e98;--text3:#6f6c68;
+  --accent:#c9a84c;--ink:#141005;--accent-soft:rgba(201,168,76,.14);
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.15);
+  --green:#3fae78;--red:#e05252;--amber:#e09a2e;
+  --r:16px;--rs:11px;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{width:18px;height:18px;flex-shrink:0}
+.muted{color:var(--text2)} .small{font-size:12.5px}
+.view{display:none;min-height:100vh} .view.on{display:block}
+.screen{display:none} .screen.on{display:block}
 
-  /* Nav tabs */
-  .tabs { display: flex; background: var(--bg2); border-bottom: 0.5px solid var(--border); }
-  .tab { flex: 1; padding: 12px 4px; text-align: center; font-size: 12px; font-weight: 500; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
-  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+/* ── Top bar + rolling banner ── */
+.top{position:sticky;top:0;z-index:50;background:var(--bg);padding-top:var(--st)}
+.banner{overflow:hidden;background:var(--accent);color:var(--ink);font-size:13px;font-weight:650;height:30px;display:flex;align-items:center;
+  background-image:repeating-linear-gradient(-45deg,transparent 0 14px,rgba(0,0,0,.06) 14px 28px)}
+.banner-track{display:inline-flex;white-space:nowrap;animation:marq linear infinite;will-change:transform}
+.banner-track span{padding-right:64px}
+@keyframes marq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.banner-track{animation:none}}
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.tb-text{flex:1;min-width:0}
+.tb-title{font-family:var(--display);font-size:24px;font-weight:800;line-height:1;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.logo-slot{width:42px;height:42px;border-radius:12px;overflow:hidden;background:var(--accent);color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:20px;flex-shrink:0}
+.logo-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.logo-slot.big{width:104px;height:104px;border-radius:28px;font-size:46px}
 
-  /* Screens */
-  .screen { display: none; padding: 16px 16px calc(80px + var(--safe-bottom)); }
-  .screen.active { display: block; }
+.ibtn{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:grid;place-items:center;color:var(--text2);flex-shrink:0}
+.ibtn svg{width:17px;height:17px}
+.ibtn.ok{color:var(--green)} .ibtn.danger{color:var(--red)}
 
-  /* Section title */
-  .section-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; margin: 20px 0 10px; }
-  .section-title:first-child { margin-top: 4px; }
+.page{padding:16px 16px calc(100px + var(--sb));max-width:640px;margin:0 auto}
+.section-title{font-size:13px;font-weight:650;color:var(--text2);margin:24px 2px 10px;display:flex;align-items:center;gap:8px}
+.section-title .right{margin-left:auto;font-weight:500}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 .right{margin-left:auto;font-size:12px;font-weight:500;color:var(--text2)}
 
-  /* Stats row */
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 4px; }
-  .stat-card { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--border); padding: 12px 10px; text-align: center; }
-  .stat-num { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
-  .stat-label { font-size: 11px; color: var(--text3); margin-top: 4px; }
+/* ── Forms ── */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;flex:1;min-width:0}
+.field label{font-size:12.5px;color:var(--text2);font-weight:500}
+.field input,.field select,.field textarea,.hrow input{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 12px;font-size:16px;width:100%;-webkit-appearance:none;appearance:none;min-height:46px}
+.field textarea{resize:vertical;min-height:84px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.row2{display:flex;gap:10px}
+.btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:var(--rs);background:var(--accent);color:var(--ink);font-weight:750;font-size:15px;margin-top:6px}
+.btn:disabled{opacity:.45}
+.btn-ghost{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text);font-weight:550;margin-top:8px}
+.btn-ghost.left{justify-content:flex-start;text-align:left;font-size:14px}
+.btn-ghost.danger{color:var(--red);border-color:rgba(224,82,82,.35)}
+.btn:active,.btn-ghost:active,.ibtn:active,.chip:active,.slot:active{transform:scale(.97)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text2);margin:4px 0 6px}
+.check input{width:18px;height:18px;accent-color:var(--accent);margin-top:1px;flex-shrink:0}
+.switch{position:relative;width:46px;height:28px;flex-shrink:0;display:inline-block}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch span{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;transition:.2s;cursor:pointer}
+.switch span::after{content:"";position:absolute;width:22px;height:22px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked+span{background:var(--green);border-color:var(--green)}
+.switch input:checked+span::after{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 
-  /* Appointment cards */
-  .appt-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden; }
-  .appt-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-  .appt-card.status-confirmed::before { background: var(--green); }
-  .appt-card.status-pending::before { background: var(--amber); }
-  .appt-card.status-cancelled::before { background: var(--red); }
-  .appt-time { text-align: center; min-width: 44px; }
-  .appt-time-main { font-size: 15px; font-weight: 700; color: var(--gold); }
-  .appt-time-ampm { font-size: 10px; color: var(--text3); }
-  .appt-divider { width: 1px; height: 36px; background: var(--border2); flex-shrink: 0; }
-  .appt-info { flex: 1; min-width: 0; }
-  .appt-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .appt-service { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .appt-actions { display: flex; gap: 6px; }
-  .appt-btn { width: 30px; height: 30px; border-radius: 8px; border: 0.5px solid var(--border2); background: var(--bg3); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-  .appt-btn svg { width: 15px; height: 15px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .appt-btn.danger { border-color: rgba(224,82,82,0.3); }
-  .appt-btn.danger svg { stroke: var(--red); }
-  .appt-btn.success { border-color: rgba(76,175,130,0.3); }
-  .appt-btn.success svg { stroke: var(--green); }
+/* ── Sign-in ── */
+.login{max-width:420px;margin:0 auto;padding:44px 22px calc(40px + var(--sb))}
+.hero{text-align:center;margin-bottom:30px}
+.hero .logo-slot{margin:0 auto 18px}
+.hero h1{font-family:var(--display);font-size:46px;font-weight:800;line-height:.95;letter-spacing:.3px}
+.hero p{color:var(--text2);margin-top:8px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:18px}
+.seg button{padding:10px;border-radius:9px;font-weight:650;color:var(--text2)}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.back{font-size:13px;color:var(--text2);margin-top:12px;display:block;width:100%;text-align:center;padding:8px}
 
-  /* Date strip */
-  .date-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-bottom: 4px; }
-  .date-strip::-webkit-scrollbar { display: none; }
-  .date-chip { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; background: var(--bg3); border: 0.5px solid var(--border); cursor: pointer; text-align: center; transition: all 0.15s; }
-  .date-chip.active { background: var(--gold); border-color: var(--gold); }
-  .date-chip-day { font-size: 11px; color: var(--text2); }
-  .date-chip.active .date-chip-day { color: rgba(15,15,15,0.7); }
-  .date-chip-num { font-size: 16px; font-weight: 700; color: var(--text); }
-  .date-chip.active .date-chip-num { color: #0f0f0f; }
-  .date-chip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); margin: 3px auto 0; }
-  .date-chip.active .date-chip-dot { background: rgba(15,15,15,0.4); }
+/* ── Day chips + time slots ── */
+.strip{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px}
+.strip::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;width:56px;padding:8px 0;border-radius:14px;background:var(--bg3);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:1px}
+.chip small{font-size:10.5px;color:var(--text2)}
+.chip b{font-size:18px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.chip.on small{color:var(--ink);opacity:.75}
+.chip.today:not(.on){border-color:var(--accent)}
+.chip:disabled{opacity:.35}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:3px}
+.dot.pend{background:var(--amber)}
+.chip.on .dot{background:var(--ink)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin:12px 0 4px}
+.slot{padding:11px 0;border-radius:10px;border:1px solid var(--border2);font-weight:600;font-size:14px}
+.slot.on{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.slot:disabled{opacity:.3;text-decoration:line-through}
 
-  /* Blast panel */
-  .blast-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 12px; }
-  .blast-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .blast-card h3 .badge { font-size: 10px; font-weight: 600; background: rgba(201,168,76,0.15); color: var(--gold); padding: 2px 8px; border-radius: 20px; border: 0.5px solid rgba(201,168,76,0.3); }
-  .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-  .input-group { display: flex; flex-direction: column; gap: 4px; }
-  .input-group label { font-size: 11px; color: var(--text3); }
-  .input-group input, .input-group select, .input-group textarea { background: var(--bg3); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; color: var(--text); width: 100%; -webkit-appearance: none; }
-  .input-group textarea { resize: none; min-height: 70px; font-family: inherit; }
-  .input-group input:focus, .input-group select:focus, .input-group textarea:focus { outline: none; border-color: var(--gold); }
-  .btn-gold { width: 100%; padding: 13px; background: var(--gold); border-radius: var(--radius-sm); border: none; color: #0f0f0f; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.2px; margin-top: 10px; transition: opacity 0.15s; }
-  .btn-gold:active { opacity: 0.8; }
-  .btn-outline { width: 100%; padding: 12px; background: transparent; border-radius: var(--radius-sm); border: 0.5px solid var(--border2); color: var(--text2); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: all 0.15s; }
-  .btn-outline:active { background: var(--bg3); }
+/* ── Appointment cards ── */
+.appt{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 12px 12px 16px;margin-bottom:9px;position:relative;overflow:hidden}
+.appt::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--text3)}
+.appt.st-confirmed::before{background:var(--green)}
+.appt.st-pending::before{background:var(--amber)}
+.appt.st-cancelled::before{background:var(--red)}
+.appt.st-cancelled{opacity:.55}
+.appt-when{min-width:48px;text-align:center;display:flex;flex-direction:column}
+.appt-when b{font-family:var(--display);font-size:22px;line-height:1;color:var(--accent)}
+.appt-when small{font-size:11px;color:var(--text3);margin-top:2px}
+.appt-body{flex:1;min-width:0;border-left:1px solid var(--border2);padding-left:12px}
+.appt-name{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appt-sub{font-size:12.5px;color:var(--text2);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.appt-actions{display:flex;gap:6px}
+.pill{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:20px;display:inline-block}
+.pill.confirmed{background:rgba(63,174,120,.15);color:var(--green)}
+.pill.pending{background:rgba(224,154,46,.16);color:var(--amber)}
+.pill.cancelled{background:rgba(224,82,82,.14);color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 8px;text-align:center}
+.stat b{font-family:var(--display);font-size:30px;line-height:1;display:block}
+.stat small{font-size:11.5px;color:var(--text3)}
+.empty{text-align:center;padding:36px 16px;color:var(--text3);font-size:14px}
+.empty svg{width:36px;height:36px;opacity:.5;margin-bottom:8px}
+.dayhead{display:flex;align-items:center;gap:8px;margin:18px 2px 10px}
+.dayhead h2{font-family:var(--display);font-size:26px;font-weight:800;line-height:1;flex:1}
+.datepick{position:relative}
+.datepick input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
 
-  /* Subscribers */
-  .sub-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
-  .sub-row:last-child { border-bottom: none; }
-  .sub-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg3); border: 0.5px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--gold); flex-shrink: 0; }
-  .sub-info { flex: 1; }
-  .sub-name { font-size: 14px; font-weight: 500; }
-  .sub-phone { font-size: 12px; color: var(--text3); margin-top: 1px; }
-  .sub-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
-  .sub-badge.active { background: rgba(76,175,130,0.15); color: var(--green); border: 0.5px solid rgba(76,175,130,0.3); }
-  .sub-badge.inactive { background: var(--bg3); color: var(--text3); border: 0.5px solid var(--border); }
+/* ── Client home ── */
+.announce{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+.announce-tag{font-size:12px;font-weight:700;color:var(--accent);display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.announce-tag svg{width:14px;height:14px}
+.announce p{font-size:14.5px;line-height:1.5}
+.hint{font-size:13px;color:var(--text2);text-align:center;padding:12px 8px;line-height:1.5}
 
-  /* Settings */
-  .settings-group { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 12px; }
-  .settings-row { display: flex; align-items: center; padding: 14px 16px; border-bottom: 0.5px solid var(--border); }
-  .settings-row:last-child { border-bottom: none; }
-  .settings-row-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
-  .settings-row-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .settings-row-text { flex: 1; }
-  .settings-row-title { font-size: 14px; font-weight: 500; }
-  .settings-row-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
-  .toggle { width: 44px; height: 26px; background: var(--bg3); border-radius: 13px; position: relative; border: 0.5px solid var(--border2); cursor: pointer; transition: background 0.2s; }
-  .toggle.on { background: var(--green); border-color: var(--green); }
-  .toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: transform 0.2s; }
-  .toggle.on::after { transform: translateX(18px); }
+/* ── Clients list ── */
+.search{position:relative;margin-bottom:10px}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3)}
+.search input{padding-left:38px}
+.crow{width:100%;display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--border);text-align:left}
+.crow:last-child{border-bottom:0}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0}
+.crow-body{flex:1;min-width:0;display:flex;flex-direction:column}
+.crow-body small{color:var(--text3);font-size:12px}
+.tag{font-size:10.5px;font-weight:650;padding:3px 8px;border-radius:20px;background:var(--bg3);color:var(--text3);white-space:nowrap}
+.tag.on{background:rgba(63,174,120,.15);color:var(--green)}
 
-  /* Bottom nav */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg2); border-top: 0.5px solid var(--border); padding: 8px 0 calc(var(--safe-bottom) + 8px); display: flex; z-index: 100; }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; }
-  .nav-item svg { width: 22px; height: 22px; stroke: var(--text3); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.15s; }
-  .nav-item span { font-size: 10px; color: var(--text3); transition: color 0.15s; }
-  .nav-item.active svg { stroke: var(--gold); }
-  .nav-item.active span { color: var(--gold); }
+/* ── Options ── */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.swatch{border:2px solid var(--border);border-radius:12px;padding:8px;text-align:left;font-size:12px;font-weight:600}
+.swatch.on{border-color:var(--accent)}
+.swatch i{display:flex;height:34px;border-radius:7px;overflow:hidden;margin-bottom:6px;border:1px solid var(--border)}
+.swatch i span{flex:1}
+.logo-edit{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.logo-edit .btns{flex:1;display:flex;flex-direction:column;gap:6px}
+.logo-edit .btn-ghost{margin:0;padding:9px}
+.hrow{display:grid;grid-template-columns:auto 32px minmax(0,1fr) 8px minmax(0,1fr);align-items:center;gap:7px;padding:5px 0}
+.hrow input[type=time]{padding:6px 8px;font-size:14px;min-height:40px;min-width:0}
+.hrow.closed input[type=time]{opacity:.25;pointer-events:none}
+.srow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:0}
+.srow-body{flex:1;min-width:0}
+.srow-body b{display:block;font-weight:600}
+.srow-body small{color:var(--text3);font-size:12px}
+.linkbox{font-size:13px;background:var(--bg3);border-radius:10px;padding:10px 12px;word-break:break-all;color:var(--text2);margin-bottom:4px}
 
-  /* FAB */
-  .fab { position: fixed; right: 20px; bottom: calc(80px + var(--safe-bottom)); width: 52px; height: 52px; border-radius: 50%; background: var(--gold); box-shadow: 0 4px 20px rgba(201,168,76,0.35); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99; }
-  .fab svg { width: 24px; height: 24px; stroke: #0f0f0f; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* ── Bottom nav ── */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:6px 0 calc(var(--sb) + 6px)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;color:var(--text3);font-size:10.5px;font-weight:600;position:relative}
+.nav-item svg{width:22px;height:22px}
+.nav-item.on{color:var(--accent)}
+.nav-badge{position:absolute;top:0;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--amber);color:#1a1000;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px}
+.fab{position:fixed;right:18px;bottom:calc(var(--sb) + 80px);width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:55}
+.fab svg{width:26px;height:26px;stroke-width:2.5}
 
-  /* Toast */
-  .toast { position: fixed; top: calc(var(--safe-top) + 70px); left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--bg3); border: 0.5px solid var(--border2); border-radius: 24px; padding: 10px 20px; font-size: 13px; font-weight: 500; white-space: nowrap; opacity: 0; transition: all 0.3s; z-index: 200; pointer-events: none; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.success { border-color: rgba(76,175,130,0.4); color: var(--green); }
-  .toast.gold { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+/* ── Bottom sheet ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.sheet{background:var(--bg2);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:10px 20px calc(var(--sb) + 22px);max-height:90vh;overflow-y:auto;transform:translateY(40px);transition:transform .25s;position:relative}
+.overlay.open .sheet{transform:none}
+.handle{width:38px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 16px}
+.sheet h2{font-size:19px;font-weight:750;margin-bottom:4px;padding-right:40px}
+.sheet .sub{color:var(--text2);font-size:13px;margin-bottom:14px}
+.sheet-x{position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--bg3);color:var(--text2);display:grid;place-items:center}
+.preview{background:var(--bg3);border-radius:14px;padding:14px;font-size:14px;line-height:1.55;margin-bottom:10px}
 
-  /* Modal overlay */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; align-items: flex-end; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg2); border-radius: 20px 20px 0 0; border-top: 0.5px solid var(--border); width: 100%; padding: 20px 20px calc(var(--safe-bottom) + 20px); max-height: 90vh; overflow-y: auto; }
-  .modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 20px; }
-  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-
-  /* Booking link card */
-  .link-card { background: linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.04) 100%); border-radius: var(--radius); border: 0.5px solid rgba(201,168,76,0.3); padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; }
-  .link-icon { width: 42px; height: 42px; border-radius: 11px; background: rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .link-icon svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .link-text h3 { font-size: 13px; font-weight: 600; }
-  .link-text p { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  .link-copy { margin-left: auto; flex-shrink: 0; }
-
-  /* Empty state */
-  .empty { text-align: center; padding: 40px 20px; color: var(--text3); }
-  .empty svg { width: 40px; height: 40px; stroke: var(--text3); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; opacity: 0.5; }
-  .empty p { font-size: 14px; }
-
-  /* Status pill */
-  .status-pill { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
-  .status-pill.confirmed { background: rgba(76,175,130,0.15); color: var(--green); border: 0.5px solid rgba(76,175,130,0.3); }
-  .status-pill.pending { background: rgba(224,154,46,0.15); color: var(--amber); border: 0.5px solid rgba(224,154,46,0.3); }
-  .status-pill.cancelled { background: rgba(224,82,82,0.15); color: var(--red); border: 0.5px solid rgba(224,82,82,0.3); }
-
-  /* Separator */
-  .sep { height: 0.5px; background: var(--border); margin: 4px 0 16px; }
-
-  option { background: #1a1a1a; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .appt-card { animation: fadeIn 0.2s ease both; }
+/* ── Toast ── */
+.toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-30px);opacity:0;background:var(--bg3);color:var(--text);border:1px solid var(--border2);padding:10px 18px;border-radius:24px;font-size:13.5px;font-weight:600;z-index:200;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.ok{color:var(--green)} .toast.err{color:var(--red)}
+.center-msg{max-width:460px;margin:0 auto;padding:80px 24px;text-align:center;line-height:1.6}
+.center-msg h1{font-family:var(--display);font-size:36px;margin-bottom:10px}
+.center-msg code{background:var(--bg3);padding:2px 6px;border-radius:6px;font-size:13px}
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24"><path d="M6 3L6 21M18 3L18 21M6 7L18 7M6 12L18 12M6 17L18 17" stroke="#0f0f0f" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
-    </div>
-    <div>
-      <div class="header h1" style="font-size:17px;font-weight:700;letter-spacing:-0.3px">BarberBook</div>
-      <div class="header-sub" id="todayDate"></div>
-    </div>
+<!-- ═══ Not configured ═══ -->
+<div class="view" id="v-cfg">
+  <div class="center-msg">
+    <h1>Almost there</h1>
+    <p class="muted">Open <code>index.html</code> and paste your Supabase project URL and public key into <code>https://supabase.com/dashboard/project/zvijdvhvmnnigyjvwzuo</code> and <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aWpkdmh2bW5uaWd5anZ3enVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjE5MTgsImV4cCI6MjEwNzQ5NzkxOH0.QxjvU5p-aoXdpJC3D6gcJtMnWsCJjU29mbLrDy4cZkM</code> near the top of the script.</p>
   </div>
-  <div class="header-actions">
-    <div class="icon-btn" onclick="openModal('newApptModal')">
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+</div>
+
+<!-- ═══ Loading / error ═══ -->
+<div class="view on" id="v-loading">
+  <div class="center-msg"><p class="muted" id="loading-msg">Loading…</p></div>
+</div>
+
+<!-- ═══ First-run owner setup ═══ -->
+<div class="view" id="v-setup">
+  <div class="login">
+    <div class="hero">
+      <div class="logo-slot big"></div>
+      <h1>Set up your shop</h1>
+      <p>Create the owner account. You'll use this phone number and PIN to sign in.</p>
+    </div>
+    <div class="field"><label for="su-shop">Shop name</label><input id="su-shop" placeholder="e.g. Fresh Cuts Barbershop"></div>
+    <div class="field"><label for="su-name">Your name</label><input id="su-name" autocomplete="name"></div>
+    <div class="field"><label for="su-phone">Your phone number</label><input id="su-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
+    <div class="row2">
+      <div class="field"><label for="su-pin">PIN (4–8 digits)</label><input id="su-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
+      <div class="field"><label for="su-pin2">Confirm PIN</label><input id="su-pin2" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
+    </div>
+    <button class="btn" onclick="setupOwner(this)">Create shop</button>
+  </div>
+</div>
+
+<!-- ═══ Sign in (one link, two tabs) ═══ -->
+<div class="view" id="v-login">
+  <div class="top"><div class="banner-slot"></div></div>
+  <div class="login">
+    <div class="hero">
+      <div class="logo-slot big"></div>
+      <h1 class="shop-name">Cutting Board</h1>
+      <p>Book your next cut</p>
+    </div>
+    <div class="seg" role="tablist">
+      <button id="seg-client" class="on" role="tab" onclick="setLoginTab('client')">Client</button>
+      <button id="seg-barber" role="tab" onclick="setLoginTab('barber')">Barber</button>
+    </div>
+
+    <div id="login-client">
+      <div id="lc-step1">
+        <div class="field"><label for="lc-phone">Phone number</label><input id="lc-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555" onkeydown="if(event.key==='Enter')clientContinue($('#lc-go'))"></div>
+        <button class="btn" id="lc-go" onclick="clientContinue(this)">Continue</button>
+      </div>
+      <div id="lc-step2" hidden>
+        <p class="muted small" style="margin-bottom:12px">First time here? Add your name so the shop knows who's booking.</p>
+        <div class="field"><label for="lc-name">Your name</label><input id="lc-name" autocomplete="name" onkeydown="if(event.key==='Enter')clientRegister($('#lc-reg'))"></div>
+        <label class="check"><input type="checkbox" id="lc-sub" checked> Text me when the shop posts openings</label>
+        <button class="btn" id="lc-reg" onclick="clientRegister(this)">Create account</button>
+        <button class="back" onclick="resetClientLogin()">Use a different number</button>
+      </div>
+    </div>
+
+    <div id="login-barber" hidden>
+      <div class="field"><label for="lb-phone">Phone number</label><input id="lb-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
+      <div class="field"><label for="lb-pin">PIN</label><input id="lb-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="current-password" onkeydown="if(event.key==='Enter')barberSignIn($('#lb-go'))"></div>
+      <button class="btn" id="lb-go" onclick="barberSignIn(this)">Sign in</button>
     </div>
   </div>
 </div>
 
-<!-- Bottom nav -->
-<div class="bottom-nav">
-  <div class="nav-item active" onclick="switchNav('schedule', this)">
-    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    <span>Schedule</span>
+<!-- ═══ Client app ═══ -->
+<div class="view" id="v-client">
+  <div class="top">
+    <div class="banner-slot"></div>
+    <header class="topbar">
+      <div class="logo-slot"></div>
+      <div class="tb-text"><div class="tb-title shop-name"></div><div class="tb-sub" id="c-hello"></div></div>
+    </header>
   </div>
-  <div class="nav-item" onclick="switchNav('blast', this)">
-    <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9"/></svg>
-    <span>Blast</span>
-  </div>
-  <div class="nav-item" onclick="switchNav('clients', this)">
-    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span>Clients</span>
-  </div>
-  <div class="nav-item" onclick="switchNav('settings', this)">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span>Settings</span>
-  </div>
+  <main class="page">
+    <div id="c-announce"></div>
+
+    <section class="card">
+      <h3>Book an appointment</h3>
+      <div class="field"><label for="c-service">Service</label><select id="c-service"></select></div>
+      <div class="field" style="margin-bottom:0"><label>Day</label></div>
+      <div class="strip" id="c-dates"></div>
+      <div id="c-slots"></div>
+      <button class="btn" id="c-book" disabled onclick="clientBook(this)">Pick a time</button>
+    </section>
+
+    <div class="section-title">Your appointments</div>
+    <div id="c-appts"></div>
+
+    <section class="card" style="margin-top:16px">
+      <div class="srow">
+        <div class="srow-body"><b>Text me openings</b><small>Get a text when the shop posts open times</small></div>
+        <label class="switch"><input type="checkbox" id="c-sub" onchange="clientToggleSub(this)"><span></span></label>
+      </div>
+    </section>
+    <div id="c-install"></div>
+    <button class="btn-ghost" onclick="clientSignOut()">Sign out</button>
+  </main>
 </div>
 
-<!-- SCREEN: Schedule -->
-<div class="screen active" id="screen-schedule">
-  <div class="section-title">This week</div>
-  <div class="date-strip" id="dateStrip"></div>
-  <div class="sep"></div>
-  <div class="section-title">Appointments <span id="apptCount" style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0"></span></div>
-  <div id="apptList"></div>
+<!-- ═══ Barber app ═══ -->
+<div class="view" id="v-barber">
+  <div class="top">
+    <header class="topbar">
+      <div class="logo-slot"></div>
+      <div class="tb-text"><div class="tb-title shop-name"></div><div class="tb-sub" id="b-sub"></div></div>
+      <button class="ibtn" onclick="loadAppts();loadClients();toast('Refreshed')" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </header>
+  </div>
+
+  <main class="page">
+    <!-- Schedule -->
+    <section class="screen" id="bs-schedule">
+      <div class="strip" id="b-strip"></div>
+      <div class="dayhead">
+        <h2 id="b-dayhead"></h2>
+        <button class="ibtn" onclick="jumpDate(today())" aria-label="Go to today" title="Today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg></button>
+        <label class="ibtn datepick" aria-label="Pick a date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><input type="date" id="b-jump" onchange="if(this.value)jumpDate(this.value)"></label>
+      </div>
+      <div class="stats" id="b-stats"></div>
+      <div id="b-list" style="margin-top:12px"></div>
+    </section>
+
+    <!-- Blast -->
+    <section class="screen" id="bs-blast">
+      <div class="card">
+        <h3>Send a blast <span class="right" id="bl-count"></span></h3>
+        <p class="muted small" style="margin-bottom:12px">Texts every client who opted in, and shows at the top of the client app for 3 days.</p>
+        <div class="field"><label for="bl-date">Day</label><input type="date" id="bl-date" onchange="blastDateChanged()"></div>
+        <div class="row2">
+          <div class="field"><label for="bl-open">Open from</label><input type="time" id="bl-open"></div>
+          <div class="field"><label for="bl-close">Until</label><input type="time" id="bl-close"></div>
+        </div>
+        <div class="field"><label for="bl-msg">Add a note (optional)</label><textarea id="bl-msg" placeholder="Walk-ins welcome today"></textarea></div>
+        <button class="btn" onclick="previewBlast()">Preview blast</button>
+      </div>
+    </section>
+
+    <!-- Clients -->
+    <section class="screen" id="bs-clients">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <div class="field" style="margin:0"><input id="cl-q" placeholder="Search name or number" oninput="renderClients()"></div>
+      </div>
+      <div class="card" style="padding:4px 14px">
+        <div id="cl-list"></div>
+      </div>
+      <button class="btn-ghost" onclick="clientSheet('')">Add client</button>
+    </section>
+
+    <!-- Options -->
+    <section class="screen" id="bs-options">
+      <div class="card">
+        <h3>Client link</h3>
+        <div class="linkbox" id="o-link"></div>
+        <div class="row2"><button class="btn-ghost" onclick="copyLink()">Copy link</button><button class="btn-ghost" onclick="shareLink()">Share</button></div>
+      </div>
+
+      <div class="owner-only">
+        <div class="section-title">Shop look</div>
+        <div class="card">
+          <div class="field"><label for="o-name">Shop name</label><input id="o-name" maxlength="40"></div>
+          <div class="field" style="margin-bottom:6px"><label>Shop picture</label></div>
+          <div class="logo-edit">
+            <div class="logo-slot big" id="o-logo-prev"></div>
+            <div class="btns">
+              <label class="btn-ghost">Choose picture<input type="file" accept="image/*" hidden onchange="pickLogo(this)"></label>
+              <button class="btn-ghost" onclick="draft.logo=null;renderLogoPrev()">Remove picture</button>
+            </div>
+          </div>
+          <p class="muted small" style="margin-bottom:12px">Shows at the top of the app, and becomes the app icon when clients add it to their home screen.</p>
+          <div class="field" style="margin-bottom:6px"><label>Theme</label></div>
+          <div class="swatches" id="o-themes"></div>
+          <button class="btn" style="margin-top:14px" onclick="saveLook(this)">Save shop look</button>
+        </div>
+
+        <div class="section-title">Rolling banner</div>
+        <div class="card">
+          <div class="srow" style="padding-top:0">
+            <div class="srow-body"><b>Show banner</b><small>Scrolls across the top of the client app</small></div>
+            <label class="switch"><input type="checkbox" id="o-banner-on"><span></span></label>
+          </div>
+          <div class="field" style="margin-top:10px"><label for="o-banner">Banner text</label><textarea id="o-banner" maxlength="300" placeholder="Closed Thanksgiving Day. Gift cards available at the shop."></textarea></div>
+          <button class="btn" onclick="saveBanner(this)">Save banner</button>
+        </div>
+      </div>
+
+      <div class="section-title">Hours</div>
+      <div class="card">
+        <div id="o-hours"></div>
+        <div class="field" style="margin-top:10px"><label for="o-slot">Appointment length</label>
+          <select id="o-slot"><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option><option value="90">90 min</option></select>
+        </div>
+        <button class="btn" onclick="saveHours(this)">Save hours</button>
+      </div>
+
+      <div class="section-title">Services</div>
+      <div class="card">
+        <div id="o-services"></div>
+        <div class="row2" style="margin-top:10px;align-items:center">
+          <div class="field" style="margin:0"><input id="o-new-svc" placeholder="Add a service" onkeydown="if(event.key==='Enter')addService()"></div>
+          <button class="ibtn" style="width:46px;height:46px" onclick="addService()" aria-label="Add service"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </div>
+
+      <div class="owner-only">
+        <div class="section-title">Barbers</div>
+        <div class="card">
+          <div id="o-team"></div>
+          <button class="btn-ghost" onclick="addBarberSheet()">Add barber</button>
+        </div>
+      </div>
+
+      <div class="section-title">Your account</div>
+      <div class="card">
+        <div class="srow" style="padding-top:0"><div class="srow-body"><b id="o-me"></b><small id="o-me-role"></small></div></div>
+        <button class="btn-ghost" onclick="pinSheet()">Change PIN</button>
+        <button class="btn-ghost danger" onclick="barberSignOut()">Sign out</button>
+      </div>
+    </section>
+  </main>
+
+  <button class="fab" id="fab" onclick="apptSheet()" aria-label="New appointment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" data-t="schedule" onclick="bTab('schedule')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="nav-badge" id="nav-pending" hidden></span></button>
+    <button class="nav-item" data-t="blast" onclick="bTab('blast')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Blast</button>
+    <button class="nav-item" data-t="clients" onclick="bTab('clients')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</button>
+    <button class="nav-item" data-t="options" onclick="bTab('options')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>Options</button>
+  </nav>
 </div>
 
-<!-- SCREEN: Blast -->
-<div class="screen" id="screen-blast">
-  <div class="link-card">
-    <div class="link-icon">
-      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-    </div>
-    <div class="link-text">
-      <h3>Client booking link</h3>
-      <p>Share so clients can sign up & book</p>
-    </div>
-    <div class="link-copy">
-      <div class="icon-btn" onclick="copyLink()">
-        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="blast-card">
-    <h3>
-      <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9"/></svg>
-      Send blast message
-      <span class="badge" id="subCountBadge">0 subscribers</span>
-    </h3>
-
-    <div class="time-row">
-      <div class="input-group">
-        <label>Open from</label>
-        <input type="time" id="blastOpen" value="09:00">
-      </div>
-      <div class="input-group">
-        <label>Until</label>
-        <input type="time" id="blastClose" value="18:00">
-      </div>
-    </div>
-    <div class="input-group" style="margin-bottom:10px">
-      <label>Date</label>
-      <input type="date" id="blastDate">
-    </div>
-    <div class="input-group">
-      <label>Optional message</label>
-      <textarea id="blastMsg" placeholder="e.g. Walk-ins welcome today! Reply BOOK for a slot."></textarea>
-    </div>
-    <button class="btn-gold" onclick="sendBlast()">
-      Send to all subscribers
-    </button>
-    <button class="btn-outline" onclick="previewBlast()">Preview message</button>
-  </div>
-
-  <div class="section-title">Pending replies</div>
-  <div id="pendingReplies"></div>
-</div>
-
-<!-- SCREEN: Clients -->
-<div class="screen" id="screen-clients">
-  <div class="section-title">Subscribers (<span id="subTotal">0</span>)</div>
-  <div class="blast-card" style="padding:12px 14px">
-    <div id="subList"></div>
-  </div>
-  <div class="section-title">Add subscriber manually</div>
-  <div class="blast-card">
-    <div class="input-group" style="margin-bottom:8px">
-      <label>Name</label>
-      <input type="text" id="newSubName" placeholder="Client name">
-    </div>
-    <div class="input-group">
-      <label>Phone</label>
-      <input type="tel" id="newSubPhone" placeholder="+1 (555) 000-0000">
-    </div>
-    <button class="btn-gold" onclick="addSubscriber()">Add subscriber</button>
+<!-- Bottom sheet -->
+<div class="overlay" id="sheet" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" role="dialog" aria-modal="true">
+    <div class="handle"></div>
+    <button class="sheet-x" onclick="closeSheet()" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div id="sheet-body"></div>
   </div>
 </div>
-
-<!-- SCREEN: Settings -->
-<div class="screen" id="screen-settings">
-  <div class="section-title">Shop info</div>
-  <div class="blast-card">
-    <div class="input-group" style="margin-bottom:8px">
-      <label>Shop name</label>
-      <input type="text" id="shopName" placeholder="e.g. Fresh Cuts Barbershop" oninput="saveSettings()">
-    </div>
-    <div class="input-group">
-      <label>Barber name</label>
-      <input type="text" id="barberName" placeholder="Your name" oninput="saveSettings()">
-    </div>
-  </div>
-
-  <div class="section-title">Default hours</div>
-  <div class="blast-card">
-    <div class="time-row">
-      <div class="input-group">
-        <label>Open</label>
-        <input type="time" id="defaultOpen" value="09:00" oninput="saveSettings()">
-      </div>
-      <div class="input-group">
-        <label>Close</label>
-        <input type="time" id="defaultClose" value="18:00" oninput="saveSettings()">
-      </div>
-    </div>
-    <div class="input-group">
-      <label>Appointment slots (minutes)</label>
-      <select id="slotDuration" onchange="saveSettings()">
-        <option value="30">30 min slots</option>
-        <option value="45">45 min slots</option>
-        <option value="60" selected>60 min slots</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="section-title">Twilio SMS (optional)</div>
-  <div class="blast-card">
-    <div class="input-group" style="margin-bottom:8px">
-      <label>Account SID</label>
-      <input type="text" id="twilioSid" placeholder="ACxxxxxxxxxxxxxxxx" oninput="saveSettings()">
-    </div>
-    <div class="input-group" style="margin-bottom:8px">
-      <label>Auth token</label>
-      <input type="password" id="twilioToken" placeholder="••••••••••••••••" oninput="saveSettings()">
-    </div>
-    <div class="input-group">
-      <label>Twilio phone number</label>
-      <input type="tel" id="twilioPhone" placeholder="+15550001234" oninput="saveSettings()">
-    </div>
-    <p style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.5">When filled in, blasts and notifications send as real SMS. Leave blank to use the web booking link instead.</p>
-  </div>
-
-  <div class="section-title">Services offered</div>
-  <div class="blast-card">
-    <div id="serviceList"></div>
-    <div class="input-group" style="margin-top:8px">
-      <input type="text" id="newService" placeholder="Add a service (e.g. Fade + Lineup)">
-    </div>
-    <button class="btn-outline" onclick="addService()" style="margin-top:8px">+ Add service</button>
-  </div>
-
-  <div class="section-title">Notifications</div>
-  <div class="settings-group">
-    <div class="settings-row">
-      <div class="settings-row-icon" style="background:rgba(76,175,130,0.12)">
-        <svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </div>
-      <div class="settings-row-text">
-        <div class="settings-row-title">New booking alert</div>
-        <div class="settings-row-sub">Notify when client books</div>
-      </div>
-      <div class="toggle on" id="tog1" onclick="this.classList.toggle('on')"></div>
-    </div>
-    <div class="settings-row">
-      <div class="settings-row-icon" style="background:rgba(74,143,212,0.12)">
-        <svg viewBox="0 0 24 24" style="stroke:var(--blue)"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      </div>
-      <div class="settings-row-text">
-        <div class="settings-row-title">15 min reminder</div>
-        <div class="settings-row-sub">Remind clients before appointment</div>
-      </div>
-      <div class="toggle on" id="tog2" onclick="this.classList.toggle('on')"></div>
-    </div>
-  </div>
-
-  <div style="height:20px"></div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<!-- Modal: New Appointment -->
-<div class="modal-overlay" id="newApptModal" onclick="if(event.target===this)closeModal('newApptModal')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <h2>New appointment</h2>
-    <div class="input-group" style="margin-bottom:10px">
-      <label>Client name</label>
-      <input type="text" id="newApptName" placeholder="Name">
-    </div>
-    <div class="input-group" style="margin-bottom:10px">
-      <label>Phone (optional)</label>
-      <input type="tel" id="newApptPhone" placeholder="+1 (555) 000-0000">
-    </div>
-    <div class="time-row">
-      <div class="input-group">
-        <label>Date</label>
-        <input type="date" id="newApptDate">
-      </div>
-      <div class="input-group">
-        <label>Time</label>
-        <input type="time" id="newApptTime" value="10:00">
-      </div>
-    </div>
-    <div class="input-group" style="margin-top:10px">
-      <label>Service</label>
-      <select id="newApptService"></select>
-    </div>
-    <button class="btn-gold" style="margin-top:16px" onclick="saveAppt()">Book appointment</button>
-    <button class="btn-outline" onclick="closeModal('newApptModal')">Cancel</button>
-  </div>
-</div>
-
-<!-- Modal: Message client -->
-<div class="modal-overlay" id="msgModal" onclick="if(event.target===this)closeModal('msgModal')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <h2 id="msgModalTitle">Message client</h2>
-    <div class="input-group" style="margin-bottom:10px">
-      <label>Quick message</label>
-      <div style="display:grid;gap:6px;margin-bottom:10px">
-        <button class="btn-outline" style="width:100%;text-align:left;padding:10px 12px;font-size:13px" onclick="setMsg('Running about 15 minutes late — see you soon!')">⏱ Running ~15 min late</button>
-        <button class="btn-outline" style="width:100%;text-align:left;padding:10px 12px;font-size:13px" onclick="setMsg('Running about 30 minutes late — sorry for the wait!')">⏱ Running ~30 min late</button>
-        <button class="btn-outline" style="width:100%;text-align:left;padding:10px 12px;font-size:13px" onclick="setMsg('Unfortunately I need to cancel your appointment today. I\'ll reach out to reschedule — sorry for any inconvenience.')">❌ Cancel appointment</button>
-      </div>
-    </div>
-    <div class="input-group">
-      <label>Or write custom</label>
-      <textarea id="msgText" style="min-height:80px" placeholder="Type your message..."></textarea>
-    </div>
-    <button class="btn-gold" style="margin-top:12px" onclick="sendMsg()">Send message</button>
-    <button class="btn-outline" onclick="closeModal('msgModal')">Cancel</button>
-  </div>
-</div>
-
-<!-- Modal: Blast preview -->
-<div class="modal-overlay" id="previewModal" onclick="if(event.target===this)closeModal('previewModal')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <h2>Message preview</h2>
-    <div style="background:var(--bg3);border-radius:var(--radius);padding:16px;font-size:14px;line-height:1.6;color:var(--text);border:0.5px solid var(--border2);margin-bottom:16px" id="previewText"></div>
-    <p style="font-size:12px;color:var(--text3);margin-bottom:16px">This is exactly what your subscribers will receive via SMS (when Twilio is connected) or see when they open their booking link.</p>
-    <button class="btn-gold" onclick="closeModal('previewModal');sendBlast(true)">Looks good — send it</button>
-    <button class="btn-outline" onclick="closeModal('previewModal')">Edit</button>
-  </div>
-</div>
+<datalist id="client-names"></datalist>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
-// ─── State ─────────────────────────────────────────────────────────────────
-const DB_KEY = 'barberbook_data';
-let state = {
-  appointments: [],
-  subscribers: [],
-  services: ['Haircut', 'Fade', 'Fade + Beard Trim', 'Lineup', 'Kids Cut'],
-  settings: { shopName: '', barberName: '', defaultOpen: '09:00', defaultClose: '18:00', slotDuration: 60 },
-  selectedDate: null,
-  selectedApptId: null,
+// ═════════════════════════════════════════════════════════════
+//  CONFIG — paste these from Supabase → Project Settings → API
+//  (the public "anon" / "publishable" key is safe to put here)
+// ═════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://YOUR-PROJECT-ID.supabase.co';
+const SUPABASE_KEY = 'YOUR-ANON-OR-PUBLISHABLE-KEY';
+
+// ─── Themes ───────────────────────────────────────────────────
+const THEMES = {
+  gold:     { label:'Gold & black', bg:'#0f0f0f', bg2:'#171717', bg3:'#242424', card:'#1b1b1b', text:'#f2efe9', text2:'#a29e98', text3:'#6f6c68', accent:'#c9a84c', ink:'#141005', dark:true },
+  pole:     { label:'Barber pole',  bg:'#f4f1ec', bg2:'#ffffff', bg3:'#e9e4dc', card:'#ffffff', text:'#1b1f2a', text2:'#555b68', text3:'#8a8f99', accent:'#c8102e', ink:'#ffffff', dark:false },
+  midnight: { label:'Midnight',     bg:'#0b1220', bg2:'#111a2e', bg3:'#1c2742', card:'#131d33', text:'#e8eefc', text2:'#9aa8c7', text3:'#66749a', accent:'#5b9cff', ink:'#06101f', dark:true },
+  emerald:  { label:'Emerald',      bg:'#0c1411', bg2:'#122019', bg3:'#1d2e26', card:'#14231c', text:'#edf3ee', text2:'#9db3a6', text3:'#6b8276', accent:'#3fbf86', ink:'#04140c', dark:true },
+  copper:   { label:'Copper',       bg:'#15110f', bg2:'#1d1815', bg3:'#2a221e', card:'#201a17', text:'#f4ece6', text2:'#b3a398', text3:'#7d6f66', accent:'#d27c4a', ink:'#1a0d05', dark:true },
+  clean:    { label:'Clean light',  bg:'#f3f3f2', bg2:'#ffffff', bg3:'#e6e6e4', card:'#ffffff', text:'#17171a', text2:'#5a5a60', text3:'#909096', accent:'#1d1d21', ink:'#ffffff', dark:false },
 };
 
-function save() { localStorage.setItem(DB_KEY, JSON.stringify(state)); }
-function load() {
-  try {
-    const d = localStorage.getItem(DB_KEY);
-    if (d) Object.assign(state, JSON.parse(d));
-  } catch(e) {}
+// ─── Icons ────────────────────────────────────────────────────
+const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const IC = {
+  check: I('<path d="M20 6L9 17l-5-5"/>'),
+  x: I('<path d="M18 6L6 18M6 6l12 12"/>'),
+  msg: I('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+  phone: I('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
+  cal: I('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
+  send: I('<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>'),
+  plus: I('<path d="M12 5v14M5 12h14"/>'),
+  trash: I('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
+};
+
+// ─── State ────────────────────────────────────────────────────
+let shop = null;
+let barber = readJSON('cb_barber');
+let client = null;
+const cSel = { date:null, time:null };
+let bDate = today(), bAnchor = addDays(today(), -1), bAppts = [], bClients = [], pollT = null;
+let draft = {};
+
+// ─── Small helpers ────────────────────────────────────────────
+const $ = s => document.querySelector(s);
+function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } }
+function store(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)); } catch {} }
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const digits = s => { let d = String(s || '').replace(/\D/g, ''); if (d.length === 11 && d[0] === '1') d = d.slice(1); return d.slice(-10); };
+const fmtPhone = p => { const d = digits(p); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (p || ''); };
+const first = n => String(n || '').trim().split(/\s+/)[0];
+function initials(n){ return String(n || 'CB').trim().split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase(); }
+function ds(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function today(){ return ds(new Date()); }
+function addDays(s, n){ const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + n); return ds(d); }
+const dow = s => new Date(s + 'T00:00:00').getDay();
+const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const fromMin = m => `${String(Math.floor(m / 60)).padStart(2,'0')}:${String(m % 60).padStart(2,'0')}`;
+function fmt12(t){ const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2,'0') : ''} ${h >= 12 ? 'PM' : 'AM'}`; }
+const fmtDay = (s, o = { weekday:'short', month:'short', day:'numeric' }) => new Date(s + 'T00:00:00').toLocaleDateString('en-US', o);
+function timeAgo(iso){ const m = Math.round((Date.now() - new Date(iso)) / 60000); if (m < 1) return 'just now'; if (m < 60) return m + ' min ago'; const h = Math.round(m / 60); if (h < 24) return h + 'h ago'; return Math.round(h / 24) + 'd ago'; }
+
+function toast(msg, type = ''){
+  const el = $('#toast'); el.textContent = msg; el.className = 'toast show ' + type;
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.className = 'toast', 2800);
+}
+function show(v){ document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v)); window.scrollTo(0, 0); }
+function openSheet(html){ $('#sheet-body').innerHTML = html; $('#sheet').classList.add('open'); }
+function closeSheet(){ $('#sheet').classList.remove('open'); }
+async function busy(btn, fn){
+  if (!btn || btn.disabled) return;
+  const label = btn.innerHTML; btn.disabled = true; btn.textContent = 'Working…';
+  try { return await fn(); }
+  catch (e) { toast(e.message, 'err'); }
+  finally { btn.disabled = false; if (btn.textContent === 'Working…') btn.innerHTML = label; }
 }
 
-// ─── Init ──────────────────────────────────────────────────────────────────
-load();
-state.selectedDate = state.selectedDate || todayStr();
-
-document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-document.getElementById('blastDate').value = todayStr();
-document.getElementById('newApptDate').value = todayStr();
-
-if (state.settings.shopName) document.getElementById('shopName').value = state.settings.shopName;
-if (state.settings.barberName) document.getElementById('barberName').value = state.settings.barberName;
-if (state.settings.defaultOpen) { document.getElementById('defaultOpen').value = state.settings.defaultOpen; document.getElementById('blastOpen').value = state.settings.defaultOpen; }
-if (state.settings.defaultClose) { document.getElementById('defaultClose').value = state.settings.defaultClose; document.getElementById('blastClose').value = state.settings.defaultClose; }
-if (state.settings.slotDuration) document.getElementById('slotDuration').value = state.settings.slotDuration;
-
-renderAll();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-
-// ─── Helpers ───────────────────────────────────────────────────────────────
-function todayStr() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-
-function fmtTime(t) {
-  const [h, m] = t.split(':').map(Number);
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 || 12;
-  return { main: h12 + (m ? ':' + String(m).padStart(2,'0') : ''), ampm };
-}
-
-function fmtDate(str) {
-  const d = new Date(str + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-function uid() { return Math.random().toString(36).slice(2,9); }
-
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + type;
-  setTimeout(() => el.className = 'toast', 2400);
-}
-
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-function setMsg(t) { document.getElementById('msgText').value = t; }
-
-// ─── Navigation ────────────────────────────────────────────────────────────
-function switchNav(screen, el) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+screen).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ─── Date strip ────────────────────────────────────────────────────────────
-function renderDateStrip() {
-  const strip = document.getElementById('dateStrip');
-  strip.innerHTML = '';
-  const today = new Date();
-  for (let i = -1; i <= 6; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    const str = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const hasAppts = state.appointments.some(a => a.date === str && a.status !== 'cancelled');
-    const chip = document.createElement('div');
-    chip.className = 'date-chip' + (str === state.selectedDate ? ' active' : '');
-    chip.innerHTML = `
-      <div class="date-chip-day">${d.toLocaleDateString('en-US',{weekday:'short'})}</div>
-      <div class="date-chip-num">${d.getDate()}</div>
-      ${hasAppts ? '<div class="date-chip-dot"></div>' : '<div style="height:7px"></div>'}
-    `;
-    chip.onclick = () => { state.selectedDate = str; save(); renderDateStrip(); renderApptList(); };
-    strip.appendChild(chip);
-  }
-}
-
-// ─── Appointments ──────────────────────────────────────────────────────────
-function renderApptList() {
-  const list = document.getElementById('apptList');
-  const appts = state.appointments
-    .filter(a => a.date === state.selectedDate)
-    .sort((a, b) => a.time.localeCompare(b.time));
-  document.getElementById('apptCount').textContent = appts.length ? `· ${appts.length}` : '';
-  if (!appts.length) {
-    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><p>No appointments for this day</p></div>`;
-    return;
-  }
-  list.innerHTML = appts.map(a => {
-    const t = fmtTime(a.time);
-    return `
-    <div class="appt-card status-${a.status}" style="animation-delay:${appts.indexOf(a)*0.04}s">
-      <div class="appt-time">
-        <div class="appt-time-main">${t.main}</div>
-        <div class="appt-time-ampm">${t.ampm}</div>
-      </div>
-      <div class="appt-divider"></div>
-      <div class="appt-info">
-        <div class="appt-name">${a.name}</div>
-        <div class="appt-service">${a.service} <span class="status-pill ${a.status}" style="margin-left:4px">${a.status}</span></div>
-      </div>
-      <div class="appt-actions">
-        <div class="appt-btn success" onclick="confirmAppt('${a.id}')" title="Confirm">
-          <svg viewBox="0 0 24 24"><path d="M20 6L9 17L4 12"/></svg>
-        </div>
-        <div class="appt-btn" onclick="openMsgModal('${a.id}')" title="Message">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <div class="appt-btn danger" onclick="cancelAppt('${a.id}')" title="Cancel">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function saveAppt() {
-  const name = document.getElementById('newApptName').value.trim();
-  const phone = document.getElementById('newApptPhone').value.trim();
-  const date = document.getElementById('newApptDate').value;
-  const time = document.getElementById('newApptTime').value;
-  const service = document.getElementById('newApptService').value;
-  if (!name || !date || !time) { toast('Fill in name, date & time'); return; }
-  state.appointments.push({ id: uid(), name, phone, date, time, service, status: 'confirmed' });
-  save();
-  closeModal('newApptModal');
-  state.selectedDate = date;
-  renderAll();
-  toast('Appointment booked!', 'success');
-  document.getElementById('newApptName').value = '';
-  document.getElementById('newApptPhone').value = '';
-}
-
-function confirmAppt(id) {
-  const a = state.appointments.find(x => x.id === id);
-  if (a) { a.status = 'confirmed'; save(); renderAll(); toast('Confirmed ✓', 'success'); }
-}
-
-function cancelAppt(id) {
-  const a = state.appointments.find(x => x.id === id);
-  if (a) { a.status = 'cancelled'; save(); renderAll(); toast('Appointment cancelled'); }
-}
-
-function openMsgModal(id) {
-  state.selectedApptId = id;
-  const a = state.appointments.find(x => x.id === id);
-  if (a) document.getElementById('msgModalTitle').textContent = 'Message ' + a.name;
-  document.getElementById('msgText').value = '';
-  openModal('msgModal');
-}
-
-function sendMsg() {
-  const a = state.appointments.find(x => x.id === state.selectedApptId);
-  const msg = document.getElementById('msgText').value.trim();
-  if (!msg) { toast('Type a message'); return; }
-  const twilio = state.settings.twilioSid && state.settings.twilioToken;
-  closeModal('msgModal');
-  if (twilio && a && a.phone) {
-    sendSMS(a.phone, msg).then(() => toast('Message sent via SMS', 'gold')).catch(() => toast('SMS failed — check Twilio settings'));
-  } else {
-    toast(a && a.phone ? 'SMS ready (add Twilio to send)' : 'Message logged', 'gold');
-  }
-}
-
-// ─── Blast ─────────────────────────────────────────────────────────────────
-function buildBlastMsg() {
-  const open = document.getElementById('blastOpen').value;
-  const close = document.getElementById('blastClose').value;
-  const date = document.getElementById('blastDate').value;
-  const extra = document.getElementById('blastMsg').value.trim();
-  const barber = state.settings.barberName || 'Your barber';
-  const shop = state.settings.shopName || 'the shop';
-  const d = new Date(date + 'T00:00:00');
-  const dateLabel = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-  const o = fmtTime(open); const c = fmtTime(close);
-  let msg = `Hey! ${barber} here — ${shop} is open this ${dateLabel} from ${o.main} ${o.ampm} to ${c.main} ${c.ampm}.\n\nReply BOOK to get available time slots.`;
-  if (extra) msg += '\n\n' + extra;
-  const bookingUrl = window.location.href.replace('index.html','').replace(/\/$/, '') + '/client.html';
-  msg += `\n\nOr book online: ${bookingUrl}`;
-  return msg;
-}
-
-function previewBlast() {
-  document.getElementById('previewText').textContent = buildBlastMsg();
-  openModal('previewModal');
-}
-
-function sendBlast(confirmed = false) {
-  const subs = state.subscribers.filter(s => s.active);
-  if (!subs.length) { toast('No active subscribers yet'); return; }
-  const msg = buildBlastMsg();
-  const twilio = state.settings.twilioSid && state.settings.twilioToken && state.settings.twilioPhone;
-  if (twilio) {
-    Promise.all(subs.map(s => sendSMS(s.phone, msg)))
-      .then(() => toast(`Blast sent to ${subs.length} subscribers!`, 'gold'))
-      .catch(() => toast('Some messages failed — check Twilio'));
-  } else {
-    toast(`Blast ready! Connect Twilio to send to ${subs.length} subs`, 'gold');
-  }
-  renderPendingReplies(subs);
-}
-
-function renderPendingReplies(subs) {
-  const el = document.getElementById('pendingReplies');
-  if (!subs || !subs.length) { el.innerHTML = '<div class="empty" style="padding:20px 0"><p>No pending replies</p></div>'; return; }
-  el.innerHTML = subs.map(s => `
-    <div class="appt-card status-pending">
-      <div class="appt-info">
-        <div class="appt-name">${s.name}</div>
-        <div class="appt-service">${s.phone} <span class="status-pill pending" style="margin-left:4px">waiting</span></div>
-      </div>
-      <div class="appt-actions">
-        <div class="appt-btn success" onclick="quickBook('${s.id}')" title="Book them in">
-          <svg viewBox="0 0 24 24"><path d="M20 6L9 17L4 12"/></svg>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function quickBook(subId) {
-  const s = state.subscribers.find(x => x.id === subId);
-  if (!s) return;
-  document.getElementById('newApptName').value = s.name;
-  document.getElementById('newApptPhone').value = s.phone;
-  document.getElementById('newApptDate').value = document.getElementById('blastDate').value || todayStr();
-  closeModal('previewModal');
-  openModal('newApptModal');
-}
-
-// ─── Subscribers ───────────────────────────────────────────────────────────
-function renderSubscribers() {
-  const list = document.getElementById('subList');
-  const total = document.getElementById('subTotal');
-  const badge = document.getElementById('subCountBadge');
-  total.textContent = state.subscribers.length;
-  badge.textContent = state.subscribers.filter(s=>s.active).length + ' subscribers';
-  if (!state.subscribers.length) {
-    list.innerHTML = '<div style="padding:16px 0;text-align:center;color:var(--text3);font-size:13px">No subscribers yet — share the booking link</div>';
-    return;
-  }
-  list.innerHTML = state.subscribers.map(s => `
-    <div class="sub-row">
-      <div class="sub-avatar">${s.name.slice(0,2).toUpperCase()}</div>
-      <div class="sub-info">
-        <div class="sub-name">${s.name}</div>
-        <div class="sub-phone">${s.phone}</div>
-      </div>
-      <span class="sub-badge ${s.active ? 'active' : 'inactive'}" onclick="toggleSub('${s.id}')">${s.active ? 'Active' : 'Off'}</span>
-    </div>
-  `).join('');
-}
-
-function addSubscriber() {
-  const name = document.getElementById('newSubName').value.trim();
-  const phone = document.getElementById('newSubPhone').value.trim();
-  if (!name || !phone) { toast('Name and phone required'); return; }
-  if (state.subscribers.find(s => s.phone === phone)) { toast('Already subscribed'); return; }
-  state.subscribers.push({ id: uid(), name, phone, active: true, joined: Date.now() });
-  save(); renderSubscribers();
-  document.getElementById('newSubName').value = '';
-  document.getElementById('newSubPhone').value = '';
-  toast(name + ' added!', 'success');
-}
-
-function toggleSub(id) {
-  const s = state.subscribers.find(x => x.id === id);
-  if (s) { s.active = !s.active; save(); renderSubscribers(); }
-}
-
-// ─── Services ──────────────────────────────────────────────────────────────
-function renderServices() {
-  const list = document.getElementById('serviceList');
-  const sel = document.getElementById('newApptService');
-  list.innerHTML = state.services.map((s, i) => `
-    <div style="display:flex;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
-      <span style="flex:1;font-size:14px">${s}</span>
-      <div class="appt-btn danger" style="width:26px;height:26px" onclick="removeService(${i})">
-        <svg viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </div>
-    </div>
-  `).join('');
-  sel.innerHTML = state.services.map(s => `<option value="${s}">${s}</option>`).join('');
-}
-
-function addService() {
-  const val = document.getElementById('newService').value.trim();
-  if (!val) return;
-  state.services.push(val);
-  document.getElementById('newService').value = '';
-  save(); renderServices();
-}
-
-function removeService(i) {
-  state.services.splice(i, 1);
-  save(); renderServices();
-}
-
-// ─── Settings ──────────────────────────────────────────────────────────────
-function saveSettings() {
-  state.settings.shopName = document.getElementById('shopName').value;
-  state.settings.barberName = document.getElementById('barberName').value;
-  state.settings.defaultOpen = document.getElementById('defaultOpen').value;
-  state.settings.defaultClose = document.getElementById('defaultClose').value;
-  state.settings.slotDuration = parseInt(document.getElementById('slotDuration').value);
-  state.settings.twilioSid = document.getElementById('twilioSid').value;
-  state.settings.twilioToken = document.getElementById('twilioToken').value;
-  state.settings.twilioPhone = document.getElementById('twilioPhone').value;
-  save();
-}
-
-// ─── Twilio ────────────────────────────────────────────────────────────────
-async function sendSMS(to, body) {
-  const { twilioSid, twilioToken, twilioPhone } = state.settings;
-  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
-    method: 'POST',
-    headers: { 'Authorization': 'Basic ' + btoa(twilioSid+':'+twilioToken), 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ To: to, From: twilioPhone, Body: body })
-  });
-  if (!res.ok) throw new Error('SMS failed');
-}
-
-// ─── Copy link ─────────────────────────────────────────────────────────────
-function copyLink() {
-  const url = window.location.href.replace('index.html','client.html').replace(/([^/])$/, '$1/client.html').replace('//client.html', '/client.html');
-  const final = window.location.origin + window.location.pathname.replace('index.html','') + 'client.html';
-  navigator.clipboard.writeText(final).then(() => toast('Link copied!', 'gold')).catch(() => toast('Copy the URL manually'));
-}
-
-// ─── Incoming booking from client page ─────────────────────────────────────
-window.addEventListener('storage', e => {
-  if (e.key === 'barberbook_new_booking') {
-    try {
-      const b = JSON.parse(e.newValue);
-      state.appointments.push({ id: uid(), name: b.name, phone: b.phone, date: b.date, time: b.time, service: b.service, status: 'pending' });
-      save(); renderAll();
-      toast('New booking from ' + b.name + '!', 'gold');
-    } catch(e) {}
-  }
-  if (e.key === 'barberbook_new_subscriber') {
-    try {
-      const s = JSON.parse(e.newValue);
-      if (!state.subscribers.find(x => x.phone === s.phone)) {
-        state.subscribers.push({ id: uid(), name: s.name, phone: s.phone, active: true, joined: Date.now() });
-        save(); renderSubscribers();
-        toast(s.name + ' subscribed!', 'success');
-      }
-    } catch(e) {}
-  }
+// Phone input mask: (555) 555-5555
+document.addEventListener('input', e => {
+  const el = e.target; if (!el.classList || !el.classList.contains('phone')) return;
+  let d = el.value.replace(/\D/g, ''); if (d.length > 10 && d[0] === '1') d = d.slice(1); d = d.slice(0, 10);
+  el.value = d.length > 6 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0,3)}) ${d.slice(3)}` : d;
 });
 
-// ─── Render all ────────────────────────────────────────────────────────────
-function renderAll() {
-  renderDateStrip();
-  renderApptList();
-  renderSubscribers();
-  renderServices();
-  renderPendingReplies([]);
+// ─── Supabase ─────────────────────────────────────────────────
+function apiHeaders(){
+  const h = { 'Content-Type':'application/json', apikey: SUPABASE_KEY };
+  if (SUPABASE_KEY.startsWith('eyJ')) h.Authorization = 'Bearer ' + SUPABASE_KEY; // legacy anon key
+  return h;
 }
+async function rpc(fn, args = {}){
+  let r;
+  try { r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, { method:'POST', headers: apiHeaders(), body: JSON.stringify(args) }); }
+  catch { throw new Error('No connection. Check your internet and try again.'); }
+  const txt = await r.text();
+  let data = null; try { data = txt ? JSON.parse(txt) : null; } catch { data = txt; }
+  if (!r.ok) {
+    const msg = (data && data.message) || `Something went wrong (${r.status})`;
+    if (msg.includes('SESSION_EXPIRED')) { forceBarberOut(); throw new Error('Signed out. Sign in again.'); }
+    throw new Error(msg);
+  }
+  return data;
+}
+
+// ─── Shop look: theme, name, picture, banner, app icon ────────
+function hexA(h, a){ const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; }
+function applyTheme(key){
+  const t = THEMES[key] || THEMES.gold, s = document.documentElement.style;
+  for (const k of ['bg','bg2','bg3','card','text','text2','text3','accent','ink']) s.setProperty('--' + k, t[k]);
+  s.setProperty('--accent-soft', hexA(t.accent, .14));
+  s.setProperty('--border', t.dark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.08)');
+  s.setProperty('--border2', t.dark ? 'rgba(255,255,255,.15)' : 'rgba(0,0,0,.15)');
+  s.colorScheme = t.dark ? 'dark' : 'light';
+  $('meta[name=theme-color]').content = t.bg;
+  $('meta[name=apple-mobile-web-app-status-bar-style]').content = t.dark ? 'black-translucent' : 'default';
+}
+function logoHTML(logo = shop && shop.logo){ return logo ? `<img src="${logo}" alt="">` : esc(initials(shop ? shop.name : 'CB')); }
+function bannerHTML(){
+  if (!shop || !shop.banner_on || !(shop.banner_text || '').trim()) return '';
+  const t = esc(shop.banner_text.trim()), dur = Math.max(14, shop.banner_text.length * 0.55);
+  return `<div class="banner" aria-label="${t}"><div class="banner-track" style="animation-duration:${dur}s">${`<span>${t}</span>`.repeat(4)}</div></div>`;
+}
+function applyShop(){
+  applyTheme(shop.theme);
+  document.title = shop.name;
+  document.querySelectorAll('.shop-name').forEach(e => e.textContent = shop.name);
+  document.querySelectorAll('.logo-slot:not(#o-logo-prev)').forEach(e => e.innerHTML = logoHTML());
+  document.querySelectorAll('.banner-slot').forEach(e => e.innerHTML = bannerHTML());
+  applyIcon();
+}
+const iconCache = {};
+function initialsIcon(t){
+  const key = t.accent + t.ink + shop.name; if (iconCache[key]) return iconCache[key];
+  const c = document.createElement('canvas'); c.width = c.height = 512; const x = c.getContext('2d');
+  x.fillStyle = t.accent; x.fillRect(0, 0, 512, 512); x.fillStyle = t.ink;
+  x.font = '800 230px "Big Shoulders Display", "Arial Narrow", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText(initials(shop.name), 256, 272);
+  return iconCache[key] = c.toDataURL('image/png');
+}
+function applyIcon(){
+  const t = THEMES[shop.theme] || THEMES.gold;
+  const icon = shop.logo || initialsIcon(t);
+  $('link[rel=apple-touch-icon]').href = icon;
+  $('link[rel=icon]').href = icon;
+  $('meta[name=apple-mobile-web-app-title]').content = shop.name;
+  const base = location.origin + location.pathname.replace(/[^/]*$/, '');
+  const type = icon.slice(5, icon.indexOf(';'));
+  const manifest = {
+    name: shop.name, short_name: shop.name.slice(0, 12), start_url: base, scope: base,
+    display: 'standalone', background_color: t.bg, theme_color: t.bg,
+    icons: [{ src: icon, sizes: '512x512', type, purpose: 'any' }, { src: icon, sizes: '192x192', type, purpose: 'any' }]
+  };
+  $('link[rel=manifest]').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }));
+}
+async function refreshShop(){
+  shop = await rpc('get_shop');
+  store('cb_shop', shop);
+  applyShop();
+  return shop;
+}
+
+// ─── Boot ─────────────────────────────────────────────────────
+async function boot(){
+  if (SUPABASE_URL.includes('YOUR-') || SUPABASE_KEY.includes('YOUR-')) return show('cfg');
+  shop = readJSON('cb_shop');
+  if (shop) applyShop();
+  try { await refreshShop(); }
+  catch (e) { if (!shop) { $('#loading-msg').textContent = e.message; return; } }
+
+  if (!shop.has_owner) { $('#v-setup .logo-slot').innerHTML = logoHTML(); return show('setup'); }
+
+  if (barber) {
+    try { Object.assign(barber, await rpc('barber_me', { p_token: barber.token })); store('cb_barber', barber); return enterBarber(); }
+    catch { barber = null; store('cb_barber', null); }
+  }
+  const savedPhone = localStorage.getItem('cb_client');
+  if (savedPhone) {
+    try { const c = await rpc('client_login', { p_phone: savedPhone }); if (c) { client = c; return enterClient(); } } catch {}
+  }
+  show('login');
+}
+
+// ─── First-run setup ──────────────────────────────────────────
+async function setupOwner(btn){
+  const shopName = $('#su-shop').value.trim(), name = $('#su-name').value.trim(), phone = digits($('#su-phone').value);
+  const pin = $('#su-pin').value, pin2 = $('#su-pin2').value;
+  if (!shopName || !name) return toast('Enter the shop name and your name', 'err');
+  if (phone.length !== 10) return toast('Enter a 10-digit phone number', 'err');
+  if (!/^\d{4,8}$/.test(pin)) return toast('PIN must be 4 to 8 digits', 'err');
+  if (pin !== pin2) return toast("PINs don't match", 'err');
+  await busy(btn, async () => {
+    const r = await rpc('setup_owner', { p_shop_name: shopName, p_name: name, p_phone: phone, p_pin: pin });
+    barber = { token: r.token, name: r.name, is_owner: true }; store('cb_barber', barber);
+    await refreshShop();
+    toast('Shop created', 'ok');
+    enterBarber();
+  });
+}
+
+// ─── Sign in ──────────────────────────────────────────────────
+function setLoginTab(t){
+  $('#seg-client').classList.toggle('on', t === 'client');
+  $('#seg-barber').classList.toggle('on', t === 'barber');
+  $('#login-client').hidden = t !== 'client';
+  $('#login-barber').hidden = t !== 'barber';
+}
+function resetClientLogin(){ $('#lc-step1').hidden = false; $('#lc-step2').hidden = true; $('#lc-name').value = ''; }
+async function clientContinue(btn){
+  const p = digits($('#lc-phone').value);
+  if (p.length !== 10) return toast('Enter your 10-digit phone number', 'err');
+  await busy(btn, async () => {
+    const c = await rpc('client_login', { p_phone: p });
+    if (c) { client = c; store('cb_client', c.phone); enterClient(); }
+    else { $('#lc-step1').hidden = true; $('#lc-step2').hidden = false; $('#lc-name').focus(); }
+  });
+}
+async function clientRegister(btn){
+  const name = $('#lc-name').value.trim(), p = digits($('#lc-phone').value);
+  if (!name) return toast('Enter your name', 'err');
+  await busy(btn, async () => {
+    client = await rpc('client_register', { p_name: name, p_phone: p, p_subscribed: $('#lc-sub').checked });
+    store('cb_client', client.phone);
+    toast(`Welcome, ${first(client.name)}`, 'ok');
+    enterClient();
+  });
+}
+async function barberSignIn(btn){
+  const p = digits($('#lb-phone').value), pin = $('#lb-pin').value;
+  if (p.length !== 10) return toast('Enter your 10-digit phone number', 'err');
+  if (!pin) return toast('Enter your PIN', 'err');
+  await busy(btn, async () => {
+    const r = await rpc('barber_login', { p_phone: p, p_pin: pin });
+    if (!r.ok) throw new Error(r.error);
+    barber = { token: r.token, name: r.name, is_owner: r.is_owner }; store('cb_barber', barber);
+    $('#lb-pin').value = '';
+    enterBarber();
+  });
+}
+
+// ═════════════════════════ CLIENT SIDE ═════════════════════════
+function enterClient(){
+  show('client');
+  $('#c-hello').textContent = `Hi, ${first(client.name)}`;
+  $('#c-sub').checked = !!client.subscribed;
+  $('#c-service').innerHTML = (shop.services || []).map(s => `<option>${esc(s)}</option>`).join('');
+  cSel.time = null;
+  renderClientDates();
+  loadClientAppts();
+  loadAnnouncement();
+  renderInstall();
+}
+function centerChip(sel){
+  const strip = $(sel), on = strip && strip.querySelector('.chip.on'); if (!on) return;
+  const sr = strip.getBoundingClientRect(), r = on.getBoundingClientRect();
+  strip.scrollLeft += (r.left - sr.left) - (sr.width - r.width) / 2;
+}
+function slotsFor(date, taken = []){
+  const h = shop.hours && shop.hours[dow(date)]; if (!h) return null;
+  const step = Number(shop.slot_minutes) || 60, open = toMin(h.open), close = toMin(h.close);
+  const now = new Date(), nowM = date === today() ? now.getHours() * 60 + now.getMinutes() : -1;
+  const tk = taken.map(toMin), out = [];
+  for (let m = open; m + step <= close; m += step) {
+    if (m <= nowM) continue;
+    out.push({ t: fromMin(m), free: !tk.some(x => Math.abs(x - m) < step) });
+  }
+  return out;
+}
+const isOpenDay = d => { const s = slotsFor(d); return !!(s && s.length); };
+function renderClientDates(){
+  const days = [...Array(21)].map((_, i) => addDays(today(), i));
+  if (!cSel.date || !isOpenDay(cSel.date)) cSel.date = days.find(isOpenDay) || null;
+  $('#c-dates').innerHTML = days.map(d => {
+    const open = isOpenDay(d);
+    return `<button class="chip ${d === cSel.date ? 'on' : ''}" ${open ? '' : 'disabled'} onclick="pickClientDate('${d}')">
+      <small>${fmtDay(d, { weekday:'short' })}</small><b>${new Date(d + 'T00:00:00').getDate()}</b><small>${open ? fmtDay(d, { month:'short' }) : (shop.hours && shop.hours[dow(d)] ? 'Done' : 'Closed')}</small></button>`;
+  }).join('');
+  centerChip('#c-dates');
+  if (cSel.date) loadClientSlots();
+  else { $('#c-slots').innerHTML = '<p class="muted small" style="margin:12px 0">No open days in the next 3 weeks.</p>'; updateBookBtn(); }
+}
+function pickClientDate(d){ cSel.date = d; cSel.time = null; renderClientDates(); }
+let slotReq = 0;
+async function loadClientSlots(){
+  const d = cSel.date, id = ++slotReq;
+  $('#c-slots').innerHTML = '<p class="muted small" style="margin:12px 0">Loading times…</p>';
+  updateBookBtn();
+  try {
+    const taken = await rpc('get_taken_slots', { p_date: d });
+    if (id !== slotReq) return;
+    const slots = slotsFor(d, taken) || [], free = slots.filter(s => s.free);
+    $('#c-slots').innerHTML = slots.length
+      ? `<div class="slots">${slots.map(s => `<button class="slot ${s.t === cSel.time ? 'on' : ''}" data-t="${s.t}" ${s.free ? '' : 'disabled'} onclick="pickSlot('${s.t}')">${fmt12(s.t)}</button>`).join('')}</div>
+         ${free.length ? '' : '<p class="muted small">Fully booked. Try another day.</p>'}`
+      : '<p class="muted small" style="margin:12px 0">No times left today.</p>';
+  } catch (e) { $('#c-slots').innerHTML = `<p class="muted small" style="margin:12px 0">${esc(e.message)}</p>`; }
+}
+function pickSlot(t){
+  cSel.time = t;
+  document.querySelectorAll('#c-slots .slot').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  updateBookBtn();
+}
+function updateBookBtn(){
+  const b = $('#c-book'); b.disabled = !cSel.time;
+  b.textContent = cSel.time ? `Request ${fmtDay(cSel.date, { weekday:'short', month:'short', day:'numeric' })} at ${fmt12(cSel.time)}` : 'Pick a time';
+}
+async function clientBook(btn){
+  await busy(btn, async () => {
+    await rpc('client_request', { p_phone: client.phone, p_date: cSel.date, p_time: cSel.time, p_service: $('#c-service').value });
+    toast('Request sent. The shop will confirm it.', 'ok');
+    cSel.time = null;
+    loadClientAppts();
+  });
+  loadClientSlots();
+}
+const statusLabel = s => ({ pending:'Waiting for the shop to confirm', confirmed:'Confirmed', cancelled:'Cancelled' }[s] || s);
+async function loadClientAppts(){
+  try {
+    const list = await rpc('client_appts', { p_phone: client.phone });
+    $('#c-appts').innerHTML = list.length ? list.map(a => `
+      <div class="appt st-${a.status}">
+        <div class="appt-when"><b>${new Date(a.date + 'T00:00:00').getDate()}</b><small>${fmtDay(a.date, { month:'short' })}</small></div>
+        <div class="appt-body">
+          <div class="appt-name">${fmtDay(a.date, { weekday:'long' })}, ${fmt12(a.time)}</div>
+          <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${statusLabel(a.status)}</span></div>
+        </div>
+        ${a.status !== 'cancelled' ? `<button class="ibtn danger" onclick="clientCancel('${a.id}')" aria-label="Cancel appointment">${IC.x}</button>` : ''}
+      </div>`).join('')
+      : '<div class="empty" style="padding:20px">No upcoming appointments. Pick a time above.</div>';
+  } catch (e) { $('#c-appts').innerHTML = `<div class="empty" style="padding:20px">${esc(e.message)}</div>`; }
+}
+async function clientCancel(id){
+  if (!confirm('Cancel this appointment?')) return;
+  try { await rpc('client_cancel', { p_phone: client.phone, p_id: id }); toast('Appointment cancelled'); loadClientAppts(); loadClientSlots(); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function loadAnnouncement(){
+  try {
+    const b = await rpc('latest_blast');
+    const text = b ? b.message.replace(/\n*Book( here)?: https?:\/\/\S+\s*$/i, '') : '';
+    $('#c-announce').innerHTML = b ? `<div class="announce"><div class="announce-tag">${IC.send} From the shop, ${timeAgo(b.created_at)}</div><p>${esc(text).replace(/\n/g, '<br>')}</p></div>` : '';
+  } catch {}
+}
+async function clientToggleSub(el){
+  try { await rpc('client_set_subscribed', { p_phone: client.phone, p_on: el.checked }); client.subscribed = el.checked; toast(el.checked ? "You'll get texts about openings" : 'Texts turned off'); }
+  catch (e) { el.checked = !el.checked; toast(e.message, 'err'); }
+}
+function clientSignOut(){ client = null; store('cb_client', null); resetClientLogin(); $('#lc-phone').value = ''; setLoginTab('client'); show('login'); }
+
+// Add-to-home-screen prompt
+let deferredInstall = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; renderInstall(); });
+function renderInstall(){
+  const el = $('#c-install'); if (!el || !shop) return;
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone) el.innerHTML = '';
+  else if (deferredInstall) el.innerHTML = `<button class="btn-ghost" onclick="doInstall()">${IC.plus} Add ${esc(shop.name)} to your home screen</button>`;
+  else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) el.innerHTML = `<p class="hint">To save ${esc(shop.name)} as an app, tap <b>Share</b> then <b>Add to Home Screen</b>.</p>`;
+  else el.innerHTML = '';
+}
+async function doInstall(){ if (!deferredInstall) return; deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; renderInstall(); }
+
+// ═════════════════════════ BARBER SIDE ═════════════════════════
+function enterBarber(){
+  show('barber');
+  $('#b-sub').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  document.querySelectorAll('.owner-only').forEach(e => e.hidden = !barber.is_owner);
+  bDate = today(); bAnchor = addDays(today(), -1);
+  bTab('schedule');
+  loadAppts(); loadClients();
+  clearInterval(pollT);
+  pollT = setInterval(() => { if (document.visibilityState === 'visible' && barber) loadAppts(); }, 30000);
+}
+function forceBarberOut(){
+  barber = null; store('cb_barber', null); clearInterval(pollT); closeSheet();
+  setLoginTab('barber'); show('login');
+}
+async function barberSignOut(){
+  try { await rpc('barber_logout', { p_token: barber.token }); } catch {}
+  forceBarberOut();
+}
+function bTab(t){
+  document.querySelectorAll('#v-barber .screen').forEach(s => s.classList.toggle('on', s.id === 'bs-' + t));
+  document.querySelectorAll('#v-barber .nav-item').forEach(n => n.classList.toggle('on', n.dataset.t === t));
+  $('#fab').hidden = t !== 'schedule';
+  if (t === 'blast') initBlast();
+  if (t === 'clients') renderClients();
+  if (t === 'options') renderOptions();
+  window.scrollTo(0, 0);
+}
+
+// ── Schedule ──
+async function loadAppts(){
+  if (!barber) return;
+  try {
+    bAppts = await rpc('barber_appts', { p_token: barber.token, p_from: bAnchor, p_to: addDays(bAnchor, 20) });
+    renderStrip(); renderDay(); updateBadge();
+  } catch (e) { if (barber) toast(e.message, 'err'); }
+}
+function renderStrip(){
+  const days = [...Array(21)].map((_, i) => addDays(bAnchor, i));
+  $('#b-strip').innerHTML = days.map(d => {
+    const n = bAppts.filter(a => a.date === d && a.status !== 'cancelled').length;
+    const pend = bAppts.some(a => a.date === d && a.status === 'pending');
+    return `<button class="chip ${d === bDate ? 'on' : ''} ${d === today() ? 'today' : ''}" onclick="pickBDate('${d}')">
+      <small>${fmtDay(d, { weekday:'short' })}</small><b>${new Date(d + 'T00:00:00').getDate()}</b>
+      <i class="dot ${pend ? 'pend' : ''}" style="${n ? '' : 'visibility:hidden'}"></i></button>`;
+  }).join('');
+  centerChip('#b-strip');
+}
+function pickBDate(d){ bDate = d; renderStrip(); renderDay(); }
+function jumpDate(d){ bDate = d; bAnchor = addDays(d, -1); $('#b-jump').value = ''; renderStrip(); renderDay(); loadAppts(); }
+const stat = (n, l) => `<div class="stat"><b>${n}</b><small>${l}</small></div>`;
+function renderDay(){
+  const list = bAppts.filter(a => a.date === bDate).sort((a, b) => a.time.localeCompare(b.time));
+  const active = list.filter(a => a.status !== 'cancelled');
+  const slots = slotsFor(bDate, active.map(a => a.time));
+  $('#b-dayhead').textContent = bDate === today() ? 'Today' : fmtDay(bDate, { weekday:'long', month:'short', day:'numeric' });
+  $('#b-stats').innerHTML =
+    stat(active.filter(a => a.status === 'confirmed').length, 'Confirmed') +
+    stat(active.filter(a => a.status === 'pending').length, 'To confirm') +
+    stat(slots ? slots.filter(s => s.free).length : '–', slots ? 'Open slots' : 'Closed');
+  $('#b-list').innerHTML = list.length ? list.map(apptCard).join('')
+    : `<div class="empty">${IC.cal}<p>${slots ? 'No appointments yet. Tap + to add one.' : 'The shop is closed this day.'}</p></div>`;
+}
+function apptCard(a){
+  const t = fmt12(a.time);
+  return `<div class="appt st-${a.status}">
+    <div class="appt-when"><b>${t.split(' ')[0]}</b><small>${t.split(' ')[1]}</small></div>
+    <div class="appt-body">
+      <div class="appt-name">${esc(a.name)}</div>
+      <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${a.status === 'pending' ? 'needs confirming' : a.status}</span></div>
+    </div>
+    <div class="appt-actions">
+      ${a.status === 'pending' ? `<button class="ibtn ok" onclick="setStatus('${a.id}','confirmed')" aria-label="Confirm">${IC.check}</button>` : ''}
+      ${a.phone ? `<button class="ibtn" onclick="msgSheet('${a.id}')" aria-label="Message">${IC.msg}</button>` : ''}
+      ${a.status !== 'cancelled' ? `<button class="ibtn danger" onclick="setStatus('${a.id}','cancelled')" aria-label="Cancel">${IC.x}</button>` : ''}
+    </div></div>`;
+}
+function updateBadge(){
+  const n = bAppts.filter(a => a.status === 'pending' && a.date >= today()).length;
+  const b = $('#nav-pending'); b.hidden = !n; b.textContent = n;
+}
+async function setStatus(id, status){
+  const a = bAppts.find(x => x.id === id);
+  if (status === 'cancelled' && !confirm(`Cancel ${a ? a.name + "'s" : 'this'} appointment?`)) return;
+  try {
+    await rpc('barber_set_status', { p_token: barber.token, p_id: id, p_status: status });
+    if (a) a.status = status;
+    renderStrip(); renderDay(); updateBadge();
+    toast(status === 'confirmed' ? 'Confirmed' : 'Cancelled', status === 'confirmed' ? 'ok' : '');
+    if (a && a.phone) msgSheet(id, status === 'confirmed' ? 0 : 3);
+  } catch (e) { toast(e.message, 'err'); }
+}
+let QUICK = [];
+function msgSheet(id, preset){
+  const a = bAppts.find(x => x.id === id); if (!a) return;
+  const when = `${fmtDay(a.date, { weekday:'long', month:'short', day:'numeric' })} at ${fmt12(a.time)}`, n = first(a.name);
+  const q = [
+    ["You're confirmed", `Hi ${n}, you're confirmed at ${shop.name} for ${when}. See you then!`],
+    ['Running 15 min late', `Hi ${n}, I'm running about 15 minutes behind. Sorry for the wait, see you soon!`],
+    ['Running 30 min late', `Hi ${n}, I'm running about 30 minutes behind today. Sorry about that!`],
+    ['Cancelled', `Hi ${n}, I have to cancel your ${when} appointment. Book a new time here: ${appLink()}`],
+  ];
+  QUICK = q.map(x => x[1]);
+  openSheet(`<h2>Message ${esc(a.name)}</h2><p class="sub">${fmtPhone(a.phone)}</p>
+    ${q.map((x, i) => `<button class="btn-ghost left" onclick="$('#m-text').value=QUICK[${i}]">${esc(x[0])}</button>`).join('')}
+    <div class="field" style="margin-top:12px"><label for="m-text">Message</label><textarea id="m-text" rows="4">${preset != null ? esc(QUICK[preset]) : ''}</textarea></div>
+    <div class="row2"><a class="btn-ghost" href="tel:+1${a.phone}">${IC.phone} Call</a><button class="btn-ghost" style="background:var(--accent);color:var(--ink);border-color:var(--accent)" onclick="openSms('${a.phone}',$('#m-text').value)">${IC.msg} Text</button></div>
+    <p class="muted small" style="margin-top:10px">Opens your phone's Messages app with this text filled in.</p>`);
+}
+function openSms(phone, body){ location.href = `sms:+1${phone}${body ? '?&body=' + encodeURIComponent(body) : ''}`; }
+function nextFree(date){ const s = slotsFor(date, bAppts.filter(a => a.date === date && a.status !== 'cancelled').map(a => a.time)); const f = s && s.find(x => x.free); return f ? f.t : '10:00'; }
+function apptSheet(pre = {}){
+  const date = pre.date || bDate;
+  openSheet(`<h2>New appointment</h2><p class="sub">Appointments you add are confirmed right away.</p>
+    <div class="field"><label for="n-name">Client name</label><input id="n-name" list="client-names" value="${esc(pre.name || '')}" oninput="autofillPhone(this)" autocomplete="off"></div>
+    <div class="field"><label for="n-phone">Phone (optional)</label><input id="n-phone" class="phone" inputmode="tel" value="${esc(pre.phone ? fmtPhone(pre.phone) : '')}" placeholder="(555) 555-5555"></div>
+    <div class="row2">
+      <div class="field"><label for="n-date">Date</label><input id="n-date" type="date" value="${date}"></div>
+      <div class="field"><label for="n-time">Time</label><input id="n-time" type="time" step="300" value="${nextFree(date)}"></div>
+    </div>
+    <div class="field"><label for="n-service">Service</label><select id="n-service">${(shop.services || []).map(s => `<option>${esc(s)}</option>`).join('')}</select></div>
+    <button class="btn" onclick="saveNewAppt(this)">Book appointment</button>`);
+}
+function autofillPhone(el){ const c = bClients.find(x => x.name.toLowerCase() === el.value.trim().toLowerCase()); if (c && !$('#n-phone').value) $('#n-phone').value = fmtPhone(c.phone); }
+async function saveNewAppt(btn){
+  const name = $('#n-name').value.trim(), phone = digits($('#n-phone').value), date = $('#n-date').value, time = $('#n-time').value;
+  if (!name || !date || !time) return toast('Name, date and time are required', 'err');
+  if (phone && phone.length !== 10) return toast('Phone should be 10 digits', 'err');
+  await busy(btn, async () => {
+    await rpc('barber_add_appt', { p_token: barber.token, p_name: name, p_phone: phone || null, p_date: date, p_time: time, p_service: $('#n-service').value });
+    closeSheet();
+    if (date < bAnchor || date > addDays(bAnchor, 20)) bAnchor = addDays(date, -1);
+    bDate = date;
+    await loadAppts(); loadClients();
+    toast('Appointment booked', 'ok');
+  });
+}
+
+// ── Blast ──
+function initBlast(){
+  if (!$('#bl-date').value) { $('#bl-date').value = today(); blastDateChanged(); }
+  const n = bClients.filter(c => c.subscribed).length;
+  $('#bl-count').textContent = `${n} client${n === 1 ? '' : 's'} opted in`;
+}
+function blastDateChanged(){
+  const d = $('#bl-date').value; if (!d) return;
+  const h = shop.hours && shop.hours[dow(d)];
+  $('#bl-open').value = h ? h.open : '09:00'; $('#bl-close').value = h ? h.close : '18:00';
+}
+function buildBlast(){
+  const d = $('#bl-date').value || today(), o = $('#bl-open').value, c = $('#bl-close').value, extra = $('#bl-msg').value.trim();
+  const day = d === today() ? 'today' : d === addDays(today(), 1) ? 'tomorrow' : fmtDay(d, { weekday:'long', month:'short', day:'numeric' });
+  let m = `${shop.name} is open ${day}, ${fmt12(o)} to ${fmt12(c)}.`;
+  if (extra) m += `\n\n${extra}`;
+  return m + `\n\nBook here: ${appLink()}`;
+}
+function previewBlast(){
+  const n = bClients.filter(c => c.subscribed).length;
+  openSheet(`<h2>Preview</h2><p class="sub">Goes to ${n} client${n === 1 ? '' : 's'} who opted in to texts.</p>
+    <div class="preview">${esc(buildBlast()).replace(/\n/g, '<br>')}</div>
+    <button class="btn" onclick="sendBlast(this)">${IC.send} Send blast</button>
+    <button class="btn-ghost" onclick="closeSheet()">Edit</button>`);
+}
+async function sendBlast(btn){
+  const message = buildBlast();
+  await busy(btn, async () => {
+    let r = null;
+    try {
+      r = await fetch(`${SUPABASE_URL}/functions/v1/send-blast`, { method:'POST', headers: apiHeaders(), body: JSON.stringify({ token: barber.token, message }) });
+    } catch { r = null; }
+    if (r && r.status !== 404) {
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || 'Blast failed');
+      closeSheet(); $('#bl-msg').value = '';
+      return toast(j.sms ? `Blast sent to ${j.sent} client${j.sent === 1 ? '' : 's'}${j.failed ? `, ${j.failed} failed` : ''}` : 'Blast posted in the app. Texting isn’t set up yet.', 'ok');
+    }
+    // Texting function not deployed yet: still post it in the client app
+    await rpc('barber_create_blast', { p_token: barber.token, p_message: message });
+    closeSheet(); $('#bl-msg').value = '';
+    toast('Blast posted in the app. Texting isn’t set up yet.', 'ok');
+  });
+}
+
+// ── Clients ──
+async function loadClients(){
+  if (!barber) return;
+  try {
+    bClients = await rpc('barber_clients', { p_token: barber.token });
+    $('#client-names').innerHTML = bClients.map(c => `<option value="${esc(c.name)}">`).join('');
+    renderClients();
+    if ($('#bs-blast').classList.contains('on')) initBlast();
+  } catch {}
+}
+function renderClients(){
+  const q = ($('#cl-q').value || '').trim().toLowerCase(), qd = q.replace(/\D/g, '');
+  const list = bClients.filter(c => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)));
+  $('#cl-list').innerHTML = list.length ? list.map(c => {
+    const meta = [fmtPhone(c.phone), c.visits ? `${c.visits} visit${c.visits > 1 ? 's' : ''}` : '', c.last_visit ? `last in ${fmtDay(c.last_visit, { month:'short', day:'numeric' })}` : ''].filter(Boolean).join(', ');
+    return `<button class="crow" onclick="clientSheet('${c.id}')"><span class="avatar">${esc(initials(c.name))}</span>
+      <span class="crow-body"><b>${esc(c.name)}</b><small>${meta}</small></span>
+      <span class="tag ${c.subscribed ? 'on' : ''}">${c.subscribed ? 'Gets texts' : 'No texts'}</span></button>`;
+  }).join('') : `<div class="empty" style="padding:24px 8px">${bClients.length ? 'No clients match that search.' : 'No clients yet. Share your client link from Options.'}</div>`;
+}
+function clientSheet(id){
+  const c = id ? bClients.find(x => x.id === id) : { name:'', phone:'', subscribed:true, notes:'' };
+  if (!c) return;
+  openSheet(`<h2>${id ? esc(c.name) : 'Add client'}</h2><p class="sub">${id ? `Client since ${new Date(c.created_at).toLocaleDateString('en-US', { month:'short', year:'numeric' })}` : 'They can sign in later with this phone number.'}</p>
+    ${id ? `<div class="row2" style="margin-bottom:12px">
+      <a class="btn-ghost" style="margin:0" href="tel:+1${c.phone}">${IC.phone} Call</a>
+      <button class="btn-ghost" style="margin:0" onclick="openSms('${c.phone}','')">${IC.msg} Text</button>
+      <button class="btn-ghost" style="margin:0" onclick="closeSheet();apptSheet({name:${esc(JSON.stringify(c.name))},phone:'${c.phone}'})">${IC.cal} Book</button></div>` : ''}
+    <div class="field"><label for="e-name">Name</label><input id="e-name" value="${esc(c.name)}"></div>
+    <div class="field"><label for="e-phone">Phone</label><input id="e-phone" class="phone" inputmode="tel" value="${esc(fmtPhone(c.phone))}"></div>
+    <div class="field"><label for="e-notes">Notes</label><textarea id="e-notes" placeholder="Guard numbers, preferences">${esc(c.notes)}</textarea></div>
+    <div class="srow"><div class="srow-body"><b>Gets blast texts</b><small>Only turn on if they agreed to texts</small></div><label class="switch"><input type="checkbox" id="e-sub" ${c.subscribed ? 'checked' : ''}><span></span></label></div>
+    <button class="btn" onclick="saveClient(this,'${id}')">${id ? 'Save changes' : 'Add client'}</button>
+    ${id ? `<button class="btn-ghost danger" onclick="deleteClient('${id}')">Delete client</button>` : ''}`);
+}
+async function saveClient(btn, id){
+  const name = $('#e-name').value.trim(), phone = digits($('#e-phone').value);
+  if (!name) return toast('Enter a name', 'err');
+  if (phone.length !== 10) return toast('Phone should be 10 digits', 'err');
+  await busy(btn, async () => {
+    await rpc('barber_save_client', { p_token: barber.token, p_id: id || null, p_name: name, p_phone: phone, p_subscribed: $('#e-sub').checked, p_notes: $('#e-notes').value });
+    closeSheet(); await loadClients(); loadAppts();
+    toast(id ? 'Changes saved' : 'Client added', 'ok');
+  });
+}
+async function deleteClient(id){
+  const c = bClients.find(x => x.id === id);
+  if (!confirm(`Delete ${c ? c.name : 'this client'}? Their past appointments stay on the schedule.`)) return;
+  try { await rpc('barber_delete_client', { p_token: barber.token, p_id: id }); closeSheet(); loadClients(); toast('Client deleted'); }
+  catch (e) { toast(e.message, 'err'); }
+}
+
+// ── Options ──
+function appLink(){ return location.origin + location.pathname.replace(/index\.html$/, ''); }
+function copyLink(){ navigator.clipboard.writeText(appLink()).then(() => toast('Link copied', 'ok')).catch(() => toast(appLink())); }
+async function shareLink(){
+  if (navigator.share) { try { await navigator.share({ title: shop.name, text: `Book with ${shop.name}`, url: appLink() }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  copyLink();
+}
+function renderOptions(){
+  draft = { theme: shop.theme, logo: shop.logo };
+  $('#o-link').textContent = appLink();
+  $('#o-me').textContent = barber.name;
+  $('#o-me-role').textContent = barber.is_owner ? 'Shop owner' : 'Barber';
+  if (barber.is_owner) {
+    $('#o-name').value = shop.name;
+    $('#o-banner').value = shop.banner_text || '';
+    $('#o-banner-on').checked = !!shop.banner_on;
+    renderLogoPrev(); renderSwatches(); loadTeam();
+  }
+  renderHours(); renderServices();
+}
+function renderLogoPrev(){ $('#o-logo-prev').innerHTML = logoHTML(draft.logo); }
+function renderSwatches(){
+  $('#o-themes').innerHTML = Object.entries(THEMES).map(([k, t]) =>
+    `<button class="swatch ${k === draft.theme ? 'on' : ''}" onclick="pickTheme('${k}')"><i><span style="background:${t.bg}"></span><span style="background:${t.card}"></span><span style="background:${t.accent}"></span></i>${t.label}</button>`).join('');
+}
+function pickTheme(k){ draft.theme = k; applyTheme(k); renderSwatches(); }
+function pickLogo(input){
+  const file = input.files && input.files[0]; input.value = ''; if (!file) return;
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => {
+    const S = 512, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d');
+    x.fillStyle = (THEMES[draft.theme] || THEMES.gold).bg; x.fillRect(0, 0, S, S);
+    const s = Math.min(img.width, img.height);
+    x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, S, S);
+    draft.logo = c.toDataURL('image/jpeg', 0.86);
+    URL.revokeObjectURL(url); renderLogoPrev();
+    toast('Picture ready. Tap Save shop look.');
+  };
+  img.onerror = () => toast("That file couldn't be opened as a picture", 'err');
+  img.src = url;
+}
+async function saveShop(patch){ shop = await rpc('barber_update_shop', { p_token: barber.token, p_patch: patch }); store('cb_shop', shop); applyShop(); }
+async function saveLook(btn){
+  const name = $('#o-name').value.trim(); if (!name) return toast('Enter a shop name', 'err');
+  await busy(btn, async () => { await saveShop({ name, theme: draft.theme, logo: draft.logo }); toast('Shop look saved', 'ok'); });
+}
+async function saveBanner(btn){
+  const text = $('#o-banner').value.trim(), on = $('#o-banner-on').checked;
+  if (on && !text) return toast('Add banner text first', 'err');
+  await busy(btn, async () => { await saveShop({ banner_text: text, banner_on: on }); toast(on ? 'Banner is live' : 'Banner saved (hidden)', 'ok'); });
+}
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function renderHours(){
+  $('#o-hours').innerHTML = [1,2,3,4,5,6,0].map(d => {
+    const h = shop.hours && shop.hours[d];
+    return `<div class="hrow ${h ? '' : 'closed'}" data-d="${d}">
+      <label class="switch" aria-label="Open ${DAYS[d]}"><input type="checkbox" ${h ? 'checked' : ''} onchange="this.closest('.hrow').classList.toggle('closed',!this.checked)"><span></span></label>
+      <b>${DAYS[d].slice(0,3)}</b>
+      <input type="time" aria-label="${DAYS[d]} open" value="${h ? h.open : '09:00'}"><span class="muted">–</span>
+      <input type="time" aria-label="${DAYS[d]} close" value="${h ? h.close : '18:00'}"></div>`;
+  }).join('');
+  $('#o-slot').value = String(shop.slot_minutes);
+}
+async function saveHours(btn){
+  const hours = {};
+  for (const r of document.querySelectorAll('#o-hours .hrow')) {
+    const on = r.querySelector('input[type=checkbox]').checked, [o, c] = r.querySelectorAll('input[type=time]');
+    if (on && toMin(c.value) <= toMin(o.value)) return toast(`${DAYS[r.dataset.d]}: closing time must be after opening`, 'err');
+    hours[r.dataset.d] = on ? { open: o.value, close: c.value } : null;
+  }
+  await busy(btn, async () => { await saveShop({ hours, slot_minutes: Number($('#o-slot').value) }); renderDay(); toast('Hours saved', 'ok'); });
+}
+function renderServices(){
+  $('#o-services').innerHTML = (shop.services || []).map((s, i) =>
+    `<div class="srow"><div class="srow-body"><b>${esc(s)}</b></div><button class="ibtn danger" onclick="removeService(${i})" aria-label="Remove ${esc(s)}">${IC.x}</button></div>`).join('')
+    || '<p class="muted small">No services yet. Add one below.</p>';
+}
+async function addService(){
+  const v = $('#o-new-svc').value.trim(); if (!v) return;
+  try { await saveShop({ services: [...(shop.services || []), v] }); $('#o-new-svc').value = ''; renderServices(); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function removeService(i){
+  const list = [...(shop.services || [])]; list.splice(i, 1);
+  try { await saveShop({ services: list }); renderServices(); } catch (e) { toast(e.message, 'err'); }
+}
+async function loadTeam(){
+  try {
+    const team = await rpc('barber_team', { p_token: barber.token });
+    $('#o-team').innerHTML = team.map(b => `<div class="srow"><span class="avatar">${esc(initials(b.name))}</span>
+      <div class="srow-body"><b>${esc(b.name)}</b><small>${fmtPhone(b.phone)}${b.is_owner ? ', owner' : ''}</small></div>
+      ${b.is_owner ? '' : `<button class="ibtn danger" onclick="removeBarber('${b.id}',${esc(JSON.stringify(b.name))})" aria-label="Remove">${IC.trash}</button>`}</div>`).join('');
+  } catch {}
+}
+function addBarberSheet(){
+  openSheet(`<h2>Add barber</h2><p class="sub">They sign in on the Barber tab with this phone number and PIN.</p>
+    <div class="field"><label for="ab-name">Name</label><input id="ab-name"></div>
+    <div class="field"><label for="ab-phone">Phone</label><input id="ab-phone" class="phone" inputmode="tel" placeholder="(555) 555-5555"></div>
+    <div class="field"><label for="ab-pin">PIN for them (4–8 digits)</label><input id="ab-pin" inputmode="numeric" maxlength="8"></div>
+    <button class="btn" onclick="addBarber(this)">Add barber</button>`);
+}
+async function addBarber(btn){
+  const name = $('#ab-name').value.trim(), phone = digits($('#ab-phone').value), pin = $('#ab-pin').value;
+  if (!name || phone.length !== 10 || !/^\d{4,8}$/.test(pin)) return toast('Enter a name, 10-digit phone and 4–8 digit PIN', 'err');
+  await busy(btn, async () => { await rpc('barber_add_barber', { p_token: barber.token, p_name: name, p_phone: phone, p_pin: pin }); closeSheet(); loadTeam(); toast(`${name} added`, 'ok'); });
+}
+async function removeBarber(id, name){
+  if (!confirm(`Remove ${name}? They won't be able to sign in.`)) return;
+  try { await rpc('barber_remove_barber', { p_token: barber.token, p_id: id }); loadTeam(); toast(`${name} removed`); } catch (e) { toast(e.message, 'err'); }
+}
+function pinSheet(){
+  openSheet(`<h2>Change PIN</h2><p class="sub">You'll stay signed in here. Other devices get signed out.</p>
+    <div class="field"><label for="p-old">Current PIN</label><input id="p-old" type="password" inputmode="numeric" maxlength="8"></div>
+    <div class="row2"><div class="field"><label for="p-new">New PIN</label><input id="p-new" type="password" inputmode="numeric" maxlength="8"></div>
+    <div class="field"><label for="p-new2">Confirm</label><input id="p-new2" type="password" inputmode="numeric" maxlength="8"></div></div>
+    <button class="btn" onclick="changePin(this)">Change PIN</button>`);
+}
+async function changePin(btn){
+  const o = $('#p-old').value, n = $('#p-new').value;
+  if (!/^\d{4,8}$/.test(n)) return toast('New PIN must be 4 to 8 digits', 'err');
+  if (n !== $('#p-new2').value) return toast("New PINs don't match", 'err');
+  await busy(btn, async () => { await rpc('barber_change_pin', { p_token: barber.token, p_old: o, p_new: n }); closeSheet(); toast('PIN changed', 'ok'); });
+}
+
+// ─── Keep things fresh when the app comes back to the front ───
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState !== 'visible' || !shop) return;
+  try { await refreshShop(); } catch {}
+  if ($('#v-client').classList.contains('on') && client) { loadClientAppts(); loadAnnouncement(); if (cSel.date) loadClientSlots(); }
+  if ($('#v-barber').classList.contains('on') && barber) { loadAppts(); loadClients(); }
+});
+
+boot();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
