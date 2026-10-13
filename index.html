@@ -21,7 +21,7 @@
   --text:#f2efe9;--text2:#a29e98;--text3:#6f6c68;
   --accent:#c9a84c;--ink:#141005;--accent-soft:rgba(201,168,76,.14);
   --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.15);
-  --green:#3fae78;--red:#e05252;--amber:#e09a2e;
+  --green:#3fae78;--red:#e05252;--amber:#e09a2e;--blue:#5b9cff;
   --r:16px;--rs:11px;
   --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
   --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",sans-serif;
@@ -39,7 +39,7 @@ svg{width:18px;height:18px;flex-shrink:0}
 .view{display:none;min-height:100vh} .view.on{display:block}
 .screen{display:none} .screen.on{display:block}
 
-/* ── Top bar + rolling banner ── */
+/* Top bar + banner */
 .top{position:sticky;top:0;z-index:50;background:var(--bg);padding-top:var(--st)}
 .banner{overflow:hidden;background:var(--accent);color:var(--ink);font-size:13px;font-weight:650;height:30px;display:flex;align-items:center;
   background-image:repeating-linear-gradient(-45deg,transparent 0 14px,rgba(0,0,0,.06) 14px 28px)}
@@ -48,36 +48,40 @@ svg{width:18px;height:18px;flex-shrink:0}
 @keyframes marq{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.banner-track{animation:none}}
 .topbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
-.tb-text{flex:1;min-width:0}
-.tb-title{font-family:var(--display);font-size:24px;font-weight:800;line-height:1;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-text{flex:1;min-width:0;text-align:left}
+.tb-title{font-family:var(--display);font-size:24px;font-weight:800;line-height:1;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px}
+.tb-title svg{width:16px;height:16px;color:var(--text2)}
 .tb-sub{font-size:12px;color:var(--text2);margin-top:3px}
 .logo-slot{width:42px;height:42px;border-radius:12px;overflow:hidden;background:var(--accent);color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:20px;flex-shrink:0}
 .logo-slot img{width:100%;height:100%;object-fit:cover;display:block}
 .logo-slot.big{width:104px;height:104px;border-radius:28px;font-size:46px}
-
-.ibtn{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:grid;place-items:center;color:var(--text2);flex-shrink:0}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar.sm{width:24px;height:24px;font-size:9.5px}
+.avatar.lg{width:92px;height:92px;font-size:30px}
+.ibtn{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:grid;place-items:center;color:var(--text2);flex-shrink:0;position:relative}
 .ibtn svg{width:17px;height:17px}
-.ibtn.ok{color:var(--green)} .ibtn.danger{color:var(--red)}
-
+.ibtn.ok{color:var(--green)} .ibtn.danger{color:var(--red)} .ibtn.info{color:var(--blue)}
 .page{padding:16px 16px calc(100px + var(--sb));max-width:640px;margin:0 auto}
 .section-title{font-size:13px;font-weight:650;color:var(--text2);margin:24px 2px 10px;display:flex;align-items:center;gap:8px}
-.section-title .right{margin-left:auto;font-weight:500}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
 .card h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .card h3 .right{margin-left:auto;font-size:12px;font-weight:500;color:var(--text2)}
 
-/* ── Forms ── */
+/* Forms */
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;flex:1;min-width:0}
 .field label{font-size:12.5px;color:var(--text2);font-weight:500}
 .field input,.field select,.field textarea,.hrow input{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:11px 12px;font-size:16px;width:100%;-webkit-appearance:none;appearance:none;min-height:46px}
 .field textarea{resize:vertical;min-height:84px}
+.code-input{text-transform:uppercase;letter-spacing:.25em;font-weight:700}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .row2{display:flex;gap:10px}
 .btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:var(--rs);background:var(--accent);color:var(--ink);font-weight:750;font-size:15px;margin-top:6px}
 .btn:disabled{opacity:.45}
-.btn-ghost{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text);font-weight:550;margin-top:8px}
+.btn-ghost{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--rs);border:1px solid var(--border2);color:var(--text);font-weight:550;margin-top:8px;cursor:pointer}
 .btn-ghost.left{justify-content:flex-start;text-align:left;font-size:14px}
 .btn-ghost.danger{color:var(--red);border-color:rgba(224,82,82,.35)}
+.btn-ghost.slim{padding:9px;margin:0}
 .btn:active,.btn-ghost:active,.ibtn:active,.chip:active,.slot:active{transform:scale(.97)}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text2);margin:4px 0 6px}
 .check input{width:18px;height:18px;accent-color:var(--accent);margin-top:1px;flex-shrink:0}
@@ -88,8 +92,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .switch input:checked+span{background:var(--green);border-color:var(--green)}
 .switch input:checked+span::after{transform:translateX(18px)}
 .switch input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.switch input:disabled+span{opacity:.5}
 
-/* ── Sign-in ── */
+/* Sign in */
 .login{max-width:420px;margin:0 auto;padding:44px 22px calc(40px + var(--sb))}
 .hero{text-align:center;margin-bottom:30px}
 .hero .logo-slot{margin:0 auto 18px}
@@ -98,9 +103,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:18px}
 .seg button{padding:10px;border-radius:9px;font-weight:650;color:var(--text2)}
 .seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.back{font-size:13px;color:var(--text2);margin-top:12px;display:block;width:100%;text-align:center;padding:8px}
+.linkish{font-size:13.5px;color:var(--text2);margin-top:14px;display:block;width:100%;text-align:center;padding:8px}
+.linkish b{color:var(--accent)}
 
-/* ── Day chips + time slots ── */
+/* Day chips + slots */
 .strip{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 0 6px}
 .strip::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;width:56px;padding:8px 0;border-radius:14px;background:var(--bg3);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:1px}
@@ -118,24 +124,29 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .slot.on{background:var(--accent);color:var(--ink);border-color:var(--accent)}
 .slot:disabled{opacity:.3;text-decoration:line-through}
 
-/* ── Appointment cards ── */
-.appt{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 12px 12px 16px;margin-bottom:9px;position:relative;overflow:hidden}
+/* Appointments */
+.appt{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 12px 12px 16px;margin-bottom:9px;position:relative;overflow:hidden}
+.appt-row{display:flex;align-items:center;gap:12px}
 .appt::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--text3)}
 .appt.st-confirmed::before{background:var(--green)}
 .appt.st-pending::before{background:var(--amber)}
-.appt.st-cancelled::before{background:var(--red)}
-.appt.st-cancelled{opacity:.55}
+.appt.st-reschedule::before{background:var(--blue)}
+.appt.st-cancelled::before,.appt.st-declined::before{background:var(--red)}
+.appt.st-cancelled,.appt.st-declined{opacity:.55}
 .appt-when{min-width:48px;text-align:center;display:flex;flex-direction:column}
 .appt-when b{font-family:var(--display);font-size:22px;line-height:1;color:var(--accent)}
 .appt-when small{font-size:11px;color:var(--text3);margin-top:2px}
 .appt-body{flex:1;min-width:0;border-left:1px solid var(--border2);padding-left:12px}
-.appt-name{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appt-name{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:7px}
 .appt-sub{font-size:12.5px;color:var(--text2);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .appt-actions{display:flex;gap:6px}
+.appt-extra{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:13.5px}
+.appt-extra .row2{margin-top:8px}
 .pill{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:20px;display:inline-block}
 .pill.confirmed{background:rgba(63,174,120,.15);color:var(--green)}
 .pill.pending{background:rgba(224,154,46,.16);color:var(--amber)}
-.pill.cancelled{background:rgba(224,82,82,.14);color:var(--red)}
+.pill.reschedule{background:rgba(91,156,255,.16);color:var(--blue)}
+.pill.cancelled,.pill.declined{background:rgba(224,82,82,.14);color:var(--red)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
 .stat{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 8px;text-align:center}
 .stat b{font-family:var(--display);font-size:30px;line-height:1;display:block}
@@ -146,35 +157,48 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .dayhead h2{font-family:var(--display);font-size:26px;font-weight:800;line-height:1;flex:1}
 .datepick{position:relative}
 .datepick input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.fill-chips{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 10px}
+.fill-chips button{padding:6px 10px;border-radius:8px;border:1px solid var(--border2);font-size:13px;font-weight:600}
 
-/* ── Client home ── */
+/* Client home */
 .announce{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
 .announce-tag{font-size:12px;font-weight:700;color:var(--accent);display:flex;gap:6px;align-items:center;margin-bottom:6px}
 .announce-tag svg{width:14px;height:14px}
 .announce p{font-size:14.5px;line-height:1.5}
+.nudge{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;font-size:13.5px}
+.nudge svg{color:var(--accent);width:22px;height:22px}
+.nudge p{flex:1;color:var(--text2)} .nudge b{color:var(--text)}
+.nudge .btn{width:auto;margin:0;padding:9px 14px;font-size:13.5px}
 .hint{font-size:13px;color:var(--text2);text-align:center;padding:12px 8px;line-height:1.5}
+.badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px}
+.msg-btn{position:relative}
+.msg-btn .badge{position:static;margin-left:4px}
 
-/* ── Clients list ── */
+/* Lists */
 .search{position:relative;margin-bottom:10px}
-.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3)}
+.search > svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);z-index:1}
 .search input{padding-left:38px}
 .crow{width:100%;display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--border);text-align:left}
 .crow:last-child{border-bottom:0}
-.avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0}
 .crow-body{flex:1;min-width:0;display:flex;flex-direction:column}
-.crow-body small{color:var(--text3);font-size:12px}
+.crow-body b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crow-body small{color:var(--text3);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crow-body.unread b,.crow-body.unread small{color:var(--text);font-weight:650}
+.crow-end{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:11.5px;color:var(--text3)}
+.count{min-width:20px;height:20px;border-radius:10px;background:var(--accent);color:var(--ink);font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 6px}
 .tag{font-size:10.5px;font-weight:650;padding:3px 8px;border-radius:20px;background:var(--bg3);color:var(--text3);white-space:nowrap}
 .tag.on{background:rgba(63,174,120,.15);color:var(--green)}
 
-/* ── Options ── */
+/* Options */
+.code-card{text-align:center}
+.code-big{font-family:var(--display);font-size:52px;font-weight:800;letter-spacing:.12em;color:var(--accent);line-height:1;margin:6px 0 4px}
 .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
 .swatch{border:2px solid var(--border);border-radius:12px;padding:8px;text-align:left;font-size:12px;font-weight:600}
 .swatch.on{border-color:var(--accent)}
 .swatch i{display:flex;height:34px;border-radius:7px;overflow:hidden;margin-bottom:6px;border:1px solid var(--border)}
 .swatch i span{flex:1}
-.logo-edit{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.logo-edit .btns{flex:1;display:flex;flex-direction:column;gap:6px}
-.logo-edit .btn-ghost{margin:0;padding:9px}
+.pic-edit{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pic-edit .btns{flex:1;display:flex;flex-direction:column;gap:6px}
 .hrow{display:grid;grid-template-columns:auto 32px minmax(0,1fr) 8px minmax(0,1fr);align-items:center;gap:7px;padding:5px 0}
 .hrow input[type=time]{padding:6px 8px;font-size:14px;min-height:40px;min-width:0}
 .hrow.closed input[type=time]{opacity:.25;pointer-events:none}
@@ -182,30 +206,44 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .srow:last-child{border-bottom:0}
 .srow-body{flex:1;min-width:0}
 .srow-body b{display:block;font-weight:600}
-.srow-body small{color:var(--text3);font-size:12px}
-.linkbox{font-size:13px;background:var(--bg3);border-radius:10px;padding:10px 12px;word-break:break-all;color:var(--text2);margin-bottom:4px}
+.srow-body small{color:var(--text3);font-size:12.5px}
+.linkbox{font-size:13px;background:var(--bg3);border-radius:10px;padding:10px 12px;word-break:break-all;color:var(--text2);margin:8px 0 4px;text-align:left}
 
-/* ── Bottom nav ── */
+/* Bottom nav */
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:6px 0 calc(var(--sb) + 6px)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;color:var(--text3);font-size:10.5px;font-weight:600;position:relative}
 .nav-item svg{width:22px;height:22px}
 .nav-item.on{color:var(--accent)}
-.nav-badge{position:absolute;top:0;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--amber);color:#1a1000;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px}
+.nav-badge{position:absolute;top:0;left:calc(50% + 5px);min-width:17px;height:17px;border-radius:9px;background:var(--amber);color:#1a1000;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px}
 .fab{position:fixed;right:18px;bottom:calc(var(--sb) + 80px);width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:55}
 .fab svg{width:26px;height:26px;stroke-width:2.5}
 
-/* ── Bottom sheet ── */
+/* Sheet */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:auto}
-.sheet{background:var(--bg2);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:10px 20px calc(var(--sb) + 22px);max-height:90vh;overflow-y:auto;transform:translateY(40px);transition:transform .25s;position:relative}
+.sheet{background:var(--bg2);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:10px 20px calc(var(--sb) + 22px);max-height:92vh;overflow-y:auto;transform:translateY(40px);transition:transform .25s;position:relative}
 .overlay.open .sheet{transform:none}
 .handle{width:38px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 16px}
 .sheet h2{font-size:19px;font-weight:750;margin-bottom:4px;padding-right:40px}
 .sheet .sub{color:var(--text2);font-size:13px;margin-bottom:14px}
 .sheet-x{position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--bg3);color:var(--text2);display:grid;place-items:center}
 .preview{background:var(--bg3);border-radius:14px;padding:14px;font-size:14px;line-height:1.55;margin-bottom:10px}
+.sheet-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-right:40px}
+.sheet-head h2{margin:0;padding:0}
+.sheet-head .sub{margin:2px 0 0}
 
-/* ── Toast ── */
+/* Chat */
+.chat-list{height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:10px 2px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:8px -4px 10px}
+.bubble{max-width:80%;align-self:flex-start;background:var(--bg3);padding:9px 12px;border-radius:16px 16px 16px 4px}
+.bubble.me{align-self:flex-end;background:var(--accent);color:var(--ink);border-radius:16px 16px 4px 16px}
+.bubble p{font-size:14.5px;line-height:1.4;white-space:pre-wrap;word-wrap:break-word}
+.bubble small{display:block;font-size:10.5px;opacity:.65;margin-top:3px}
+.chat-input{display:flex;gap:8px;align-items:flex-end}
+.chat-input textarea{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:10px 14px;font-size:16px;resize:none;max-height:120px;min-height:44px}
+.chat-input textarea:focus{outline:none;border-color:var(--accent)}
+.send{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--ink);display:grid;place-items:center;flex-shrink:0}
+
+/* Toast */
 .toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-30px);opacity:0;background:var(--bg3);color:var(--text);border:1px solid var(--border2);padding:10px 18px;border-radius:24px;font-size:13.5px;font-weight:600;z-index:200;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.ok{color:var(--green)} .toast.err{color:var(--red)}
@@ -216,46 +254,23 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 </head>
 <body>
 
-<!-- ═══ Not configured ═══ -->
 <div class="view" id="v-cfg">
   <div class="center-msg">
     <h1>Almost there</h1>
-    <p class="muted">Open <code>index.html</code> and paste your Supabase project URL and public key into <code>SUPABASE_URL</code> and <code>SUPABASE_KEY</code> near the top of the script.</p>
+    <p class="muted">Open <code>index.html</code> and fill in <code>SUPABASE_URL</code> and <code>SUPABASE_KEY</code> near the top of the script.</p>
   </div>
 </div>
 
-<!-- ═══ Loading / error ═══ -->
-<div class="view on" id="v-loading">
-  <div class="center-msg"><p class="muted" id="loading-msg">Loading…</p></div>
-</div>
+<div class="view on" id="v-loading"><div class="center-msg"><p class="muted" id="loading-msg">Loading…</p></div></div>
 
-<!-- ═══ First-run owner setup ═══ -->
-<div class="view" id="v-setup">
-  <div class="login">
-    <div class="hero">
-      <div class="logo-slot big"></div>
-      <h1>Set up your shop</h1>
-      <p>Create the owner account. You'll use this phone number and PIN to sign in.</p>
-    </div>
-    <div class="field"><label for="su-shop">Shop name</label><input id="su-shop" placeholder="e.g. Fresh Cuts Barbershop"></div>
-    <div class="field"><label for="su-name">Your name</label><input id="su-name" autocomplete="name"></div>
-    <div class="field"><label for="su-phone">Your phone number</label><input id="su-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
-    <div class="row2">
-      <div class="field"><label for="su-pin">PIN (4–8 digits)</label><input id="su-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
-      <div class="field"><label for="su-pin2">Confirm PIN</label><input id="su-pin2" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
-    </div>
-    <button class="btn" onclick="setupOwner(this)">Create shop</button>
-  </div>
-</div>
-
-<!-- ═══ Sign in (one link, two tabs) ═══ -->
+<!-- ═══ Sign in ═══ -->
 <div class="view" id="v-login">
   <div class="top"><div class="banner-slot"></div></div>
   <div class="login">
     <div class="hero">
       <div class="logo-slot big"></div>
       <h1 class="shop-name">Cutting Board</h1>
-      <p>Book your next cut</p>
+      <p id="login-sub">Book with your barber</p>
     </div>
     <div class="seg" role="tablist">
       <button id="seg-client" class="on" role="tab" onclick="setLoginTab('client')">Client</button>
@@ -268,18 +283,33 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <button class="btn" id="lc-go" onclick="clientContinue(this)">Continue</button>
       </div>
       <div id="lc-step2" hidden>
-        <p class="muted small" style="margin-bottom:12px">First time here? Add your name so the shop knows who's booking.</p>
-        <div class="field"><label for="lc-name">Your name</label><input id="lc-name" autocomplete="name" onkeydown="if(event.key==='Enter')clientRegister($('#lc-reg'))"></div>
-        <label class="check"><input type="checkbox" id="lc-sub" checked> Text me when the shop posts openings</label>
+        <p class="muted small" style="margin-bottom:12px">New here? Add your name and your barber's shop code.</p>
+        <div class="field"><label for="lc-name">Your name</label><input id="lc-name" autocomplete="name"></div>
+        <div class="field"><label for="lc-code">Shop code</label><input id="lc-code" class="code-input" maxlength="6" autocomplete="off" placeholder="ABC123" onkeydown="if(event.key==='Enter')clientRegister($('#lc-reg'))"></div>
+        <label class="check"><input type="checkbox" id="lc-sub" checked> Let the shop send me openings and announcements</label>
         <button class="btn" id="lc-reg" onclick="clientRegister(this)">Create account</button>
-        <button class="back" onclick="resetClientLogin()">Use a different number</button>
+        <button class="linkish" onclick="resetClientLogin()">Use a different number</button>
       </div>
     </div>
 
     <div id="login-barber" hidden>
-      <div class="field"><label for="lb-phone">Phone number</label><input id="lb-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
-      <div class="field"><label for="lb-pin">PIN</label><input id="lb-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="current-password" onkeydown="if(event.key==='Enter')barberSignIn($('#lb-go'))"></div>
-      <button class="btn" id="lb-go" onclick="barberSignIn(this)">Sign in</button>
+      <div id="lb-signin">
+        <div class="field"><label for="lb-phone">Phone number</label><input id="lb-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
+        <div class="field"><label for="lb-pin">PIN</label><input id="lb-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="current-password" onkeydown="if(event.key==='Enter')barberSignIn($('#lb-go'))"></div>
+        <button class="btn" id="lb-go" onclick="barberSignIn(this)">Sign in</button>
+        <button class="linkish" onclick="showCreateShop(true)">Opening a new shop? <b>Create one</b></button>
+      </div>
+      <div id="lb-create" hidden>
+        <div class="field"><label for="cs-shop">Shop name</label><input id="cs-shop" maxlength="40" placeholder="e.g. Fresh Cuts Barbershop"></div>
+        <div class="field"><label for="cs-name">Your name</label><input id="cs-name" autocomplete="name"></div>
+        <div class="field"><label for="cs-phone">Your phone number</label><input id="cs-phone" class="phone" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
+        <div class="row2">
+          <div class="field"><label for="cs-pin">PIN (4–8 digits)</label><input id="cs-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
+          <div class="field"><label for="cs-pin2">Confirm PIN</label><input id="cs-pin2" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></div>
+        </div>
+        <button class="btn" onclick="createShop(this)">Create shop</button>
+        <button class="linkish" onclick="showCreateShop(false)">Already have a shop? <b>Sign in</b></button>
+      </div>
     </div>
   </div>
 </div>
@@ -290,32 +320,53 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
     <div class="banner-slot"></div>
     <header class="topbar">
       <div class="logo-slot"></div>
-      <div class="tb-text"><div class="tb-title shop-name"></div><div class="tb-sub" id="c-hello"></div></div>
+      <button class="tb-text" id="c-shop-btn" onclick="shopSwitchSheet()">
+        <div class="tb-title"><span class="shop-name"></span><span id="c-switch-icon" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+        <div class="tb-sub" id="c-hello"></div>
+      </button>
+      <button id="c-me-btn" onclick="clientProfileSheet()" aria-label="Your profile"></button>
     </header>
   </div>
   <main class="page">
-    <div id="c-announce"></div>
-
-    <section class="card">
-      <h3>Book an appointment</h3>
-      <div class="field"><label for="c-service">Service</label><select id="c-service"></select></div>
-      <div class="field" style="margin-bottom:0"><label>Day</label></div>
-      <div class="strip" id="c-dates"></div>
-      <div id="c-slots"></div>
-      <button class="btn" id="c-book" disabled onclick="clientBook(this)">Pick a time</button>
-    </section>
-
-    <div class="section-title">Your appointments</div>
-    <div id="c-appts"></div>
-
-    <section class="card" style="margin-top:16px">
-      <div class="srow">
-        <div class="srow-body"><b>Text me openings</b><small>Get a text when the shop posts open times</small></div>
-        <label class="switch"><input type="checkbox" id="c-sub" onchange="clientToggleSub(this)"><span></span></label>
+    <div id="c-noshop" hidden>
+      <div class="card">
+        <h3>Join a shop</h3>
+        <p class="muted small" style="margin-bottom:12px">Ask your barber for their 6-character shop code.</p>
+        <div class="field"><input id="c-join-code0" class="code-input" maxlength="6" placeholder="ABC123"></div>
+        <button class="btn" onclick="joinShop(this, '#c-join-code0')">Join shop</button>
       </div>
-    </section>
-    <div id="c-install"></div>
-    <button class="btn-ghost" onclick="clientSignOut()">Sign out</button>
+    </div>
+    <div id="c-main">
+      <div id="c-nudge"></div>
+      <div id="c-announce"></div>
+      <div class="section-title" id="c-appts-title" hidden>Your appointments</div>
+      <div id="c-appts"></div>
+
+      <section class="card" style="margin-top:12px">
+        <h3>Book an appointment</h3>
+        <div class="field"><label for="c-service">Service</label><select id="c-service"></select></div>
+        <div class="field" style="margin-bottom:0"><label>Day</label></div>
+        <div class="strip" id="c-dates"></div>
+        <div id="c-slots"></div>
+        <button class="btn" id="c-book" disabled onclick="clientBook(this)">Pick a time</button>
+      </section>
+
+      <button class="btn-ghost msg-btn" onclick="openChat({mode:'client'})" style="margin-bottom:12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Message the shop <span class="badge" id="c-unread" hidden></span>
+      </button>
+
+      <section class="card">
+        <div class="srow" style="padding-top:0">
+          <div class="srow-body"><b>Openings and announcements</b><small>Get the shop's blast messages</small></div>
+          <label class="switch"><input type="checkbox" id="c-sub" onchange="clientToggleSub(this)"><span></span></label>
+        </div>
+        <div class="srow" style="padding-bottom:0" id="c-push-row">
+          <div class="srow-body"><b>Notifications on this phone</b><small>Confirmations, changes and messages</small></div>
+          <label class="switch"><input type="checkbox" id="c-push" onchange="togglePush(this,'client')"><span></span></label>
+        </div>
+      </section>
+    </div>
   </main>
 </div>
 
@@ -325,13 +376,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
     <header class="topbar">
       <div class="logo-slot"></div>
       <div class="tb-text"><div class="tb-title shop-name"></div><div class="tb-sub" id="b-sub"></div></div>
-      <button class="ibtn" onclick="loadAppts();loadClients();toast('Refreshed')" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
+      <button class="ibtn" onclick="refreshBarber(true)" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
     </header>
   </div>
 
   <main class="page">
-    <!-- Schedule -->
     <section class="screen" id="bs-schedule">
+      <div id="b-nudge"></div>
       <div class="strip" id="b-strip"></div>
       <div class="dayhead">
         <h2 id="b-dayhead"></h2>
@@ -342,11 +393,24 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
       <div id="b-list" style="margin-top:12px"></div>
     </section>
 
-    <!-- Blast -->
+    <section class="screen" id="bs-messages">
+      <div class="card" style="padding:4px 14px"><div id="b-threads"></div></div>
+      <p class="hint">To message someone new, open them from Clients.</p>
+    </section>
+
+    <section class="screen" id="bs-clients">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <div class="field" style="margin:0"><input id="cl-q" placeholder="Search name or number" oninput="renderClients()"></div>
+      </div>
+      <div class="card" style="padding:4px 14px"><div id="cl-list"></div></div>
+      <button class="btn-ghost" onclick="addClientSheet()">Add client</button>
+    </section>
+
     <section class="screen" id="bs-blast">
       <div class="card">
         <h3>Send a blast <span class="right" id="bl-count"></span></h3>
-        <p class="muted small" style="margin-bottom:12px">Texts every client who opted in, and shows at the top of the client app for 3 days.</p>
+        <p class="muted small" style="margin-bottom:12px">Notifies every client who opted in, and shows at the top of their app for 3 days.</p>
         <div class="field"><label for="bl-date">Day</label><input type="date" id="bl-date" onchange="blastDateChanged()"></div>
         <div class="row2">
           <div class="field"><label for="bl-open">Open from</label><input type="time" id="bl-open"></div>
@@ -357,24 +421,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
       </div>
     </section>
 
-    <!-- Clients -->
-    <section class="screen" id="bs-clients">
-      <div class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <div class="field" style="margin:0"><input id="cl-q" placeholder="Search name or number" oninput="renderClients()"></div>
-      </div>
-      <div class="card" style="padding:4px 14px">
-        <div id="cl-list"></div>
-      </div>
-      <button class="btn-ghost" onclick="clientSheet('')">Add client</button>
-    </section>
-
-    <!-- Options -->
     <section class="screen" id="bs-options">
-      <div class="card">
-        <h3>Client link</h3>
+      <div class="card code-card">
+        <h3 style="justify-content:center;margin-bottom:0">Your shop code</h3>
+        <div class="code-big" id="o-code"></div>
+        <p class="muted small">New clients enter this code to join your shop. Or send them this link, which fills it in:</p>
         <div class="linkbox" id="o-link"></div>
         <div class="row2"><button class="btn-ghost" onclick="copyLink()">Copy link</button><button class="btn-ghost" onclick="shareLink()">Share</button></div>
+        <button class="btn-ghost owner-only" style="border:0;color:var(--text2);font-size:13px" onclick="newCode()">Make a new code</button>
       </div>
 
       <div class="owner-only">
@@ -382,11 +436,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <div class="card">
           <div class="field"><label for="o-name">Shop name</label><input id="o-name" maxlength="40"></div>
           <div class="field" style="margin-bottom:6px"><label>Shop picture</label></div>
-          <div class="logo-edit">
+          <div class="pic-edit">
             <div class="logo-slot big" id="o-logo-prev"></div>
             <div class="btns">
-              <label class="btn-ghost">Choose picture<input type="file" accept="image/*" hidden onchange="pickLogo(this)"></label>
-              <button class="btn-ghost" onclick="draft.logo=null;renderLogoPrev()">Remove picture</button>
+              <label class="btn-ghost slim">Choose picture<input type="file" accept="image/*" hidden onchange="pickImage(this,512,d=>{draft.logo=d;renderLogoPrev()})"></label>
+              <button class="btn-ghost slim" onclick="draft.logo=null;renderLogoPrev()">Remove picture</button>
             </div>
           </div>
           <p class="muted small" style="margin-bottom:12px">Shows at the top of the app, and becomes the app icon when clients add it to their home screen.</p>
@@ -434,7 +488,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 
       <div class="section-title">Your account</div>
       <div class="card">
-        <div class="srow" style="padding-top:0"><div class="srow-body"><b id="o-me"></b><small id="o-me-role"></small></div></div>
+        <div class="pic-edit">
+          <span id="o-me-avatar"></span>
+          <div class="btns">
+            <label class="btn-ghost slim">Change photo<input type="file" accept="image/*" hidden onchange="pickImage(this,256,d=>{draft.avatar=d;renderMeAvatar()})"></label>
+            <button class="btn-ghost slim" onclick="draft.avatar=null;renderMeAvatar()">Remove photo</button>
+          </div>
+        </div>
+        <div class="field"><label for="o-me-name">Your name</label><input id="o-me-name" maxlength="40"></div>
+        <button class="btn" onclick="saveMe(this)">Save profile</button>
+        <div class="srow" id="b-push-row" style="margin-top:8px">
+          <div class="srow-body"><b>Notifications on this phone</b><small>New requests, cancellations and messages</small></div>
+          <label class="switch"><input type="checkbox" id="b-push" onchange="togglePush(this,'barber')"><span></span></label>
+        </div>
         <button class="btn-ghost" onclick="pinSheet()">Change PIN</button>
         <button class="btn-ghost danger" onclick="barberSignOut()">Sign out</button>
       </div>
@@ -445,13 +511,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 
   <nav class="bottom-nav">
     <button class="nav-item" data-t="schedule" onclick="bTab('schedule')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="nav-badge" id="nav-pending" hidden></span></button>
-    <button class="nav-item" data-t="blast" onclick="bTab('blast')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Blast</button>
+    <button class="nav-item" data-t="messages" onclick="bTab('messages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="nav-badge" id="nav-unread" hidden></span></button>
     <button class="nav-item" data-t="clients" onclick="bTab('clients')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</button>
+    <button class="nav-item" data-t="blast" onclick="bTab('blast')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Blast</button>
     <button class="nav-item" data-t="options" onclick="bTab('options')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>Options</button>
   </nav>
 </div>
 
-<!-- Bottom sheet -->
 <div class="overlay" id="sheet" onclick="if(event.target===this)closeSheet()">
   <div class="sheet" role="dialog" aria-modal="true">
     <div class="handle"></div>
@@ -464,13 +530,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 
 <script>
 // ═════════════════════════════════════════════════════════════
-//  CONFIG — paste these from Supabase → Project Settings → API
-//  (the public "anon" / "publishable" key is safe to put here)
+//  CONFIG
+//  SUPABASE_URL / SUPABASE_KEY: Supabase → Project Settings → API
+//    (use the anon / publishable key, never service_role)
+//  VAPID_PUBLIC_KEY: the PUBLIC half of your push keys (see SETUP.md).
+//    Leave as-is to run without notifications.
 // ═════════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://zvijdvhvmnnigyjvwzuo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aWpkdmh2bW5uaWd5anZ3enVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjE5MTgsImV4cCI6MjEwNzQ5NzkxOH0.QxjvU5p-aoXdpJC3D6gcJtMnWsCJjU29mbLrDy4cZkM';
+const VAPID_PUBLIC_KEY = 'YOUR-VAPID-PUBLIC-KEY';
 
-// ─── Themes ───────────────────────────────────────────────────
 const THEMES = {
   gold:     { label:'Gold & black', bg:'#0f0f0f', bg2:'#171717', bg3:'#242424', card:'#1b1b1b', text:'#f2efe9', text2:'#a29e98', text3:'#6f6c68', accent:'#c9a84c', ink:'#141005', dark:true },
   pole:     { label:'Barber pole',  bg:'#f4f1ec', bg2:'#ffffff', bg3:'#e9e4dc', card:'#ffffff', text:'#1b1f2a', text2:'#555b68', text3:'#8a8f99', accent:'#c8102e', ink:'#ffffff', dark:false },
@@ -480,35 +549,39 @@ const THEMES = {
   clean:    { label:'Clean light',  bg:'#f3f3f2', bg2:'#ffffff', bg3:'#e6e6e4', card:'#ffffff', text:'#17171a', text2:'#5a5a60', text3:'#909096', accent:'#1d1d21', ink:'#ffffff', dark:false },
 };
 
-// ─── Icons ────────────────────────────────────────────────────
 const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 const IC = {
   check: I('<path d="M20 6L9 17l-5-5"/>'),
   x: I('<path d="M18 6L6 18M6 6l12 12"/>'),
   msg: I('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
   phone: I('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
+  sms: I('<path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/>'),
   cal: I('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
+  move: I('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16h6M13 14l2 2-2 2"/>'),
   send: I('<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>'),
   plus: I('<path d="M12 5v14M5 12h14"/>'),
   trash: I('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
+  bell: I('<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>'),
 };
 
 // ─── State ────────────────────────────────────────────────────
-let shop = null;
-let barber = readJSON('cb_barber');
-let client = null;
+const urlCode = (new URLSearchParams(location.search).get('shop') || '').toUpperCase().trim();
+let shop = null;            // the shop currently on screen (branding, hours, services)
+let B = null;               // barber: { token, barber, shop }
+let C = null;               // client: { token, client, shops, shopId, view }
 const cSel = { date:null, time:null };
-let bDate = today(), bAnchor = addDays(today(), -1), bAppts = [], bClients = [], pollT = null;
-let draft = {};
+let bDate, bAnchor, bAppts = [], bClients = [], bThreads = [], pollT = null;
+let draft = {}, chat = null, chatTimer = null;
 
-// ─── Small helpers ────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────
 const $ = s => document.querySelector(s);
-function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } }
 function store(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)); } catch {} }
+function load(k){ try { return localStorage.getItem(k); } catch { return null; } }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const digits = s => { let d = String(s || '').replace(/\D/g, ''); if (d.length === 11 && d[0] === '1') d = d.slice(1); return d.slice(-10); };
 const fmtPhone = p => { const d = digits(p); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (p || ''); };
 const first = n => String(n || '').trim().split(/\s+/)[0];
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 function initials(n){ return String(n || 'CB').trim().split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase(); }
 function ds(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function today(){ return ds(new Date()); }
@@ -518,15 +591,23 @@ const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m;
 const fromMin = m => `${String(Math.floor(m / 60)).padStart(2,'0')}:${String(m % 60).padStart(2,'0')}`;
 function fmt12(t){ const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2,'0') : ''} ${h >= 12 ? 'PM' : 'AM'}`; }
 const fmtDay = (s, o = { weekday:'short', month:'short', day:'numeric' }) => new Date(s + 'T00:00:00').toLocaleDateString('en-US', o);
+const whenStr = (d, t) => `${fmtDay(d)} at ${fmt12(t)}`;
 function timeAgo(iso){ const m = Math.round((Date.now() - new Date(iso)) / 60000); if (m < 1) return 'just now'; if (m < 60) return m + ' min ago'; const h = Math.round(m / 60); if (h < 24) return h + 'h ago'; return Math.round(h / 24) + 'd ago'; }
+function fmtStamp(iso){ const d = new Date(iso); const t = d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }); return ds(d) === today() ? t : d.toLocaleDateString('en-US', { month:'short', day:'numeric' }) + ', ' + t; }
+const avatarHTML = (name, src, cls = '') => `<span class="avatar ${cls}">${src ? `<img src="${src}" alt="">` : esc(initials(name))}</span>`;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 
 function toast(msg, type = ''){
   const el = $('#toast'); el.textContent = msg; el.className = 'toast show ' + type;
-  clearTimeout(toast.t); toast.t = setTimeout(() => el.className = 'toast', 2800);
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.className = 'toast', 3000);
 }
 function show(v){ document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v)); window.scrollTo(0, 0); }
 function openSheet(html){ $('#sheet-body').innerHTML = html; $('#sheet').classList.add('open'); }
-function closeSheet(){ $('#sheet').classList.remove('open'); }
+function closeSheet(){
+  $('#sheet').classList.remove('open');
+  if (chat) { chat = null; clearInterval(chatTimer); if (B) loadThreads(); if (C && C.shopId) refreshClientShop(); }
+}
 async function busy(btn, fn){
   if (!btn || btn.disabled) return;
   const label = btn.innerHTML; btn.disabled = true; btn.textContent = 'Working…';
@@ -534,18 +615,34 @@ async function busy(btn, fn){
   catch (e) { toast(e.message, 'err'); }
   finally { btn.disabled = false; if (btn.textContent === 'Working…') btn.innerHTML = label; }
 }
-
-// Phone input mask: (555) 555-5555
 document.addEventListener('input', e => {
-  const el = e.target; if (!el.classList || !el.classList.contains('phone')) return;
-  let d = el.value.replace(/\D/g, ''); if (d.length > 10 && d[0] === '1') d = d.slice(1); d = d.slice(0, 10);
-  el.value = d.length > 6 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0,3)}) ${d.slice(3)}` : d;
+  const el = e.target; if (!el.classList) return;
+  if (el.classList.contains('phone')) {
+    let d = el.value.replace(/\D/g, ''); if (d.length > 10 && d[0] === '1') d = d.slice(1); d = d.slice(0, 10);
+    el.value = d.length > 6 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0,3)}) ${d.slice(3)}` : d;
+  }
+  if (el.classList.contains('code-input')) el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
 });
+
+// Resize a chosen photo to a square JPEG data URL
+function pickImage(input, size, cb){
+  const file = input.files && input.files[0]; input.value = ''; if (!file) return;
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d');
+    x.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#000'; x.fillRect(0, 0, size, size);
+    const s = Math.min(img.width, img.height);
+    x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+    URL.revokeObjectURL(url); cb(c.toDataURL('image/jpeg', size > 300 ? 0.86 : 0.82));
+  };
+  img.onerror = () => toast("That file couldn't be opened as a picture", 'err');
+  img.src = url;
+}
 
 // ─── Supabase ─────────────────────────────────────────────────
 function apiHeaders(){
   const h = { 'Content-Type':'application/json', apikey: SUPABASE_KEY };
-  if (SUPABASE_KEY.startsWith('eyJ')) h.Authorization = 'Bearer ' + SUPABASE_KEY; // legacy anon key
+  if (SUPABASE_KEY.startsWith('eyJ')) h.Authorization = 'Bearer ' + SUPABASE_KEY;
   return h;
 }
 async function rpc(fn, args = {}){
@@ -556,13 +653,14 @@ async function rpc(fn, args = {}){
   let data = null; try { data = txt ? JSON.parse(txt) : null; } catch { data = txt; }
   if (!r.ok) {
     const msg = (data && data.message) || `Something went wrong (${r.status})`;
-    if (msg.includes('SESSION_EXPIRED')) { forceBarberOut(); throw new Error('Signed out. Sign in again.'); }
+    if (msg.includes('CLIENT_SESSION_EXPIRED')) { clientOut(); throw new Error('Signed out. Sign in again.'); }
+    if (msg.includes('SESSION_EXPIRED')) { barberOut(); throw new Error('Signed out. Sign in again.'); }
     throw new Error(msg);
   }
   return data;
 }
 
-// ─── Shop look: theme, name, picture, banner, app icon ────────
+// ─── Shop look ────────────────────────────────────────────────
 function hexA(h, a){ const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${n >> 8 & 255},${n & 255},${a})`; }
 function applyTheme(key){
   const t = THEMES[key] || THEMES.gold, s = document.documentElement.style;
@@ -598,89 +696,131 @@ function initialsIcon(t){
   return iconCache[key] = c.toDataURL('image/png');
 }
 function applyIcon(){
-  const t = THEMES[shop.theme] || THEMES.gold;
-  const icon = shop.logo || initialsIcon(t);
+  const t = THEMES[shop.theme] || THEMES.gold, icon = shop.logo || initialsIcon(t);
   $('link[rel=apple-touch-icon]').href = icon;
   $('link[rel=icon]').href = icon;
   $('meta[name=apple-mobile-web-app-title]').content = shop.name;
   const base = location.origin + location.pathname.replace(/[^/]*$/, '');
   const type = icon.slice(5, icon.indexOf(';'));
-  const manifest = {
-    name: shop.name, short_name: shop.name.slice(0, 12), start_url: base, scope: base,
-    display: 'standalone', background_color: t.bg, theme_color: t.bg,
-    icons: [{ src: icon, sizes: '512x512', type, purpose: 'any' }, { src: icon, sizes: '192x192', type, purpose: 'any' }]
-  };
+  const manifest = { name: shop.name, short_name: shop.name.slice(0, 12), start_url: base, scope: base, display: 'standalone',
+    background_color: t.bg, theme_color: t.bg,
+    icons: [{ src: icon, sizes: '512x512', type, purpose: 'any' }, { src: icon, sizes: '192x192', type, purpose: 'any' }] };
   $('link[rel=manifest]').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }));
 }
-async function refreshShop(){
-  shop = await rpc('get_shop');
-  store('cb_shop', shop);
-  applyShop();
-  return shop;
+
+// ─── Notifications (free Web Push) ────────────────────────────
+const pushConfigured = () => VAPID_PUBLIC_KEY && !VAPID_PUBLIC_KEY.includes('YOUR-');
+const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+function b64ToU8(b64){ const p = '='.repeat((4 - b64.length % 4) % 4); const raw = atob((b64 + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(raw, c => c.charCodeAt(0)); }
+async function currentSub(){
+  if (!pushSupported()) return null;
+  const reg = await navigator.serviceWorker.getRegistration(); return reg ? reg.pushManager.getSubscription() : null;
 }
+async function enablePush(kind){
+  if (!pushConfigured()) { toast("Notifications aren't set up for this app yet", 'err'); return false; }
+  if (!pushSupported()) {
+    toast(isIOS && !isStandalone() ? 'On iPhone, add this app to your Home Screen first, then turn notifications on from there.' : "This browser can't receive notifications.", 'err');
+    return false;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') { toast('Notifications are blocked. Allow them in your phone settings.', 'err'); return false; }
+  const reg = await navigator.serviceWorker.ready;
+  const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC_KEY) });
+  const j = sub.toJSON();
+  await rpc(kind === 'barber' ? 'barber_save_push' : 'client_save_push',
+    { p_token: kind === 'barber' ? B.token : C.token, p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth });
+  toast('Notifications on', 'ok');
+  return true;
+}
+async function disablePush(silent){
+  const s = await currentSub();
+  if (s) { try { await rpc('delete_push', { p_endpoint: s.endpoint }); } catch {} await s.unsubscribe(); }
+  if (!silent) toast('Notifications off');
+}
+async function togglePush(el, kind){
+  const want = el.checked; el.disabled = true;
+  try { if (want) el.checked = await enablePush(kind); else await disablePush(); }
+  catch (e) { el.checked = !want; toast(e.message, 'err'); }
+  el.disabled = false;
+  if (kind === 'client') renderClientNudge(); else renderBarberNudge();
+}
+async function syncPushSwitch(sel, rowSel){
+  const row = $(rowSel); if (row) row.hidden = !pushConfigured();
+  const el = $(sel); if (el) el.checked = !!(await currentSub().catch(() => null));
+}
+async function pushNudgeHTML(kind){
+  if (!pushConfigured() || load('cb_nudge_' + kind) === 'off') return '';
+  if (pushSupported() && Notification.permission === 'granted' && await currentSub().catch(() => null)) return '';
+  const what = kind === 'client' ? 'when your barber confirms or changes your appointment' : 'when clients request appointments or message you';
+  if (isIOS && !isStandalone()) return `<div class="nudge">${IC.bell}<p><b>Want notifications?</b> On iPhone, tap Share, then Add to Home Screen, and open the app from there.</p><button class="ibtn" onclick="dismissNudge('${kind}')" aria-label="Dismiss">${IC.x}</button></div>`;
+  if (!pushSupported()) return '';
+  return `<div class="nudge">${IC.bell}<p><b>Get notified</b> ${what}.</p><button class="btn" onclick="nudgeOn(this,'${kind}')">Turn on</button></div>`;
+}
+function dismissNudge(kind){ store('cb_nudge_' + kind, 'off'); kind === 'client' ? renderClientNudge() : renderBarberNudge(); }
+async function nudgeOn(btn, kind){ await busy(btn, async () => { await enablePush(kind); }); kind === 'client' ? (renderClientNudge(), syncPushSwitch('#c-push', '#c-push-row')) : (renderBarberNudge(), syncPushSwitch('#b-push', '#b-push-row')); }
 
 // ─── Boot ─────────────────────────────────────────────────────
 async function boot(){
   if (SUPABASE_URL.includes('YOUR-') || SUPABASE_KEY.includes('YOUR-')) return show('cfg');
-  shop = readJSON('cb_shop');
-  if (shop) applyShop();
-  try { await refreshShop(); }
-  catch (e) { if (!shop) { $('#loading-msg').textContent = e.message; return; } }
-
-  if (!shop.has_owner) { $('#v-setup .logo-slot').innerHTML = logoHTML(); return show('setup'); }
-
-  if (barber) {
-    try { Object.assign(barber, await rpc('barber_me', { p_token: barber.token })); store('cb_barber', barber); return enterBarber(); }
-    catch { barber = null; store('cb_barber', null); }
+  const bt = load('cb_btoken');
+  if (bt) { try { await loadBarber(bt); return enterBarber(); } catch { store('cb_btoken', null); } }
+  const ct = load('cb_ctoken');
+  if (ct) {
+    try {
+      setClientBundle(await rpc('client_me', { p_token: ct }));
+      if (urlCode && !C.shops.some(s => s.code === urlCode)) {
+        try { const r = await rpc('client_join_shop', { p_token: C.token, p_code: urlCode }); setClientBundle(r.bundle); C.shopId = r.shop_id; } catch {}
+      }
+      return enterClient();
+    } catch { store('cb_ctoken', null); }
   }
-  const savedPhone = localStorage.getItem('cb_client');
-  if (savedPhone) {
-    try { const c = await rpc('client_login', { p_phone: savedPhone }); if (c) { client = c; return enterClient(); } } catch {}
-  }
-  show('login');
-}
-
-// ─── First-run setup ──────────────────────────────────────────
-async function setupOwner(btn){
-  const shopName = $('#su-shop').value.trim(), name = $('#su-name').value.trim(), phone = digits($('#su-phone').value);
-  const pin = $('#su-pin').value, pin2 = $('#su-pin2').value;
-  if (!shopName || !name) return toast('Enter the shop name and your name', 'err');
-  if (phone.length !== 10) return toast('Enter a 10-digit phone number', 'err');
-  if (!/^\d{4,8}$/.test(pin)) return toast('PIN must be 4 to 8 digits', 'err');
-  if (pin !== pin2) return toast("PINs don't match", 'err');
-  await busy(btn, async () => {
-    const r = await rpc('setup_owner', { p_shop_name: shopName, p_name: name, p_phone: phone, p_pin: pin });
-    barber = { token: r.token, name: r.name, is_owner: true }; store('cb_barber', barber);
-    await refreshShop();
-    toast('Shop created', 'ok');
-    enterBarber();
-  });
+  showLogin();
 }
 
 // ─── Sign in ──────────────────────────────────────────────────
+async function showLogin(){
+  let s = null;
+  if (urlCode) { try { s = await rpc('shop_by_code', { p_code: urlCode }); } catch {} }
+  shop = s || { name: 'Cutting Board', theme: 'gold' };
+  applyShop();
+  $('#login-sub').textContent = s ? 'Book your next cut' : 'Book with your barber';
+  $('#lc-code').value = s ? s.code : '';
+  resetClientLogin(); showCreateShop(false);
+  show('login');
+}
 function setLoginTab(t){
   $('#seg-client').classList.toggle('on', t === 'client');
   $('#seg-barber').classList.toggle('on', t === 'barber');
   $('#login-client').hidden = t !== 'client';
   $('#login-barber').hidden = t !== 'barber';
 }
-function resetClientLogin(){ $('#lc-step1').hidden = false; $('#lc-step2').hidden = true; $('#lc-name').value = ''; }
+function resetClientLogin(){ $('#lc-step1').hidden = false; $('#lc-step2').hidden = true; }
+function showCreateShop(on){ $('#lb-signin').hidden = on; $('#lb-create').hidden = !on; }
 async function clientContinue(btn){
   const p = digits($('#lc-phone').value);
   if (p.length !== 10) return toast('Enter your 10-digit phone number', 'err');
   await busy(btn, async () => {
-    const c = await rpc('client_login', { p_phone: p });
-    if (c) { client = c; store('cb_client', c.phone); enterClient(); }
-    else { $('#lc-step1').hidden = true; $('#lc-step2').hidden = false; $('#lc-name').focus(); }
+    const b = await rpc('client_login', { p_phone: p });
+    if (b) {
+      setClientBundle(b);
+      if (urlCode && !C.shops.some(s => s.code === urlCode)) {
+        try { const r = await rpc('client_join_shop', { p_token: C.token, p_code: urlCode }); setClientBundle(r.bundle); C.shopId = r.shop_id; } catch {}
+      }
+      enterClient();
+    } else {
+      $('#lc-step1').hidden = true; $('#lc-step2').hidden = false;
+      ($('#lc-code').value ? $('#lc-name') : $('#lc-name')).focus();
+    }
   });
 }
 async function clientRegister(btn){
-  const name = $('#lc-name').value.trim(), p = digits($('#lc-phone').value);
+  const name = $('#lc-name').value.trim(), p = digits($('#lc-phone').value), code = $('#lc-code').value.trim();
   if (!name) return toast('Enter your name', 'err');
+  if (code.length !== 6) return toast('Enter the 6-character shop code from your barber', 'err');
   await busy(btn, async () => {
-    client = await rpc('client_register', { p_name: name, p_phone: p, p_subscribed: $('#lc-sub').checked });
-    store('cb_client', client.phone);
-    toast(`Welcome, ${first(client.name)}`, 'ok');
+    setClientBundle(await rpc('client_register', { p_name: name, p_phone: p, p_code: code, p_subscribed: $('#lc-sub').checked }));
+    C.shopId = (C.shops.find(s => s.code === code.toUpperCase()) || C.shops[0] || {}).id;
+    toast(`Welcome, ${first(C.client.name)}`, 'ok');
     enterClient();
   });
 }
@@ -691,28 +831,72 @@ async function barberSignIn(btn){
   await busy(btn, async () => {
     const r = await rpc('barber_login', { p_phone: p, p_pin: pin });
     if (!r.ok) throw new Error(r.error);
-    barber = { token: r.token, name: r.name, is_owner: r.is_owner }; store('cb_barber', barber);
     $('#lb-pin').value = '';
-    enterBarber();
+    await loadBarber(r.token); enterBarber();
+  });
+}
+async function createShop(btn){
+  const shopName = $('#cs-shop').value.trim(), name = $('#cs-name').value.trim(), phone = digits($('#cs-phone').value);
+  const pin = $('#cs-pin').value;
+  if (!shopName || !name) return toast('Enter the shop name and your name', 'err');
+  if (phone.length !== 10) return toast('Enter a 10-digit phone number', 'err');
+  if (!/^\d{4,8}$/.test(pin)) return toast('PIN must be 4 to 8 digits', 'err');
+  if (pin !== $('#cs-pin2').value) return toast("PINs don't match", 'err');
+  await busy(btn, async () => {
+    const r = await rpc('create_shop', { p_shop_name: shopName, p_name: name, p_phone: phone, p_pin: pin });
+    await loadBarber(r.token); enterBarber(); bTab('options');
+    toast(`Shop created. Your code is ${B.shop.code}`, 'ok');
   });
 }
 
-// ═════════════════════════ CLIENT SIDE ═════════════════════════
-function enterClient(){
+// ═════════════════════════ CLIENT ═════════════════════════════
+function setClientBundle(b){ C = { ...(C || {}), token: b.token, client: b.client, shops: b.shops }; store('cb_ctoken', b.token); }
+function clientOut(){ C = null; store('cb_ctoken', null); closeSheet(); showLogin(); }
+async function clientSignOut(){ try { await disablePush(true); } catch {} try { await rpc('client_logout', { p_token: C.token }); } catch {} clientOut(); setLoginTab('client'); }
+
+async function enterClient(){
+  const saved = load('cb_cshop');
+  if (!C.shopId || !C.shops.some(s => s.id === C.shopId))
+    C.shopId = (C.shops.find(s => s.id === saved) || C.shops[0] || {}).id || null;
   show('client');
-  $('#c-hello').textContent = `Hi, ${first(client.name)}`;
-  $('#c-sub').checked = !!client.subscribed;
-  $('#c-service').innerHTML = (shop.services || []).map(s => `<option>${esc(s)}</option>`).join('');
-  cSel.time = null;
-  renderClientDates();
-  loadClientAppts();
-  loadAnnouncement();
-  renderInstall();
+  renderClientHeader();
+  $('#c-noshop').hidden = !!C.shopId; $('#c-main').hidden = !C.shopId;
+  if (!C.shopId) { shop = { name: 'Cutting Board', theme: 'gold' }; applyShop(); return; }
+  await loadClientShop();
+  syncPushSwitch('#c-push', '#c-push-row');
 }
-function centerChip(sel){
-  const strip = $(sel), on = strip && strip.querySelector('.chip.on'); if (!on) return;
-  const sr = strip.getBoundingClientRect(), r = on.getBoundingClientRect();
-  strip.scrollLeft += (r.left - sr.left) - (sr.width - r.width) / 2;
+function renderClientHeader(){
+  $('#c-hello').textContent = `Hi, ${first(C.client.name)}`;
+  $('#c-me-btn').innerHTML = avatarHTML(C.client.name, C.client.avatar);
+  $('#c-switch-icon').hidden = C.shops.length < 2;
+}
+async function loadClientShop(){
+  store('cb_cshop', C.shopId);
+  try {
+    C.view = await rpc('client_shop', { p_token: C.token, p_shop: C.shopId });
+  } catch (e) { toast(e.message, 'err'); return; }
+  shop = C.view.shop; applyShop();
+  $('#c-sub').checked = !!C.view.subscribed;
+  $('#c-service').innerHTML = (shop.services || []).map(s => `<option>${esc(s)}</option>`).join('');
+  renderAnnouncement(); renderUnread(); renderClientNudge();
+  cSel.time = null; cSel.date = null;
+  renderClientDates(); loadClientAppts();
+}
+async function refreshClientShop(){
+  if (!C || !C.shopId) return;
+  try {
+    C.view = await rpc('client_shop', { p_token: C.token, p_shop: C.shopId });
+    const themeChanged = shop.theme !== C.view.shop.theme || shop.logo !== C.view.shop.logo || shop.banner_text !== C.view.shop.banner_text || shop.banner_on !== C.view.shop.banner_on || shop.name !== C.view.shop.name;
+    shop = C.view.shop; if (themeChanged) applyShop();
+    renderAnnouncement(); renderUnread(); loadClientAppts();
+  } catch {}
+}
+function renderUnread(){ const n = C.view ? C.view.unread : 0, b = $('#c-unread'); b.hidden = !n; b.textContent = n; }
+async function renderClientNudge(){ $('#c-nudge').innerHTML = await pushNudgeHTML('client'); }
+function renderAnnouncement(){
+  const b = C.view && C.view.blast;
+  const text = b ? b.message.replace(/\n*Book( here)?: https?:\/\/\S+\s*$/i, '') : '';
+  $('#c-announce').innerHTML = b ? `<div class="announce"><div class="announce-tag">${IC.send} From the shop, ${timeAgo(b.created_at)}</div><p>${esc(text).replace(/\n/g, '<br>')}</p></div>` : '';
 }
 function slotsFor(date, taken = []){
   const h = shop.hours && shop.hours[dow(date)]; if (!h) return null;
@@ -726,6 +910,11 @@ function slotsFor(date, taken = []){
   return out;
 }
 const isOpenDay = d => { const s = slotsFor(d); return !!(s && s.length); };
+function centerChip(sel){
+  const strip = $(sel), on = strip && strip.querySelector('.chip.on'); if (!on) return;
+  const sr = strip.getBoundingClientRect(), r = on.getBoundingClientRect();
+  strip.scrollLeft += (r.left - sr.left) - (sr.width - r.width) / 2;
+}
 function renderClientDates(){
   const days = [...Array(21)].map((_, i) => addDays(today(), i));
   if (!cSel.date || !isOpenDay(cSel.date)) cSel.date = days.find(isOpenDay) || null;
@@ -745,7 +934,7 @@ async function loadClientSlots(){
   $('#c-slots').innerHTML = '<p class="muted small" style="margin:12px 0">Loading times…</p>';
   updateBookBtn();
   try {
-    const taken = await rpc('get_taken_slots', { p_date: d });
+    const taken = await rpc('client_taken_slots', { p_token: C.token, p_shop: C.shopId, p_date: d });
     if (id !== slotReq) return;
     const slots = slotsFor(d, taken) || [], free = slots.filter(s => s.free);
     $('#c-slots').innerHTML = slots.length
@@ -754,94 +943,176 @@ async function loadClientSlots(){
       : '<p class="muted small" style="margin:12px 0">No times left today.</p>';
   } catch (e) { $('#c-slots').innerHTML = `<p class="muted small" style="margin:12px 0">${esc(e.message)}</p>`; }
 }
-function pickSlot(t){
-  cSel.time = t;
-  document.querySelectorAll('#c-slots .slot').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  updateBookBtn();
-}
+function pickSlot(t){ cSel.time = t; document.querySelectorAll('#c-slots .slot').forEach(b => b.classList.toggle('on', b.dataset.t === t)); updateBookBtn(); }
 function updateBookBtn(){
   const b = $('#c-book'); b.disabled = !cSel.time;
-  b.textContent = cSel.time ? `Request ${fmtDay(cSel.date, { weekday:'short', month:'short', day:'numeric' })} at ${fmt12(cSel.time)}` : 'Pick a time';
+  b.textContent = cSel.time ? `Request ${whenStr(cSel.date, cSel.time)}` : 'Pick a time';
 }
 async function clientBook(btn){
   await busy(btn, async () => {
-    await rpc('client_request', { p_phone: client.phone, p_date: cSel.date, p_time: cSel.time, p_service: $('#c-service').value });
+    await rpc('client_request', { p_token: C.token, p_shop: C.shopId, p_date: cSel.date, p_time: cSel.time, p_service: $('#c-service').value });
     toast('Request sent. The shop will confirm it.', 'ok');
-    cSel.time = null;
-    loadClientAppts();
+    cSel.time = null; loadClientAppts();
   });
   loadClientSlots();
 }
-const statusLabel = s => ({ pending:'Waiting for the shop to confirm', confirmed:'Confirmed', cancelled:'Cancelled' }[s] || s);
+const cStatus = s => ({ pending:'Waiting for the shop', confirmed:'Confirmed', declined:'Not available', cancelled:'Cancelled', reschedule:'New time proposed' }[s] || s);
 async function loadClientAppts(){
   try {
-    const list = await rpc('client_appts', { p_phone: client.phone });
-    $('#c-appts').innerHTML = list.length ? list.map(a => `
+    const list = (await rpc('client_appts', { p_token: C.token, p_shop: C.shopId })).filter(a => a.date >= today() || a.status === 'reschedule');
+    $('#c-appts-title').hidden = !list.length;
+    $('#c-appts').innerHTML = list.map(a => `
       <div class="appt st-${a.status}">
-        <div class="appt-when"><b>${new Date(a.date + 'T00:00:00').getDate()}</b><small>${fmtDay(a.date, { month:'short' })}</small></div>
-        <div class="appt-body">
-          <div class="appt-name">${fmtDay(a.date, { weekday:'long' })}, ${fmt12(a.time)}</div>
-          <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${statusLabel(a.status)}</span></div>
+        <div class="appt-row">
+          <div class="appt-when"><b>${new Date(a.date + 'T00:00:00').getDate()}</b><small>${fmtDay(a.date, { month:'short' })}</small></div>
+          <div class="appt-body">
+            <div class="appt-name">${fmtDay(a.date, { weekday:'long' })}, ${fmt12(a.time)}</div>
+            <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${cStatus(a.status)}</span></div>
+          </div>
+          ${['pending','confirmed'].includes(a.status) ? `<button class="ibtn danger" onclick="clientCancel('${a.id}')" aria-label="Cancel appointment">${IC.x}</button>` : ''}
         </div>
-        ${a.status !== 'cancelled' ? `<button class="ibtn danger" onclick="clientCancel('${a.id}')" aria-label="Cancel appointment">${IC.x}</button>` : ''}
-      </div>`).join('')
-      : '<div class="empty" style="padding:20px">No upcoming appointments. Pick a time above.</div>';
-  } catch (e) { $('#c-appts').innerHTML = `<div class="empty" style="padding:20px">${esc(e.message)}</div>`; }
+        ${a.status === 'reschedule' ? `<div class="appt-extra">
+            The shop asked to move this to <b>${whenStr(a.proposed_date, a.proposed_time)}</b>.${a.note ? `<br><span class="muted">"${esc(a.note)}"</span>` : ''}
+            <div class="row2"><button class="btn-ghost slim" onclick="clientRespond(this,'${a.id}',false)">Decline</button><button class="btn slim" style="margin:0;padding:9px" onclick="clientRespond(this,'${a.id}',true)">Accept new time</button></div>
+          </div>` : ''}
+        ${a.status === 'declined' ? `<div class="appt-extra muted">That time didn't work for the shop. Pick another time below.</div>` : ''}
+      </div>`).join('');
+  } catch {}
 }
 async function clientCancel(id){
   if (!confirm('Cancel this appointment?')) return;
-  try { await rpc('client_cancel', { p_phone: client.phone, p_id: id }); toast('Appointment cancelled'); loadClientAppts(); loadClientSlots(); }
+  try { await rpc('client_cancel', { p_token: C.token, p_id: id }); toast('Appointment cancelled'); loadClientAppts(); loadClientSlots(); }
   catch (e) { toast(e.message, 'err'); }
 }
-async function loadAnnouncement(){
-  try {
-    const b = await rpc('latest_blast');
-    const text = b ? b.message.replace(/\n*Book( here)?: https?:\/\/\S+\s*$/i, '') : '';
-    $('#c-announce').innerHTML = b ? `<div class="announce"><div class="announce-tag">${IC.send} From the shop, ${timeAgo(b.created_at)}</div><p>${esc(text).replace(/\n/g, '<br>')}</p></div>` : '';
-  } catch {}
+async function clientRespond(btn, id, accept){
+  if (!accept && !confirm('Decline the new time? Your appointment will be cancelled and you can book another.')) return;
+  await busy(btn, async () => {
+    await rpc('client_respond', { p_token: C.token, p_id: id, p_accept: accept });
+    toast(accept ? "You're confirmed for the new time" : 'Appointment cancelled', accept ? 'ok' : '');
+    loadClientAppts(); loadClientSlots();
+  });
 }
 async function clientToggleSub(el){
-  try { await rpc('client_set_subscribed', { p_phone: client.phone, p_on: el.checked }); client.subscribed = el.checked; toast(el.checked ? "You'll get texts about openings" : 'Texts turned off'); }
+  try { await rpc('client_set_subscribed', { p_token: C.token, p_shop: C.shopId, p_on: el.checked }); toast(el.checked ? "You'll get the shop's announcements" : 'Announcements turned off'); }
   catch (e) { el.checked = !el.checked; toast(e.message, 'err'); }
 }
-function clientSignOut(){ client = null; store('cb_client', null); resetClientLogin(); $('#lc-phone').value = ''; setLoginTab('client'); show('login'); }
-
-// Add-to-home-screen prompt
-let deferredInstall = null;
-addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; renderInstall(); });
-function renderInstall(){
-  const el = $('#c-install'); if (!el || !shop) return;
-  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  if (standalone) el.innerHTML = '';
-  else if (deferredInstall) el.innerHTML = `<button class="btn-ghost" onclick="doInstall()">${IC.plus} Add ${esc(shop.name)} to your home screen</button>`;
-  else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) el.innerHTML = `<p class="hint">To save ${esc(shop.name)} as an app, tap <b>Share</b> then <b>Add to Home Screen</b>.</p>`;
-  else el.innerHTML = '';
+function shopSwitchSheet(){
+  if (!C || C.shops.length < 2) return;
+  openSheet(`<h2>Your shops</h2><p class="sub">Switch to another shop you're a client of.</p>
+    ${C.shops.map(s => `<button class="crow" onclick="switchShop('${s.id}')"><span class="logo-slot">${s.logo ? `<img src="${s.logo}" alt="">` : esc(initials(s.name))}</span>
+      <span class="crow-body"><b>${esc(s.name)}</b><small>${s.id === C.shopId ? 'Showing now' : 'Tap to switch'}</small></span></button>`).join('')}`);
 }
-async function doInstall(){ if (!deferredInstall) return; deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; renderInstall(); }
+async function switchShop(id){ closeSheet(); C.shopId = id; await loadClientShop(); window.scrollTo(0, 0); }
+function clientProfileSheet(){
+  draft = { avatar: C.client.avatar };
+  openSheet(`<div class="sheet-head"><h2>Your profile</h2></div>
+    <div class="pic-edit"><span id="p-avatar">${avatarHTML(C.client.name, draft.avatar, 'lg')}</span>
+      <div class="btns"><label class="btn-ghost slim">Change photo<input type="file" accept="image/*" hidden onchange="pickImage(this,256,d=>{draft.avatar=d;$('#p-avatar').innerHTML=avatarHTML(C.client.name,d,'lg')})"></label>
+      <button class="btn-ghost slim" onclick="draft.avatar=null;$('#p-avatar').innerHTML=avatarHTML(C.client.name,null,'lg')">Remove photo</button></div></div>
+    <div class="field"><label for="p-name">Name</label><input id="p-name" value="${esc(C.client.name)}" maxlength="60"></div>
+    <p class="muted small" style="margin-bottom:6px">Signed in as ${fmtPhone(C.client.phone)}</p>
+    <button class="btn" onclick="saveClientProfile(this)">Save profile</button>
+    <div class="section-title">Your shops</div>
+    ${C.shops.map(s => `<div class="srow"><span class="logo-slot">${s.logo ? `<img src="${s.logo}" alt="">` : esc(initials(s.name))}</span><div class="srow-body"><b>${esc(s.name)}</b></div>
+      <button class="ibtn danger" onclick="leaveShop('${s.id}',${esc(JSON.stringify(s.name))})" aria-label="Leave ${esc(s.name)}">${IC.trash}</button></div>`).join('') || '<p class="muted small">None yet.</p>'}
+    <div class="row2" style="margin-top:10px;align-items:flex-end">
+      <div class="field" style="margin:0"><label for="p-code">Join another shop</label><input id="p-code" class="code-input" maxlength="6" placeholder="Shop code"></div>
+      <button class="btn" style="width:auto;margin:0;padding:12px 18px" onclick="joinShop(this,'#p-code')">Join</button>
+    </div>
+    <button class="btn-ghost danger" style="margin-top:18px" onclick="clientSignOut()">Sign out</button>`);
+}
+async function saveClientProfile(btn){
+  const name = $('#p-name').value.trim(); if (!name) return toast('Enter your name', 'err');
+  await busy(btn, async () => {
+    await rpc('client_set_profile', { p_token: C.token, p_name: name, p_avatar: draft.avatar || null });
+    C.client.name = name; C.client.avatar = draft.avatar || null;
+    renderClientHeader(); closeSheet(); toast('Profile saved', 'ok');
+  });
+}
+async function joinShop(btn, sel){
+  const code = $(sel).value.trim(); if (code.length !== 6) return toast('Shop codes are 6 characters', 'err');
+  await busy(btn, async () => {
+    const r = await rpc('client_join_shop', { p_token: C.token, p_code: code });
+    setClientBundle(r.bundle); C.shopId = r.shop_id; closeSheet();
+    await enterClient(); toast(`You're now a client of ${shop.name}`, 'ok');
+  });
+}
+async function leaveShop(id, name){
+  if (!confirm(`Leave ${name}? You won't see their schedule or messages anymore.`)) return;
+  try {
+    await rpc('client_leave_shop', { p_token: C.token, p_shop: id });
+    setClientBundle(await rpc('client_me', { p_token: C.token }));
+    if (C.shopId === id) C.shopId = null;
+    closeSheet(); enterClient(); toast(`Left ${name}`);
+  } catch (e) { toast(e.message, 'err'); }
+}
 
-// ═════════════════════════ BARBER SIDE ═════════════════════════
+// ─── Chat (both sides) ────────────────────────────────────────
+function openChat(ctx){
+  chat = { ...ctx, first: true };
+  const head = ctx.mode === 'client'
+    ? `<div class="sheet-head"><span class="logo-slot">${logoHTML()}</span><div><h2>${esc(shop.name)}</h2><p class="sub">Messages go to the barbers at this shop</p></div></div>`
+    : `<div class="sheet-head">${avatarHTML(ctx.name, ctx.avatar)}<div><h2>${esc(ctx.name)}</h2><p class="sub">${fmtPhone(ctx.phone)}</p></div></div>
+       ${ctx.phone ? `<div class="row2"><a class="btn-ghost slim" href="tel:+1${ctx.phone}">${IC.phone} Call</a><button class="btn-ghost slim" onclick="openSms('${ctx.phone}','')">${IC.sms} Text from my phone</button></div>` : ''}`;
+  openSheet(`${head}<div class="chat-list" id="chat-list"><p class="muted small" style="text-align:center;padding:24px 0">Loading…</p></div>
+    <div class="chat-input"><textarea id="chat-text" rows="1" placeholder="Message" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button class="send" onclick="sendChat(this)" aria-label="Send">${IC.send}</button></div>`);
+  loadChat(); clearInterval(chatTimer); chatTimer = setInterval(loadChat, 8000);
+}
+async function loadChat(){
+  if (!chat) return;
+  try {
+    const msgs = chat.mode === 'client'
+      ? await rpc('client_messages', { p_token: C.token, p_shop: C.shopId })
+      : await rpc('barber_thread', { p_token: B.token, p_client: chat.clientId });
+    const el = $('#chat-list'); if (!el || !chat) return;
+    const mine = chat.mode === 'client' ? 'client' : 'barber';
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+    el.innerHTML = msgs.length ? msgs.map(m => `<div class="bubble ${m.sender === mine ? 'me' : ''}"><p>${esc(m.body)}</p>
+        <small>${m.sender === 'barber' && m.barber && (mine === 'client' || m.barber !== B.barber.name) ? esc(m.barber) + ', ' : ''}${fmtStamp(m.created_at)}</small></div>`).join('')
+      : `<p class="muted small" style="text-align:center;padding:24px 0">No messages yet.</p>`;
+    if (nearBottom || chat.first) el.scrollTop = el.scrollHeight;
+    chat.first = false;
+  } catch {}
+}
+async function sendChat(btn){
+  const t = $('#chat-text'), body = t.value.trim(); if (!body) return;
+  btn.disabled = true;
+  try {
+    if (chat.mode === 'client') await rpc('client_send_message', { p_token: C.token, p_shop: C.shopId, p_body: body });
+    else await rpc('barber_send_message', { p_token: B.token, p_client: chat.clientId, p_body: body });
+    t.value = ''; t.style.height = 'auto'; chat.first = true; await loadChat();
+  } catch (e) { toast(e.message, 'err'); }
+  btn.disabled = false;
+}
+function openSms(phone, body){ location.href = `sms:+1${phone}${body ? '?&body=' + encodeURIComponent(body) : ''}`; }
+
+// ═════════════════════════ BARBER ═════════════════════════════
+async function loadBarber(token){
+  const me = await rpc('barber_me', { p_token: token });
+  B = { token, barber: me.barber, shop: me.shop }; shop = me.shop;
+  store('cb_btoken', token); applyShop();
+}
+function barberOut(){ B = null; store('cb_btoken', null); clearInterval(pollT); closeSheet(); showLogin().then(() => setLoginTab('barber')); }
+async function barberSignOut(){ try { await disablePush(true); } catch {} try { await rpc('barber_logout', { p_token: B.token }); } catch {} barberOut(); }
 function enterBarber(){
   show('barber');
   $('#b-sub').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-  document.querySelectorAll('.owner-only').forEach(e => e.hidden = !barber.is_owner);
+  document.querySelectorAll('.owner-only').forEach(e => e.hidden = !B.barber.is_owner);
   bDate = today(); bAnchor = addDays(today(), -1);
   bTab('schedule');
-  loadAppts(); loadClients();
+  refreshBarber();
+  renderBarberNudge(); syncPushSwitch('#b-push', '#b-push-row');
   clearInterval(pollT);
-  pollT = setInterval(() => { if (document.visibilityState === 'visible' && barber) loadAppts(); }, 30000);
+  pollT = setInterval(() => { if (document.visibilityState === 'visible' && B) { loadAppts(); loadThreads(); } }, 30000);
 }
-function forceBarberOut(){
-  barber = null; store('cb_barber', null); clearInterval(pollT); closeSheet();
-  setLoginTab('barber'); show('login');
-}
-async function barberSignOut(){
-  try { await rpc('barber_logout', { p_token: barber.token }); } catch {}
-  forceBarberOut();
-}
+function refreshBarber(manual){ loadAppts(); loadClients(); loadThreads(); if (manual) toast('Refreshed'); }
+async function renderBarberNudge(){ $('#b-nudge').innerHTML = await pushNudgeHTML('barber'); }
 function bTab(t){
   document.querySelectorAll('#v-barber .screen').forEach(s => s.classList.toggle('on', s.id === 'bs-' + t));
   document.querySelectorAll('#v-barber .nav-item').forEach(n => n.classList.toggle('on', n.dataset.t === t));
   $('#fab').hidden = t !== 'schedule';
+  if (t === 'messages') loadThreads();
   if (t === 'blast') initBlast();
   if (t === 'clients') renderClients();
   if (t === 'options') renderOptions();
@@ -850,16 +1121,19 @@ function bTab(t){
 
 // ── Schedule ──
 async function loadAppts(){
-  if (!barber) return;
+  if (!B) return;
   try {
-    bAppts = await rpc('barber_appts', { p_token: barber.token, p_from: bAnchor, p_to: addDays(bAnchor, 20) });
-    renderStrip(); renderDay(); updateBadge();
-  } catch (e) { if (barber) toast(e.message, 'err'); }
+    bAppts = await rpc('barber_appts', { p_token: B.token, p_from: bAnchor, p_to: addDays(bAnchor, 20) });
+    renderStrip(); renderDay(); updateBadges();
+  } catch (e) { if (B) toast(e.message, 'err'); }
 }
+const isActive = a => ['pending','confirmed','reschedule'].includes(a.status);
+const takenOn = (d, exclude) => bAppts.filter(a => a.id !== exclude && isActive(a)).flatMap(a => [
+  ...(a.date === d ? [a.time] : []), ...(a.status === 'reschedule' && a.proposed_date === d ? [a.proposed_time] : [])]);
 function renderStrip(){
   const days = [...Array(21)].map((_, i) => addDays(bAnchor, i));
   $('#b-strip').innerHTML = days.map(d => {
-    const n = bAppts.filter(a => a.date === d && a.status !== 'cancelled').length;
+    const n = bAppts.filter(a => a.date === d && isActive(a)).length;
     const pend = bAppts.some(a => a.date === d && a.status === 'pending');
     return `<button class="chip ${d === bDate ? 'on' : ''} ${d === today() ? 'today' : ''}" onclick="pickBDate('${d}')">
       <small>${fmtDay(d, { weekday:'short' })}</small><b>${new Date(d + 'T00:00:00').getDate()}</b>
@@ -872,64 +1146,80 @@ function jumpDate(d){ bDate = d; bAnchor = addDays(d, -1); $('#b-jump').value = 
 const stat = (n, l) => `<div class="stat"><b>${n}</b><small>${l}</small></div>`;
 function renderDay(){
   const list = bAppts.filter(a => a.date === bDate).sort((a, b) => a.time.localeCompare(b.time));
-  const active = list.filter(a => a.status !== 'cancelled');
-  const slots = slotsFor(bDate, active.map(a => a.time));
+  const slots = slotsFor(bDate, takenOn(bDate));
   $('#b-dayhead').textContent = bDate === today() ? 'Today' : fmtDay(bDate, { weekday:'long', month:'short', day:'numeric' });
   $('#b-stats').innerHTML =
-    stat(active.filter(a => a.status === 'confirmed').length, 'Confirmed') +
-    stat(active.filter(a => a.status === 'pending').length, 'To confirm') +
+    stat(list.filter(a => a.status === 'confirmed').length, 'Confirmed') +
+    stat(list.filter(a => a.status === 'pending').length, 'To confirm') +
     stat(slots ? slots.filter(s => s.free).length : '–', slots ? 'Open slots' : 'Closed');
   $('#b-list').innerHTML = list.length ? list.map(apptCard).join('')
     : `<div class="empty">${IC.cal}<p>${slots ? 'No appointments yet. Tap + to add one.' : 'The shop is closed this day.'}</p></div>`;
 }
+const bStatus = s => ({ pending:'needs confirming', confirmed:'confirmed', declined:'declined', cancelled:'cancelled', reschedule:'new time sent' }[s] || s);
 function apptCard(a){
-  const t = fmt12(a.time);
-  return `<div class="appt st-${a.status}">
+  const t = fmt12(a.time), c = a.client_id && bClients.find(x => x.id === a.client_id);
+  const btn = (cls, fn, label, icon) => `<button class="ibtn ${cls}" onclick="${fn}" aria-label="${label}" title="${label}">${icon}</button>`;
+  let actions = '';
+  if (a.status === 'pending') actions = btn('ok', `setStatus('${a.id}','confirmed')`, 'Confirm', IC.check) + btn('danger', `setStatus('${a.id}','declined')`, 'Decline', IC.x);
+  if (a.status === 'confirmed') actions = (a.client_id ? btn('info', `rescheduleSheet('${a.id}')`, 'Reschedule', IC.move) : '') + btn('danger', `setStatus('${a.id}','cancelled')`, 'Cancel', IC.x);
+  if (a.status === 'reschedule') actions = btn('danger', `setStatus('${a.id}','cancelled')`, 'Cancel', IC.x);
+  if (a.client_id && isActive(a)) actions = btn('', `chatWith('${a.client_id}')`, 'Message', IC.msg) + actions;
+  return `<div class="appt st-${a.status}"><div class="appt-row">
     <div class="appt-when"><b>${t.split(' ')[0]}</b><small>${t.split(' ')[1]}</small></div>
     <div class="appt-body">
-      <div class="appt-name">${esc(a.name)}</div>
-      <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${a.status === 'pending' ? 'needs confirming' : a.status}</span></div>
+      <div class="appt-name">${c ? avatarHTML(c.name, c.avatar, 'sm') : ''}${esc(a.name)}</div>
+      <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${bStatus(a.status)}</span></div>
     </div>
-    <div class="appt-actions">
-      ${a.status === 'pending' ? `<button class="ibtn ok" onclick="setStatus('${a.id}','confirmed')" aria-label="Confirm">${IC.check}</button>` : ''}
-      ${a.phone ? `<button class="ibtn" onclick="msgSheet('${a.id}')" aria-label="Message">${IC.msg}</button>` : ''}
-      ${a.status !== 'cancelled' ? `<button class="ibtn danger" onclick="setStatus('${a.id}','cancelled')" aria-label="Cancel">${IC.x}</button>` : ''}
-    </div></div>`;
+    <div class="appt-actions">${actions}</div></div>
+    ${a.status === 'reschedule' ? `<div class="appt-extra muted">Waiting for ${esc(first(a.name))} to accept <b style="color:var(--text)">${whenStr(a.proposed_date, a.proposed_time)}</b></div>` : ''}
+  </div>`;
 }
-function updateBadge(){
+function updateBadges(){
   const n = bAppts.filter(a => a.status === 'pending' && a.date >= today()).length;
   const b = $('#nav-pending'); b.hidden = !n; b.textContent = n;
+  const u = bThreads.reduce((s, t) => s + Number(t.unread || 0), 0);
+  const m = $('#nav-unread'); m.hidden = !u; m.textContent = u;
 }
 async function setStatus(id, status){
   const a = bAppts.find(x => x.id === id);
-  if (status === 'cancelled' && !confirm(`Cancel ${a ? a.name + "'s" : 'this'} appointment?`)) return;
+  const ask = { declined: `Decline ${a.name}'s request?`, cancelled: `Cancel ${a.name}'s appointment?` }[status];
+  if (ask && !confirm(ask + (a.client_id ? ' They will be notified.' : ''))) return;
   try {
-    await rpc('barber_set_status', { p_token: barber.token, p_id: id, p_status: status });
-    if (a) a.status = status;
-    renderStrip(); renderDay(); updateBadge();
-    toast(status === 'confirmed' ? 'Confirmed' : 'Cancelled', status === 'confirmed' ? 'ok' : '');
-    if (a && a.phone) msgSheet(id, status === 'confirmed' ? 0 : 3);
+    await rpc('barber_set_status', { p_token: B.token, p_id: id, p_status: status });
+    toast({ confirmed: 'Confirmed', declined: 'Request declined', cancelled: 'Appointment cancelled' }[status] + (a.client_id ? `. ${first(a.name)} was notified.` : ''), status === 'confirmed' ? 'ok' : '');
+    loadAppts();
   } catch (e) { toast(e.message, 'err'); }
 }
-let QUICK = [];
-function msgSheet(id, preset){
-  const a = bAppts.find(x => x.id === id); if (!a) return;
-  const when = `${fmtDay(a.date, { weekday:'long', month:'short', day:'numeric' })} at ${fmt12(a.time)}`, n = first(a.name);
-  const q = [
-    ["You're confirmed", `Hi ${n}, you're confirmed at ${shop.name} for ${when}. See you then!`],
-    ['Running 15 min late', `Hi ${n}, I'm running about 15 minutes behind. Sorry for the wait, see you soon!`],
-    ['Running 30 min late', `Hi ${n}, I'm running about 30 minutes behind today. Sorry about that!`],
-    ['Cancelled', `Hi ${n}, I have to cancel your ${when} appointment. Book a new time here: ${appLink()}`],
-  ];
-  QUICK = q.map(x => x[1]);
-  openSheet(`<h2>Message ${esc(a.name)}</h2><p class="sub">${fmtPhone(a.phone)}</p>
-    ${q.map((x, i) => `<button class="btn-ghost left" onclick="$('#m-text').value=QUICK[${i}]">${esc(x[0])}</button>`).join('')}
-    <div class="field" style="margin-top:12px"><label for="m-text">Message</label><textarea id="m-text" rows="4">${preset != null ? esc(QUICK[preset]) : ''}</textarea></div>
-    <div class="row2"><a class="btn-ghost" href="tel:+1${a.phone}">${IC.phone} Call</a><button class="btn-ghost" style="background:var(--accent);color:var(--ink);border-color:var(--accent)" onclick="openSms('${a.phone}',$('#m-text').value)">${IC.msg} Text</button></div>
-    <p class="muted small" style="margin-top:10px">Opens your phone's Messages app with this text filled in.</p>`);
+function freeChips(date, exclude){
+  const cur = bAppts.find(a => a.id === exclude);
+  const s = (slotsFor(date, takenOn(date, exclude)) || null);
+  if (s && cur && cur.date === date) s.forEach(x => { if (x.t === cur.time) x.free = false; });
+  if (!s) return '<p class="muted small" style="margin:-2px 0 10px">The shop is normally closed this day.</p>';
+  const free = s.filter(x => x.free);
+  return free.length ? `<div class="fill-chips">${free.map(x => `<button onclick="$('#rs-time').value='${x.t}'">${fmt12(x.t)}</button>`).join('')}</div>`
+    : '<p class="muted small" style="margin:-2px 0 10px">No open times this day.</p>';
 }
-function openSms(phone, body){ location.href = `sms:+1${phone}${body ? '?&body=' + encodeURIComponent(body) : ''}`; }
-function nextFree(date){ const s = slotsFor(date, bAppts.filter(a => a.date === date && a.status !== 'cancelled').map(a => a.time)); const f = s && s.find(x => x.free); return f ? f.t : '10:00'; }
+function rescheduleSheet(id){
+  const a = bAppts.find(x => x.id === id); if (!a) return;
+  const s = slotsFor(a.date, takenOn(a.date, id)), f = s && s.find(x => x.free && x.t !== a.time);
+  openSheet(`<h2>Reschedule ${esc(a.name)}</h2><p class="sub">Currently ${whenStr(a.date, a.time)}. They'll get a notification to accept or decline the new time.</p>
+    <div class="row2">
+      <div class="field"><label for="rs-date">New date</label><input id="rs-date" type="date" value="${a.date}" min="${today()}" onchange="$('#rs-chips').innerHTML=freeChips(this.value,'${id}')"></div>
+      <div class="field"><label for="rs-time">New time</label><input id="rs-time" type="time" step="300" value="${f ? f.t : a.time}"></div>
+    </div>
+    <div id="rs-chips">${freeChips(a.date, id)}</div>
+    <div class="field"><label for="rs-note">Note (optional)</label><textarea id="rs-note" style="min-height:64px" placeholder="Something came up, sorry about that"></textarea></div>
+    <button class="btn" onclick="sendReschedule(this,'${id}')">${IC.send} Send new time</button>`);
+}
+async function sendReschedule(btn, id){
+  const d = $('#rs-date').value, t = $('#rs-time').value;
+  if (!d || !t) return toast('Pick a date and time', 'err');
+  await busy(btn, async () => {
+    await rpc('barber_reschedule', { p_token: B.token, p_id: id, p_date: d, p_time: t, p_note: $('#rs-note').value });
+    closeSheet(); toast('New time sent', 'ok'); loadAppts();
+  });
+}
+function nextFree(date){ const s = slotsFor(date, takenOn(date)); const f = s && s.find(x => x.free); return f ? f.t : '10:00'; }
 function apptSheet(pre = {}){
   const date = pre.date || bDate;
   openSheet(`<h2>New appointment</h2><p class="sub">Appointments you add are confirmed right away.</p>
@@ -948,20 +1238,100 @@ async function saveNewAppt(btn){
   if (!name || !date || !time) return toast('Name, date and time are required', 'err');
   if (phone && phone.length !== 10) return toast('Phone should be 10 digits', 'err');
   await busy(btn, async () => {
-    await rpc('barber_add_appt', { p_token: barber.token, p_name: name, p_phone: phone || null, p_date: date, p_time: time, p_service: $('#n-service').value });
+    await rpc('barber_add_appt', { p_token: B.token, p_name: name, p_phone: phone || null, p_date: date, p_time: time, p_service: $('#n-service').value });
     closeSheet();
     if (date < bAnchor || date > addDays(bAnchor, 20)) bAnchor = addDays(date, -1);
-    bDate = date;
-    await loadAppts(); loadClients();
+    bDate = date; await loadAppts(); loadClients();
     toast('Appointment booked', 'ok');
   });
+}
+
+// ── Messages ──
+async function loadThreads(){
+  if (!B) return;
+  try { bThreads = await rpc('barber_threads', { p_token: B.token }); renderThreads(); updateBadges(); } catch {}
+}
+function renderThreads(){
+  $('#b-threads').innerHTML = bThreads.length ? bThreads.map(t => `
+    <button class="crow" onclick="chatWith('${t.client_id}')">${avatarHTML(t.name, t.avatar)}
+      <span class="crow-body ${t.unread ? 'unread' : ''}"><b>${esc(t.name)}</b><small>${t.last_sender === 'barber' ? 'You: ' : ''}${esc(t.last_body)}</small></span>
+      <span class="crow-end">${fmtStamp(t.last_at)}${t.unread ? `<span class="count">${t.unread}</span>` : ''}</span></button>`).join('')
+    : '<div class="empty" style="padding:28px 8px">No messages yet. Clients can message you from their app.</div>';
+}
+function chatWith(clientId){
+  const c = bClients.find(x => x.id === clientId) || bThreads.find(x => x.client_id === clientId) || {};
+  const a = bAppts.find(x => x.client_id === clientId);
+  closeSheet();
+  openChat({ mode: 'barber', clientId, name: c.name || (a && a.name) || 'Client', avatar: c.avatar, phone: c.phone || (a && a.phone) });
+}
+
+// ── Clients ──
+async function loadClients(){
+  if (!B) return;
+  try {
+    bClients = await rpc('barber_clients', { p_token: B.token });
+    $('#client-names').innerHTML = bClients.map(c => `<option value="${esc(c.name)}">`).join('');
+    renderClients(); renderDay();
+    if ($('#bs-blast').classList.contains('on')) initBlast();
+  } catch {}
+}
+function renderClients(){
+  const q = ($('#cl-q').value || '').trim().toLowerCase(), qd = q.replace(/\D/g, '');
+  const list = bClients.filter(c => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)));
+  $('#cl-list').innerHTML = list.length ? list.map(c => {
+    const meta = [fmtPhone(c.phone), c.visits ? plural(c.visits, 'visit') : '', c.last_visit ? `last in ${fmtDay(c.last_visit, { month:'short', day:'numeric' })}` : ''].filter(Boolean).join(', ');
+    return `<button class="crow" onclick="clientSheet('${c.id}')">${avatarHTML(c.name, c.avatar)}
+      <span class="crow-body"><b>${esc(c.name)}</b><small>${meta}</small></span>
+      <span class="tag ${c.subscribed ? 'on' : ''}">${c.subscribed ? 'Gets blasts' : 'No blasts'}</span></button>`;
+  }).join('') : `<div class="empty" style="padding:24px 8px">${bClients.length ? 'No clients match that search.' : `No clients yet. Share your shop code ${B.shop.code} from Options.`}</div>`;
+}
+function clientSheet(id){
+  const c = bClients.find(x => x.id === id); if (!c) return;
+  openSheet(`<div class="sheet-head">${avatarHTML(c.name, c.avatar, 'lg')}<div><h2>${esc(c.name)}</h2><p class="sub">${fmtPhone(c.phone)}<br>Client since ${new Date(c.joined_at).toLocaleDateString('en-US', { month:'short', year:'numeric' })}</p></div></div>
+    <div class="row2" style="margin-bottom:12px">
+      <button class="btn-ghost slim" onclick="chatWith('${c.id}')">${IC.msg} Message</button>
+      <a class="btn-ghost slim" href="tel:+1${c.phone}">${IC.phone} Call</a>
+      <button class="btn-ghost slim" onclick="closeSheet();apptSheet({name:${esc(JSON.stringify(c.name))},phone:'${c.phone}'})">${IC.cal} Book</button>
+    </div>
+    <div class="field"><label for="e-notes">Notes (only your shop sees these)</label><textarea id="e-notes" placeholder="Guard numbers, preferences">${esc(c.notes)}</textarea></div>
+    <div class="srow"><div class="srow-body"><b>Gets blasts</b><small>Openings and announcements</small></div><label class="switch"><input type="checkbox" id="e-sub" ${c.subscribed ? 'checked' : ''}><span></span></label></div>
+    <button class="btn" onclick="saveClient(this,'${c.id}')">Save</button>
+    <button class="btn-ghost danger" onclick="removeClient('${c.id}')">Remove from shop</button>`);
+}
+async function saveClient(btn, id){
+  await busy(btn, async () => {
+    await rpc('barber_update_client', { p_token: B.token, p_client: id, p_subscribed: $('#e-sub').checked, p_notes: $('#e-notes').value });
+    closeSheet(); loadClients(); toast('Saved', 'ok');
+  });
+}
+function addClientSheet(){
+  openSheet(`<h2>Add client</h2><p class="sub">They can sign in later with this phone number. Or have them join with your shop code ${esc(B.shop.code)}.</p>
+    <div class="field"><label for="ac-name">Name</label><input id="ac-name"></div>
+    <div class="field"><label for="ac-phone">Phone</label><input id="ac-phone" class="phone" inputmode="tel" placeholder="(555) 555-5555"></div>
+    <div class="field"><label for="ac-notes">Notes</label><textarea id="ac-notes" style="min-height:64px"></textarea></div>
+    <div class="srow"><div class="srow-body"><b>Gets blasts</b><small>Only if they agreed to get your announcements</small></div><label class="switch"><input type="checkbox" id="ac-sub"><span></span></label></div>
+    <button class="btn" onclick="addClient(this)">Add client</button>`);
+}
+async function addClient(btn){
+  const name = $('#ac-name').value.trim(), phone = digits($('#ac-phone').value);
+  if (!name) return toast('Enter a name', 'err');
+  if (phone.length !== 10) return toast('Phone should be 10 digits', 'err');
+  await busy(btn, async () => {
+    await rpc('barber_add_client', { p_token: B.token, p_name: name, p_phone: phone, p_subscribed: $('#ac-sub').checked, p_notes: $('#ac-notes').value });
+    closeSheet(); loadClients(); toast('Client added', 'ok');
+  });
+}
+async function removeClient(id){
+  const c = bClients.find(x => x.id === id);
+  if (!confirm(`Remove ${c ? c.name : 'this client'} from your shop? Past appointments stay on the schedule.`)) return;
+  try { await rpc('barber_remove_client', { p_token: B.token, p_client: id }); closeSheet(); loadClients(); toast('Client removed'); }
+  catch (e) { toast(e.message, 'err'); }
 }
 
 // ── Blast ──
 function initBlast(){
   if (!$('#bl-date').value) { $('#bl-date').value = today(); blastDateChanged(); }
-  const n = bClients.filter(c => c.subscribed).length;
-  $('#bl-count').textContent = `${n} client${n === 1 ? '' : 's'} opted in`;
+  $('#bl-count').textContent = plural(bClients.filter(c => c.subscribed).length, 'client') + ' opted in';
 }
 function blastDateChanged(){
   const d = $('#bl-date').value; if (!d) return;
@@ -971,108 +1341,57 @@ function blastDateChanged(){
 function buildBlast(){
   const d = $('#bl-date').value || today(), o = $('#bl-open').value, c = $('#bl-close').value, extra = $('#bl-msg').value.trim();
   const day = d === today() ? 'today' : d === addDays(today(), 1) ? 'tomorrow' : fmtDay(d, { weekday:'long', month:'short', day:'numeric' });
-  let m = `${shop.name} is open ${day}, ${fmt12(o)} to ${fmt12(c)}.`;
-  if (extra) m += `\n\n${extra}`;
-  return m + `\n\nBook here: ${appLink()}`;
+  return `Open ${day}, ${fmt12(o)} to ${fmt12(c)}.` + (extra ? `\n\n${extra}` : '');
 }
 function previewBlast(){
   const n = bClients.filter(c => c.subscribed).length;
-  openSheet(`<h2>Preview</h2><p class="sub">Goes to ${n} client${n === 1 ? '' : 's'} who opted in to texts.</p>
-    <div class="preview">${esc(buildBlast()).replace(/\n/g, '<br>')}</div>
+  openSheet(`<h2>Preview</h2><p class="sub">Goes to ${plural(n, 'client')} who opted in.</p>
+    <div class="preview"><b>${esc(shop.name)}</b><br>${esc(buildBlast()).replace(/\n/g, '<br>')}</div>
     <button class="btn" onclick="sendBlast(this)">${IC.send} Send blast</button>
     <button class="btn-ghost" onclick="closeSheet()">Edit</button>`);
 }
 async function sendBlast(btn){
-  const message = buildBlast();
   await busy(btn, async () => {
-    let r = null;
-    try {
-      r = await fetch(`${SUPABASE_URL}/functions/v1/send-blast`, { method:'POST', headers: apiHeaders(), body: JSON.stringify({ token: barber.token, message }) });
-    } catch { r = null; }
-    if (r && r.status !== 404) {
-      const j = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(j.error || 'Blast failed');
-      closeSheet(); $('#bl-msg').value = '';
-      return toast(j.sms ? `Blast sent to ${j.sent} client${j.sent === 1 ? '' : 's'}${j.failed ? `, ${j.failed} failed` : ''}` : 'Blast posted in the app. Texting isn’t set up yet.', 'ok');
-    }
-    // Texting function not deployed yet: still post it in the client app
-    await rpc('barber_create_blast', { p_token: barber.token, p_message: message });
+    const r = await rpc('barber_create_blast', { p_token: B.token, p_message: buildBlast() });
     closeSheet(); $('#bl-msg').value = '';
-    toast('Blast posted in the app. Texting isn’t set up yet.', 'ok');
+    toast(`Blast sent to ${plural(r.sent_to, 'client')}`, 'ok');
   });
-}
-
-// ── Clients ──
-async function loadClients(){
-  if (!barber) return;
-  try {
-    bClients = await rpc('barber_clients', { p_token: barber.token });
-    $('#client-names').innerHTML = bClients.map(c => `<option value="${esc(c.name)}">`).join('');
-    renderClients();
-    if ($('#bs-blast').classList.contains('on')) initBlast();
-  } catch {}
-}
-function renderClients(){
-  const q = ($('#cl-q').value || '').trim().toLowerCase(), qd = q.replace(/\D/g, '');
-  const list = bClients.filter(c => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)));
-  $('#cl-list').innerHTML = list.length ? list.map(c => {
-    const meta = [fmtPhone(c.phone), c.visits ? `${c.visits} visit${c.visits > 1 ? 's' : ''}` : '', c.last_visit ? `last in ${fmtDay(c.last_visit, { month:'short', day:'numeric' })}` : ''].filter(Boolean).join(', ');
-    return `<button class="crow" onclick="clientSheet('${c.id}')"><span class="avatar">${esc(initials(c.name))}</span>
-      <span class="crow-body"><b>${esc(c.name)}</b><small>${meta}</small></span>
-      <span class="tag ${c.subscribed ? 'on' : ''}">${c.subscribed ? 'Gets texts' : 'No texts'}</span></button>`;
-  }).join('') : `<div class="empty" style="padding:24px 8px">${bClients.length ? 'No clients match that search.' : 'No clients yet. Share your client link from Options.'}</div>`;
-}
-function clientSheet(id){
-  const c = id ? bClients.find(x => x.id === id) : { name:'', phone:'', subscribed:true, notes:'' };
-  if (!c) return;
-  openSheet(`<h2>${id ? esc(c.name) : 'Add client'}</h2><p class="sub">${id ? `Client since ${new Date(c.created_at).toLocaleDateString('en-US', { month:'short', year:'numeric' })}` : 'They can sign in later with this phone number.'}</p>
-    ${id ? `<div class="row2" style="margin-bottom:12px">
-      <a class="btn-ghost" style="margin:0" href="tel:+1${c.phone}">${IC.phone} Call</a>
-      <button class="btn-ghost" style="margin:0" onclick="openSms('${c.phone}','')">${IC.msg} Text</button>
-      <button class="btn-ghost" style="margin:0" onclick="closeSheet();apptSheet({name:${esc(JSON.stringify(c.name))},phone:'${c.phone}'})">${IC.cal} Book</button></div>` : ''}
-    <div class="field"><label for="e-name">Name</label><input id="e-name" value="${esc(c.name)}"></div>
-    <div class="field"><label for="e-phone">Phone</label><input id="e-phone" class="phone" inputmode="tel" value="${esc(fmtPhone(c.phone))}"></div>
-    <div class="field"><label for="e-notes">Notes</label><textarea id="e-notes" placeholder="Guard numbers, preferences">${esc(c.notes)}</textarea></div>
-    <div class="srow"><div class="srow-body"><b>Gets blast texts</b><small>Only turn on if they agreed to texts</small></div><label class="switch"><input type="checkbox" id="e-sub" ${c.subscribed ? 'checked' : ''}><span></span></label></div>
-    <button class="btn" onclick="saveClient(this,'${id}')">${id ? 'Save changes' : 'Add client'}</button>
-    ${id ? `<button class="btn-ghost danger" onclick="deleteClient('${id}')">Delete client</button>` : ''}`);
-}
-async function saveClient(btn, id){
-  const name = $('#e-name').value.trim(), phone = digits($('#e-phone').value);
-  if (!name) return toast('Enter a name', 'err');
-  if (phone.length !== 10) return toast('Phone should be 10 digits', 'err');
-  await busy(btn, async () => {
-    await rpc('barber_save_client', { p_token: barber.token, p_id: id || null, p_name: name, p_phone: phone, p_subscribed: $('#e-sub').checked, p_notes: $('#e-notes').value });
-    closeSheet(); await loadClients(); loadAppts();
-    toast(id ? 'Changes saved' : 'Client added', 'ok');
-  });
-}
-async function deleteClient(id){
-  const c = bClients.find(x => x.id === id);
-  if (!confirm(`Delete ${c ? c.name : 'this client'}? Their past appointments stay on the schedule.`)) return;
-  try { await rpc('barber_delete_client', { p_token: barber.token, p_id: id }); closeSheet(); loadClients(); toast('Client deleted'); }
-  catch (e) { toast(e.message, 'err'); }
 }
 
 // ── Options ──
-function appLink(){ return location.origin + location.pathname.replace(/index\.html$/, ''); }
+const appLink = () => location.origin + location.pathname.replace(/index\.html$/, '') + '?shop=' + B.shop.code;
 function copyLink(){ navigator.clipboard.writeText(appLink()).then(() => toast('Link copied', 'ok')).catch(() => toast(appLink())); }
 async function shareLink(){
-  if (navigator.share) { try { await navigator.share({ title: shop.name, text: `Book with ${shop.name}`, url: appLink() }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  if (navigator.share) { try { await navigator.share({ title: shop.name, text: `Book with ${shop.name}. Shop code: ${B.shop.code}`, url: appLink() }); return; } catch (e) { if (e.name === 'AbortError') return; } }
   copyLink();
 }
+async function newCode(){
+  if (!confirm('Make a new shop code? The old code and link stop working for new clients. Existing clients stay linked.')) return;
+  try { B.shop.code = await rpc('barber_new_code', { p_token: B.token }); renderOptions(); toast(`New code: ${B.shop.code}`, 'ok'); }
+  catch (e) { toast(e.message, 'err'); }
+}
 function renderOptions(){
-  draft = { theme: shop.theme, logo: shop.logo };
+  draft = { theme: shop.theme, logo: shop.logo, avatar: B.barber.avatar };
+  $('#o-code').textContent = B.shop.code;
   $('#o-link').textContent = appLink();
-  $('#o-me').textContent = barber.name;
-  $('#o-me-role').textContent = barber.is_owner ? 'Shop owner' : 'Barber';
-  if (barber.is_owner) {
+  $('#o-me-name').value = B.barber.name;
+  renderMeAvatar();
+  if (B.barber.is_owner) {
     $('#o-name').value = shop.name;
     $('#o-banner').value = shop.banner_text || '';
     $('#o-banner-on').checked = !!shop.banner_on;
     renderLogoPrev(); renderSwatches(); loadTeam();
   }
   renderHours(); renderServices();
+  syncPushSwitch('#b-push', '#b-push-row');
+}
+function renderMeAvatar(){ $('#o-me-avatar').innerHTML = avatarHTML(B.barber.name, draft.avatar, 'lg'); }
+async function saveMe(btn){
+  const name = $('#o-me-name').value.trim(); if (!name) return toast('Enter your name', 'err');
+  await busy(btn, async () => {
+    await rpc('barber_set_profile', { p_token: B.token, p_name: name, p_avatar: draft.avatar || null });
+    B.barber.name = name; B.barber.avatar = draft.avatar || null; toast('Profile saved', 'ok');
+  });
 }
 function renderLogoPrev(){ $('#o-logo-prev').innerHTML = logoHTML(draft.logo); }
 function renderSwatches(){
@@ -1080,22 +1399,7 @@ function renderSwatches(){
     `<button class="swatch ${k === draft.theme ? 'on' : ''}" onclick="pickTheme('${k}')"><i><span style="background:${t.bg}"></span><span style="background:${t.card}"></span><span style="background:${t.accent}"></span></i>${t.label}</button>`).join('');
 }
 function pickTheme(k){ draft.theme = k; applyTheme(k); renderSwatches(); }
-function pickLogo(input){
-  const file = input.files && input.files[0]; input.value = ''; if (!file) return;
-  const img = new Image(), url = URL.createObjectURL(file);
-  img.onload = () => {
-    const S = 512, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d');
-    x.fillStyle = (THEMES[draft.theme] || THEMES.gold).bg; x.fillRect(0, 0, S, S);
-    const s = Math.min(img.width, img.height);
-    x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, S, S);
-    draft.logo = c.toDataURL('image/jpeg', 0.86);
-    URL.revokeObjectURL(url); renderLogoPrev();
-    toast('Picture ready. Tap Save shop look.');
-  };
-  img.onerror = () => toast("That file couldn't be opened as a picture", 'err');
-  img.src = url;
-}
-async function saveShop(patch){ shop = await rpc('barber_update_shop', { p_token: barber.token, p_patch: patch }); store('cb_shop', shop); applyShop(); }
+async function saveShop(patch){ shop = await rpc('barber_update_shop', { p_token: B.token, p_patch: patch }); B.shop = shop; applyShop(); }
 async function saveLook(btn){
   const name = $('#o-name').value.trim(); if (!name) return toast('Enter a shop name', 'err');
   await busy(btn, async () => { await saveShop({ name, theme: draft.theme, logo: draft.logo }); toast('Shop look saved', 'ok'); });
@@ -1133,8 +1437,7 @@ function renderServices(){
 }
 async function addService(){
   const v = $('#o-new-svc').value.trim(); if (!v) return;
-  try { await saveShop({ services: [...(shop.services || []), v] }); $('#o-new-svc').value = ''; renderServices(); }
-  catch (e) { toast(e.message, 'err'); }
+  try { await saveShop({ services: [...(shop.services || []), v] }); $('#o-new-svc').value = ''; renderServices(); } catch (e) { toast(e.message, 'err'); }
 }
 async function removeService(i){
   const list = [...(shop.services || [])]; list.splice(i, 1);
@@ -1142,8 +1445,8 @@ async function removeService(i){
 }
 async function loadTeam(){
   try {
-    const team = await rpc('barber_team', { p_token: barber.token });
-    $('#o-team').innerHTML = team.map(b => `<div class="srow"><span class="avatar">${esc(initials(b.name))}</span>
+    const team = await rpc('barber_team', { p_token: B.token });
+    $('#o-team').innerHTML = team.map(b => `<div class="srow">${avatarHTML(b.name, b.avatar)}
       <div class="srow-body"><b>${esc(b.name)}</b><small>${fmtPhone(b.phone)}${b.is_owner ? ', owner' : ''}</small></div>
       ${b.is_owner ? '' : `<button class="ibtn danger" onclick="removeBarber('${b.id}',${esc(JSON.stringify(b.name))})" aria-label="Remove">${IC.trash}</button>`}</div>`).join('');
   } catch {}
@@ -1158,11 +1461,11 @@ function addBarberSheet(){
 async function addBarber(btn){
   const name = $('#ab-name').value.trim(), phone = digits($('#ab-phone').value), pin = $('#ab-pin').value;
   if (!name || phone.length !== 10 || !/^\d{4,8}$/.test(pin)) return toast('Enter a name, 10-digit phone and 4–8 digit PIN', 'err');
-  await busy(btn, async () => { await rpc('barber_add_barber', { p_token: barber.token, p_name: name, p_phone: phone, p_pin: pin }); closeSheet(); loadTeam(); toast(`${name} added`, 'ok'); });
+  await busy(btn, async () => { await rpc('barber_add_barber', { p_token: B.token, p_name: name, p_phone: phone, p_pin: pin }); closeSheet(); loadTeam(); toast(`${name} added`, 'ok'); });
 }
 async function removeBarber(id, name){
   if (!confirm(`Remove ${name}? They won't be able to sign in.`)) return;
-  try { await rpc('barber_remove_barber', { p_token: barber.token, p_id: id }); loadTeam(); toast(`${name} removed`); } catch (e) { toast(e.message, 'err'); }
+  try { await rpc('barber_remove_barber', { p_token: B.token, p_id: id }); loadTeam(); toast(`${name} removed`); } catch (e) { toast(e.message, 'err'); }
 }
 function pinSheet(){
   openSheet(`<h2>Change PIN</h2><p class="sub">You'll stay signed in here. Other devices get signed out.</p>
@@ -1175,16 +1478,16 @@ async function changePin(btn){
   const o = $('#p-old').value, n = $('#p-new').value;
   if (!/^\d{4,8}$/.test(n)) return toast('New PIN must be 4 to 8 digits', 'err');
   if (n !== $('#p-new2').value) return toast("New PINs don't match", 'err');
-  await busy(btn, async () => { await rpc('barber_change_pin', { p_token: barber.token, p_old: o, p_new: n }); closeSheet(); toast('PIN changed', 'ok'); });
+  await busy(btn, async () => { await rpc('barber_change_pin', { p_token: B.token, p_old: o, p_new: n }); closeSheet(); toast('PIN changed', 'ok'); });
 }
 
-// ─── Keep things fresh when the app comes back to the front ───
-document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState !== 'visible' || !shop) return;
-  try { await refreshShop(); } catch {}
-  if ($('#v-client').classList.contains('on') && client) { loadClientAppts(); loadAnnouncement(); if (cSel.date) loadClientSlots(); }
-  if ($('#v-barber').classList.contains('on') && barber) { loadAppts(); loadClients(); }
+// ─── Refresh when the app comes back to the front ─────────────
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  if ($('#v-client').classList.contains('on') && C) { refreshClientShop(); if (cSel.date) loadClientSlots(); }
+  if ($('#v-barber').classList.contains('on') && B) refreshBarber();
 });
+setInterval(() => { if (document.visibilityState === 'visible' && C && $('#v-client').classList.contains('on')) refreshClientShop(); }, 30000);
 
 boot();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
