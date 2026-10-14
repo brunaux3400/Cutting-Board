@@ -247,6 +247,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-30px);opacity:0;background:var(--bg3);color:var(--text);border:1px solid var(--border2);padding:10px 18px;border-radius:24px;font-size:13.5px;font-weight:600;z-index:200;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.ok{color:var(--green)} .toast.err{color:var(--red)}
+.app-footer{display:flex;flex-direction:column;align-items:center;gap:2px;padding:28px 16px 8px;font-size:12px;color:var(--text3);text-align:center}
+.app-footer .app-version{font-weight:600;letter-spacing:.02em}
 .center-msg{max-width:460px;margin:0 auto;padding:80px 24px;text-align:center;line-height:1.6}
 .center-msg h1{font-family:var(--display);font-size:36px;margin-bottom:10px}
 .center-msg code{background:var(--bg3);padding:2px 6px;border-radius:6px;font-size:13px}
@@ -311,6 +313,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <button class="linkish" onclick="showCreateShop(false)">Already have a shop? <b>Sign in</b></button>
       </div>
     </div>
+    <footer class="app-footer"><span class="app-version"></span><span>Made by Anthony from New York</span></footer>
   </div>
 </div>
 
@@ -367,6 +370,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         </div>
       </section>
     </div>
+    <footer class="app-footer"><span class="app-version"></span><span>Made by Anthony from New York</span></footer>
   </main>
 </div>
 
@@ -505,6 +509,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <button class="btn-ghost danger" onclick="barberSignOut()">Sign out</button>
       </div>
     </section>
+    <footer class="app-footer"><span class="app-version"></span><span>Made by Anthony from New York</span></footer>
   </main>
 
   <button class="fab" id="fab" onclick="apptSheet()" aria-label="New appointment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -536,6 +541,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 //  VAPID_PUBLIC_KEY: the PUBLIC half of your push keys (see SETUP.md).
 //    Leave as-is to run without notifications.
 // ═════════════════════════════════════════════════════════════
+// Bump this every time you upload a new version
+const APP_VERSION = '3.1';
+
 const SUPABASE_URL = 'https://zvijdvhvmnnigyjvwzuo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aWpkdmh2bW5uaWd5anZ3enVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjE5MTgsImV4cCI6MjEwNzQ5NzkxOH0.QxjvU5p-aoXdpJC3D6gcJtMnWsCJjU29mbLrDy4cZkM';
 const VAPID_PUBLIC_KEY = 'YOUR-VAPID-PUBLIC-KEY';
@@ -1489,6 +1497,7 @@ document.addEventListener('visibilitychange', () => {
 });
 setInterval(() => { if (document.visibilityState === 'visible' && C && $('#v-client').classList.contains('on')) refreshClientShop(); }, 30000);
 
+document.querySelectorAll('.app-version').forEach(e => e.textContent = 'Cutting Board v' + APP_VERSION);
 boot();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
