@@ -249,6 +249,44 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .toast.ok{color:var(--green)} .toast.err{color:var(--red)}
 .app-footer{display:flex;flex-direction:column;align-items:center;gap:2px;padding:28px 16px 8px;font-size:12px;color:var(--text3);text-align:center}
 .app-footer .app-version{font-weight:600;letter-spacing:.02em}
+/* ── Motion ── */
+@keyframes viewIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes slideFwd{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:none}}
+@keyframes slideBack{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25) translateY(-2px)}100%{transform:scale(1)}}
+@keyframes heroIn{from{opacity:0;transform:translateY(-12px) scale(.88) rotate(-6deg)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.view.on.anim{animation:viewIn .55s cubic-bezier(.2,.8,.2,1) both}
+.view.on.anim .hero .logo-slot{animation:heroIn .7s cubic-bezier(.2,1.4,.4,1) both}
+.view.on.anim .hero h1{animation:rise .6s .08s cubic-bezier(.2,.8,.2,1) both}
+.view.on.anim .hero p,.view.on.anim .seg{animation:rise .6s .14s cubic-bezier(.2,.8,.2,1) both}
+#login-client:not([hidden]),#login-barber:not([hidden]),#lb-create:not([hidden]),#lc-step2:not([hidden]){animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+.screen.on.fwd{animation:slideFwd .4s cubic-bezier(.2,.8,.2,1) both}
+.screen.on.back{animation:slideBack .4s cubic-bezier(.2,.8,.2,1) both}
+.screen.anim > *,.screen.anim .appt,.screen.anim .crow,.screen.anim .bubble{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.screen.anim > *:nth-child(2),.screen.anim .appt:nth-child(2),.screen.anim .crow:nth-child(2){animation-delay:.05s}
+.screen.anim > *:nth-child(3),.screen.anim .appt:nth-child(3),.screen.anim .crow:nth-child(3){animation-delay:.1s}
+.screen.anim > *:nth-child(4),.screen.anim .appt:nth-child(4),.screen.anim .crow:nth-child(4){animation-delay:.15s}
+.screen.anim > *:nth-child(5),.screen.anim .appt:nth-child(5),.screen.anim .crow:nth-child(5){animation-delay:.2s}
+.screen.anim > *:nth-child(n+6),.screen.anim .appt:nth-child(n+6),.screen.anim .crow:nth-child(n+6){animation-delay:.24s}
+.nav-item.on svg{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.nav-item::after{content:"";position:absolute;bottom:-6px;left:50%;width:0;height:3px;border-radius:3px;background:var(--accent);transform:translateX(-50%);transition:width .3s cubic-bezier(.3,1.5,.5,1)}
+.nav-item.on::after{width:22px}
+.sheet{transition:transform .38s cubic-bezier(.2,1.15,.3,1)}
+.overlay{transition:opacity .25s}
+.toast{transition:transform .35s cubic-bezier(.2,1.3,.4,1),opacity .25s}
+.slot,.chip{transition:background .2s,border-color .2s,color .2s,transform .15s}
+.slots .slot{animation:fadeIn .3s both}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+/* Client tabs */
+.chat-list.inline{height:calc(100vh - 280px - var(--st) - var(--sb));min-height:260px;margin:0 -4px 10px;border-top:0}
+#v-client .page{padding-bottom:calc(110px + var(--sb))}
+.next-card{display:flex;align-items:center;gap:14px;background:var(--accent);color:var(--ink);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;width:100%;text-align:left}
+.next-card b{font-family:var(--display);font-size:22px;line-height:1.05;display:block;margin:2px 0}
+.next-card small{opacity:.8;font-size:12.5px}
+.next-card .pill{background:rgba(0,0,0,.18);color:var(--ink)}
 .center-msg{max-width:460px;margin:0 auto;padding:80px 24px;text-align:center;line-height:1.6}
 .center-msg h1{font-family:var(--display);font-size:36px;margin-bottom:10px}
 .center-msg code{background:var(--bg3);padding:2px 6px;border-radius:6px;font-size:13px}
@@ -327,7 +365,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <div class="tb-title"><span class="shop-name"></span><span id="c-switch-icon" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
         <div class="tb-sub" id="c-hello"></div>
       </button>
-      <button id="c-me-btn" onclick="clientProfileSheet()" aria-label="Your profile"></button>
+      <button id="c-me-btn" onclick="cTab('me')" aria-label="Your profile"></button>
     </header>
   </div>
   <main class="page">
@@ -337,15 +375,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <p class="muted small" style="margin-bottom:12px">Ask your barber for their 6-character shop code.</p>
         <div class="field"><input id="c-join-code0" class="code-input" maxlength="6" placeholder="ABC123"></div>
         <button class="btn" onclick="joinShop(this, '#c-join-code0')">Join shop</button>
+        <button class="btn-ghost danger" onclick="clientSignOut()">Sign out</button>
       </div>
     </div>
-    <div id="c-main">
+
+    <section class="screen" id="cs-book">
       <div id="c-nudge"></div>
       <div id="c-announce"></div>
-      <div class="section-title" id="c-appts-title" hidden>Your appointments</div>
-      <div id="c-appts"></div>
-
-      <section class="card" style="margin-top:12px">
+      <div id="c-next"></div>
+      <section class="card">
         <h3>Book an appointment</h3>
         <div class="field"><label for="c-service">Service</label><select id="c-service"></select></div>
         <div class="field" style="margin-bottom:0"><label>Day</label></div>
@@ -353,25 +391,75 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <div id="c-slots"></div>
         <button class="btn" id="c-book" disabled onclick="clientBook(this)">Pick a time</button>
       </section>
+    </section>
 
-      <button class="btn-ghost msg-btn" onclick="openChat({mode:'client'})" style="margin-bottom:12px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Message the shop <span class="badge" id="c-unread" hidden></span>
-      </button>
+    <section class="screen" id="cs-appts">
+      <div class="section-title" style="margin-top:4px">Upcoming</div>
+      <div id="c-appts"></div>
+      <div class="section-title" id="c-past-title" hidden>Past</div>
+      <div id="c-past"></div>
+    </section>
 
+    <section class="screen" id="cs-msgs">
+      <div class="chat-wrap">
+        <div class="chat-list inline" id="cc-list"></div>
+        <div class="chat-input">
+          <textarea id="cc-text" rows="1" placeholder="Message the shop" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+          <button class="send" onclick="sendChat(this)" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="cs-me">
+      <div class="card">
+        <div class="pic-edit">
+          <span id="p-avatar"></span>
+          <div class="btns">
+            <label class="btn-ghost slim">Change photo<input type="file" accept="image/*" hidden onchange="pickImage(this,256,d=>{draft.avatar=d;renderClientAvatarEdit()})"></label>
+            <button class="btn-ghost slim" onclick="draft.avatar=null;renderClientAvatarEdit()">Remove photo</button>
+          </div>
+        </div>
+        <div class="field"><label for="p-name">Name</label><input id="p-name" maxlength="60"></div>
+        <p class="muted small" style="margin-bottom:6px" id="p-phone"></p>
+        <button class="btn" onclick="saveClientProfile(this)">Save profile</button>
+      </div>
+
+      <div class="section-title">Your shops</div>
+      <div class="card">
+        <div id="p-shops"></div>
+        <div class="row2" style="margin-top:10px;align-items:flex-end">
+          <div class="field" style="margin:0"><label for="p-code">Join another shop</label><input id="p-code" class="code-input" maxlength="6" placeholder="Shop code"></div>
+          <button class="btn" style="width:auto;margin:0;padding:12px 18px" onclick="joinShop(this,'#p-code')">Join</button>
+        </div>
+      </div>
+
+      <div class="section-title">Settings</div>
       <section class="card">
         <div class="srow" style="padding-top:0">
-          <div class="srow-body"><b>Openings and announcements</b><small>Get the shop's blast messages</small></div>
+          <div class="srow-body"><b>Openings and announcements</b><small>Get this shop's blast messages</small></div>
           <label class="switch"><input type="checkbox" id="c-sub" onchange="clientToggleSub(this)"><span></span></label>
         </div>
-        <div class="srow" style="padding-bottom:0" id="c-push-row">
+        <div class="srow" id="c-push-row">
           <div class="srow-body"><b>Notifications on this phone</b><small>Confirmations, changes and messages</small></div>
           <label class="switch"><input type="checkbox" id="c-push" onchange="togglePush(this,'client')"><span></span></label>
         </div>
+        <div class="srow" style="padding-bottom:0">
+          <div class="srow-body"><b>Sounds</b><small>Play a chime when something new comes in</small></div>
+          <label class="switch"><input type="checkbox" class="sound-toggle" onchange="setSounds(this)"><span></span></label>
+        </div>
       </section>
-    </div>
+      <button class="btn-ghost danger" onclick="clientSignOut()">Sign out</button>
+      <div id="c-install"></div>
+    </section>
     <footer class="app-footer"><span class="app-version"></span><span>Made by Anthony from New York</span></footer>
   </main>
+
+  <nav class="bottom-nav" id="c-nav">
+    <button class="nav-item" data-t="book" onclick="cTab('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></svg>Book</button>
+    <button class="nav-item" data-t="appts" onclick="cTab('appts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Appointments<span class="nav-badge" id="nav-c-appts" hidden></span></button>
+    <button class="nav-item" data-t="msgs" onclick="cTab('msgs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="nav-badge" id="c-unread" hidden></span></button>
+    <button class="nav-item" data-t="me" onclick="cTab('me')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+  </nav>
 </div>
 
 <!-- ═══ Barber app ═══ -->
@@ -379,7 +467,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
   <div class="top">
     <header class="topbar">
       <div class="logo-slot"></div>
-      <div class="tb-text"><div class="tb-title shop-name"></div><div class="tb-sub" id="b-sub"></div></div>
+      <button class="tb-text" onclick="locationSheet()"><div class="tb-title"><span class="shop-name"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="tb-sub" id="b-sub"></div></button>
       <button class="ibtn" onclick="refreshBarber(true)" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36L21 8"/><path d="M21 3v5h-5"/></svg></button>
     </header>
   </div>
@@ -433,6 +521,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
         <div class="linkbox" id="o-link"></div>
         <div class="row2"><button class="btn-ghost" onclick="copyLink()">Copy link</button><button class="btn-ghost" onclick="shareLink()">Share</button></div>
         <button class="btn-ghost owner-only" style="border:0;color:var(--text2);font-size:13px" onclick="newCode()">Make a new code</button>
+      </div>
+
+      <div class="section-title">Locations</div>
+      <div class="card">
+        <div id="o-locations"></div>
+        <button class="btn-ghost" onclick="addLocationSheet()">Add a location</button>
+        <p class="muted small" style="margin-top:8px">Each location has its own schedule, clients, code and hours. Switch anytime by tapping the shop name at the top.</p>
       </div>
 
       <div class="owner-only">
@@ -505,6 +600,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
           <div class="srow-body"><b>Notifications on this phone</b><small>New requests, cancellations and messages</small></div>
           <label class="switch"><input type="checkbox" id="b-push" onchange="togglePush(this,'barber')"><span></span></label>
         </div>
+        <div class="srow">
+          <div class="srow-body"><b>Sounds</b><small>Chime for new requests and messages while the app is open</small></div>
+          <label class="switch"><input type="checkbox" class="sound-toggle" onchange="setSounds(this)"><span></span></label>
+        </div>
         <button class="btn-ghost" onclick="pinSheet()">Change PIN</button>
         <button class="btn-ghost danger" onclick="barberSignOut()">Sign out</button>
       </div>
@@ -542,7 +641,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 //    Leave as-is to run without notifications.
 // ═════════════════════════════════════════════════════════════
 // Bump this every time you upload a new version
-const APP_VERSION = '3.4';
+const APP_VERSION = '4.0';
 
 const SUPABASE_URL = 'https://zvijdvhvmnnigyjvwzuo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aWpkdmh2bW5uaWd5anZ3enVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjE5MTgsImV4cCI6MjEwNzQ5NzkxOH0.QxjvU5p-aoXdpJC3D6gcJtMnWsCJjU29mbLrDy4cZkM';
@@ -555,6 +654,17 @@ const THEMES = {
   emerald:  { label:'Emerald',      bg:'#0c1411', bg2:'#122019', bg3:'#1d2e26', card:'#14231c', text:'#edf3ee', text2:'#9db3a6', text3:'#6b8276', accent:'#3fbf86', ink:'#04140c', dark:true },
   copper:   { label:'Copper',       bg:'#15110f', bg2:'#1d1815', bg3:'#2a221e', card:'#201a17', text:'#f4ece6', text2:'#b3a398', text3:'#7d6f66', accent:'#d27c4a', ink:'#1a0d05', dark:true },
   clean:    { label:'Clean light',  bg:'#f3f3f2', bg2:'#ffffff', bg3:'#e6e6e4', card:'#ffffff', text:'#17171a', text2:'#5a5a60', text3:'#909096', accent:'#1d1d21', ink:'#ffffff', dark:false },
+  crimson:  { label:'Crimson',      bg:'#120b0c', bg2:'#1a1012', bg3:'#2a1a1d', card:'#1c1214', text:'#f6ecec', text2:'#b49a9c', text3:'#7d6567', accent:'#e0475a', ink:'#ffffff', dark:true },
+  royal:    { label:'Royal purple', bg:'#0f0c19', bg2:'#161226', bg3:'#251f3b', card:'#19152c', text:'#efeafd', text2:'#a69cc6', text3:'#6f6690', accent:'#a78bfa', ink:'#130a2b', dark:true },
+  ocean:    { label:'Ocean',        bg:'#061316', bg2:'#0b1c20', bg3:'#132c32', card:'#0e2125', text:'#e6f6f6', text2:'#8fb3b5', text3:'#5d7d80', accent:'#2cc4c4', ink:'#021314', dark:true },
+  sunset:   { label:'Sunset',       bg:'#150e0a', bg2:'#1e140e', bg3:'#2e2018', card:'#211710', text:'#fbeee4', text2:'#c2a28c', text3:'#86705f', accent:'#ff8a3d', ink:'#1c0b00', dark:true },
+  rose:     { label:'Rose',         bg:'#160c12', bg2:'#1f111a', bg3:'#311c29', card:'#22131c', text:'#fbebf3', text2:'#c39bb0', text3:'#88677a', accent:'#f472b6', ink:'#2a0517', dark:true },
+  neon:     { label:'Neon lime',    bg:'#08090a', bg2:'#101214', bg3:'#1b1e21', card:'#121417', text:'#eef3e6', text2:'#9aa392', text3:'#646b5e', accent:'#c6ff3d', ink:'#0d1400', dark:true },
+  steel:    { label:'Steel',        bg:'#101317', bg2:'#161a20', bg3:'#232931', card:'#191e25', text:'#e8edf3', text2:'#9aa6b4', text3:'#677381', accent:'#cbd5e1', ink:'#10151c', dark:true },
+  mono:     { label:'Black & white',bg:'#000000', bg2:'#0c0c0c', bg3:'#1c1c1c', card:'#101010', text:'#ffffff', text2:'#a3a3a3', text3:'#6b6b6b', accent:'#ffffff', ink:'#000000', dark:true },
+  sage:     { label:'Sage',         bg:'#eef2ec', bg2:'#ffffff', bg3:'#dfe6db', card:'#ffffff', text:'#1c2a20', text2:'#566458', text3:'#8a968b', accent:'#3f7a52', ink:'#ffffff', dark:false },
+  sand:     { label:'Sand',         bg:'#f5efe4', bg2:'#fffaf2', bg3:'#e9dfcd', card:'#fffaf2', text:'#2a2016', text2:'#6f6150', text3:'#a39582', accent:'#a0682a', ink:'#ffffff', dark:false },
+  sky:      { label:'Sky',          bg:'#edf3fb', bg2:'#ffffff', bg3:'#dae5f3', card:'#ffffff', text:'#0f1b2d', text2:'#4e5d73', text3:'#8592a6', accent:'#2563eb', ink:'#ffffff', dark:false },
 };
 
 const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -581,7 +691,7 @@ let B = null;               // barber: { token, barber, shop }
 let C = null;               // client: { token, client, shops, shopId, view }
 const cSel = { date:null, time:null };
 let bDate, bAnchor, bAppts = [], bClients = [], bThreads = [], pollT = null;
-let draft = {}, chat = null, chatTimer = null;
+let draft = {}, chat = null, chatTimer = null, seenPending = null, lastUnreadTotal = null;
 
 // ─── Helpers ──────────────────────────────────────────────────
 const $ = s => document.querySelector(s);
@@ -612,11 +722,52 @@ function toast(msg, type = ''){
   const el = $('#toast'); el.textContent = msg; el.className = 'toast show ' + type;
   clearTimeout(toast.t); toast.t = setTimeout(() => el.className = 'toast', 3000);
 }
-function show(v){ document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v)); window.scrollTo(0, 0); }
+function show(v){
+  document.querySelectorAll('.view').forEach(x => {
+    const on = x.id === 'v-' + v, was = x.classList.contains('on');
+    x.classList.toggle('on', on);
+    if (on && !was) { x.classList.remove('anim'); void x.offsetWidth; x.classList.add('anim'); setTimeout(() => x.classList.remove('anim'), 900); }
+  });
+  window.scrollTo(0, 0);
+}
+// Switch tabs inside a view with a slide + staggered fade-in
+function switchScreens(viewSel, id, dir){
+  document.querySelectorAll(viewSel + ' .screen').forEach(sc => {
+    const on = sc.id === id;
+    sc.classList.toggle('on', on);
+    sc.classList.remove('fwd', 'back', 'anim');
+    if (on && dir) { void sc.offsetWidth; sc.classList.add(dir, 'anim'); clearTimeout(sc._t); sc._t = setTimeout(() => sc.classList.remove('fwd', 'back', 'anim'), 900); }
+  });
+  window.scrollTo(0, 0);
+}
+
+// ─── Sounds (in-app chime; iPhone needs one tap first to allow audio) ──
+let audioCtx = null;
+function unlockAudio(){
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch {}
+}
+['touchstart', 'pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, unlockAudio, { passive: true }));
+const soundsOn = () => load('cb_sound') !== 'off';
+function chime(kind = 'note'){
+  if (!soundsOn() || !audioCtx || audioCtx.state !== 'running') return;
+  const t0 = audioCtx.currentTime, notes = kind === 'msg' ? [987.8, 1318.5] : [659.3, 830.6, 987.8, 1318.5];
+  notes.forEach((f, i) => {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain(), st = t0 + i * (kind === 'msg' ? 0.11 : 0.09);
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.22, st + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, st + 0.45);
+    o.connect(g); g.connect(audioCtx.destination); o.start(st); o.stop(st + 0.5);
+  });
+  if (navigator.vibrate) navigator.vibrate(kind === 'msg' ? 40 : [40, 60, 40]);
+}
+function setSounds(el){ store('cb_sound', el.checked ? 'on' : 'off'); syncSoundSwitches(); if (el.checked) { unlockAudio(); setTimeout(() => chime('note'), 50); } }
+function syncSoundSwitches(){ document.querySelectorAll('.sound-toggle').forEach(x => x.checked = soundsOn()); }
 function openSheet(html){ $('#sheet-body').innerHTML = html; $('#sheet').classList.add('open'); }
 function closeSheet(){
   $('#sheet').classList.remove('open');
-  if (chat) { chat = null; clearInterval(chatTimer); if (B) loadThreads(); if (C && C.shopId) refreshClientShop(); }
+  if (chat && chat.inSheet) { chat = null; clearInterval(chatTimer); if (B) loadThreads(); }
 }
 async function busy(btn, fn){
   if (!btn || btn.disabled) return;
@@ -664,7 +815,7 @@ async function rpc(fn, args = {}){
   if (!r.ok) {
     const msg = (data && data.message) || `Something went wrong (${r.status})`;
     if (msg.includes('CLIENT_SESSION_EXPIRED')) { clientOut(); throw new Error('Signed out. Sign in again.'); }
-    if (msg.includes('SESSION_EXPIRED')) { barberOut(); throw new Error('Signed out. Sign in again.'); }
+    if (msg.includes('SESSION_EXPIRED') || msg.includes('NO_SHOP')) { barberOut(); throw new Error(msg.includes('NO_SHOP') ? "You're not part of a shop anymore." : 'Signed out. Sign in again.'); }
     throw new Error(msg);
   }
   return data;
@@ -864,40 +1015,62 @@ function setClientBundle(b){ C = { ...(C || {}), token: b.token, client: b.clien
 function clientOut(){ C = null; store('cb_ctoken', null); closeSheet(); showLogin(); }
 async function clientSignOut(){ try { await disablePush(true); } catch {} try { await rpc('client_logout', { p_token: C.token }); } catch {} clientOut(); setLoginTab('client'); }
 
+let cTabNow = 'book';
+const C_TABS = ['book','appts','msgs','me'];
 async function enterClient(){
   const saved = load('cb_cshop');
   if (!C.shopId || !C.shops.some(s => s.id === C.shopId))
     C.shopId = (C.shops.find(s => s.id === saved) || C.shops[0] || {}).id || null;
   show('client');
   renderClientHeader();
-  $('#c-noshop').hidden = !!C.shopId; $('#c-main').hidden = !C.shopId;
+  $('#c-noshop').hidden = !!C.shopId;
+  $('#c-nav').hidden = !C.shopId;
+  document.querySelectorAll('#v-client .screen').forEach(x => x.hidden = !C.shopId);
   if (!C.shopId) { shop = { name: 'Cutting Board', theme: 'gold' }; applyShop(); return; }
+  cTab('book', true);
   await loadClientShop();
   syncPushSwitch('#c-push', '#c-push-row');
+  syncSoundSwitches();
 }
 function renderClientHeader(){
   $('#c-hello').textContent = `Hi, ${first(C.client.name)}`;
   $('#c-me-btn').innerHTML = avatarHTML(C.client.name, C.client.avatar);
   $('#c-switch-icon').hidden = C.shops.length < 2;
 }
+function cTab(t, quiet){
+  if (!C || !C.shopId) return;
+  const dir = C_TABS.indexOf(t) >= C_TABS.indexOf(cTabNow) ? 'fwd' : 'back';
+  cTabNow = t;
+  switchScreens('#v-client', 'cs-' + t, quiet ? '' : dir);
+  document.querySelectorAll('#c-nav .nav-item').forEach(n => n.classList.toggle('on', n.dataset.t === t));
+  if (chat && !chat.inSheet) { chat = null; clearInterval(chatTimer); }
+  if (t === 'msgs') startClientChat();
+  if (t === 'me') renderClientMe();
+  if (t === 'appts') loadClientAppts();
+}
 async function loadClientShop(){
   store('cb_cshop', C.shopId);
-  try {
-    C.view = await rpc('client_shop', { p_token: C.token, p_shop: C.shopId });
-  } catch (e) { toast(e.message, 'err'); return; }
+  try { C.view = await rpc('client_shop', { p_token: C.token, p_shop: C.shopId }); }
+  catch (e) { toast(e.message, 'err'); return; }
   shop = C.view.shop; applyShop();
+  C.lastUnread = C.view.unread; C.statusSeen = null;
   $('#c-sub').checked = !!C.view.subscribed;
   $('#c-service').innerHTML = (shop.services || []).map(s => `<option>${esc(s)}</option>`).join('');
   renderAnnouncement(); renderUnread(); renderClientNudge();
   cSel.time = null; cSel.date = null;
   renderClientDates(); loadClientAppts();
+  if (cTabNow === 'msgs') startClientChat();
+  if (cTabNow === 'me') renderClientMe();
 }
 async function refreshClientShop(){
   if (!C || !C.shopId) return;
   try {
     C.view = await rpc('client_shop', { p_token: C.token, p_shop: C.shopId });
-    const themeChanged = shop.theme !== C.view.shop.theme || shop.logo !== C.view.shop.logo || shop.banner_text !== C.view.shop.banner_text || shop.banner_on !== C.view.shop.banner_on || shop.name !== C.view.shop.name;
-    shop = C.view.shop; if (themeChanged) applyShop();
+    const v = C.view.shop;
+    const changed = ['theme','logo','banner_text','banner_on','name'].some(k => shop[k] !== v[k]);
+    shop = v; if (changed) applyShop();
+    if (C.view.unread > (C.lastUnread || 0) && !(chat && chat.mode === 'client')) { chime('msg'); toast('New message from the shop'); }
+    C.lastUnread = C.view.unread;
     renderAnnouncement(); renderUnread(); loadClientAppts();
   } catch {}
 }
@@ -967,28 +1140,46 @@ async function clientBook(btn){
   loadClientSlots();
 }
 const cStatus = s => ({ pending:'Waiting for the shop', confirmed:'Confirmed', declined:'Not available', cancelled:'Cancelled', reschedule:'New time proposed' }[s] || s);
+function clientApptCard(a, past){
+  return `<div class="appt st-${a.status}">
+    <div class="appt-row">
+      <div class="appt-when"><b>${new Date(a.date + 'T00:00:00').getDate()}</b><small>${fmtDay(a.date, { month:'short' })}</small></div>
+      <div class="appt-body">
+        <div class="appt-name">${fmtDay(a.date, { weekday:'long' })}, ${fmt12(a.time)}</div>
+        <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${past && a.status === 'confirmed' ? 'Done' : cStatus(a.status)}</span></div>
+      </div>
+      ${!past && a.status === 'confirmed' ? `<button class="ibtn info" onclick="clientCalendar('${a.id}')" aria-label="Add to calendar" title="Add to calendar">${IC.calAdd}</button>` : ''}
+      ${!past && ['pending','confirmed'].includes(a.status) ? `<button class="ibtn danger" onclick="clientCancel('${a.id}')" aria-label="Cancel appointment">${IC.x}</button>` : ''}
+    </div>
+    ${a.status === 'reschedule' ? `<div class="appt-extra">
+        The shop asked to move this to <b>${whenStr(a.proposed_date, a.proposed_time)}</b>.${a.note ? `<br><span class="muted">"${esc(a.note)}"</span>` : ''}
+        <div class="row2"><button class="btn-ghost slim" onclick="clientRespond(this,'${a.id}',false)">Decline</button><button class="btn slim" style="margin:0;padding:9px" onclick="clientRespond(this,'${a.id}',true)">Accept new time</button></div>
+      </div>` : ''}
+    ${!past && a.status === 'declined' ? `<div class="appt-extra muted">That time didn't work for the shop. Pick another time on the Book tab.</div>` : ''}
+  </div>`;
+}
 async function loadClientAppts(){
   try {
-    const list = (await rpc('client_appts', { p_token: C.token, p_shop: C.shopId })).filter(a => a.date >= today() || a.status === 'reschedule');
-    C.appts = list;
-    $('#c-appts-title').hidden = !list.length;
-    $('#c-appts').innerHTML = list.map(a => `
-      <div class="appt st-${a.status}">
-        <div class="appt-row">
-          <div class="appt-when"><b>${new Date(a.date + 'T00:00:00').getDate()}</b><small>${fmtDay(a.date, { month:'short' })}</small></div>
-          <div class="appt-body">
-            <div class="appt-name">${fmtDay(a.date, { weekday:'long' })}, ${fmt12(a.time)}</div>
-            <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${cStatus(a.status)}</span></div>
-          </div>
-          ${a.status === 'confirmed' ? `<button class="ibtn info" onclick="clientCalendar('${a.id}')" aria-label="Add to calendar" title="Add to calendar">${IC.calAdd}</button>` : ''}
-          ${['pending','confirmed'].includes(a.status) ? `<button class="ibtn danger" onclick="clientCancel('${a.id}')" aria-label="Cancel appointment">${IC.x}</button>` : ''}
-        </div>
-        ${a.status === 'reschedule' ? `<div class="appt-extra">
-            The shop asked to move this to <b>${whenStr(a.proposed_date, a.proposed_time)}</b>.${a.note ? `<br><span class="muted">"${esc(a.note)}"</span>` : ''}
-            <div class="row2"><button class="btn-ghost slim" onclick="clientRespond(this,'${a.id}',false)">Decline</button><button class="btn slim" style="margin:0;padding:9px" onclick="clientRespond(this,'${a.id}',true)">Accept new time</button></div>
-          </div>` : ''}
-        ${a.status === 'declined' ? `<div class="appt-extra muted">That time didn't work for the shop. Pick another time below.</div>` : ''}
-      </div>`).join('');
+    const all = await rpc('client_appts', { p_token: C.token, p_shop: C.shopId });
+    const up = all.filter(a => a.date >= today() || a.status === 'reschedule');
+    const past = all.filter(a => !up.includes(a) && a.status === 'confirmed').reverse().slice(0, 15);
+    C.appts = up;
+    // sound + toast when the shop changes one of your appointments
+    const seen = C.statusSeen;
+    C.statusSeen = Object.fromEntries(up.map(a => [a.id, a.status]));
+    if (seen) {
+      const changed = up.find(a => seen[a.id] && seen[a.id] !== a.status && a.status !== 'cancelled');
+      if (changed) { chime('note'); toast({ confirmed:'Your appointment is confirmed', declined:"The shop couldn't take that time", reschedule:'The shop proposed a new time' }[changed.status] || 'Appointment updated'); }
+    }
+    $('#c-appts').innerHTML = up.length ? up.map(a => clientApptCard(a)).join('') : '<div class="empty" style="padding:24px">No upcoming appointments.<br><button class="btn-ghost" style="width:auto;display:inline-flex;margin-top:12px;padding:9px 16px" onclick="cTab(\'book\')">Book one</button></div>';
+    $('#c-past-title').hidden = !past.length;
+    $('#c-past').innerHTML = past.map(a => clientApptCard(a, true)).join('');
+    const asks = up.filter(a => a.status === 'reschedule').length, nb = $('#nav-c-appts');
+    nb.hidden = !asks; nb.textContent = asks;
+    const next = up.find(a => ['confirmed','pending','reschedule'].includes(a.status));
+    $('#c-next').innerHTML = next ? `<button class="next-card" onclick="cTab('appts')">
+        <span style="flex:1"><small>Your next appointment</small><b>${fmtDay(next.date, { weekday:'short', month:'short', day:'numeric' })}, ${fmt12(next.time)}</b>
+        <small>${esc(next.service || '')}</small></span><span class="pill">${cStatus(next.status)}</span></button>` : '';
   } catch {}
 }
 async function clientCancel(id){
@@ -1000,6 +1191,7 @@ async function clientRespond(btn, id, accept){
   if (!accept && !confirm('Decline the new time? Your appointment will be cancelled and you can book another.')) return;
   await busy(btn, async () => {
     await rpc('client_respond', { p_token: C.token, p_id: id, p_accept: accept });
+    C.statusSeen = null;
     toast(accept ? "You're confirmed for the new time" : 'Appointment cancelled', accept ? 'ok' : '');
     loadClientAppts(); loadClientSlots();
   });
@@ -1008,44 +1200,37 @@ async function clientToggleSub(el){
   try { await rpc('client_set_subscribed', { p_token: C.token, p_shop: C.shopId, p_on: el.checked }); toast(el.checked ? "You'll get the shop's announcements" : 'Announcements turned off'); }
   catch (e) { el.checked = !el.checked; toast(e.message, 'err'); }
 }
+const shopTile = s => `<span class="logo-slot">${s.logo ? `<img src="${s.logo}" alt="">` : esc(initials(s.name))}</span>`;
 function shopSwitchSheet(){
   if (!C || C.shops.length < 2) return;
   openSheet(`<h2>Your shops</h2><p class="sub">Switch to another shop you're a client of.</p>
-    ${C.shops.map(s => `<button class="crow" onclick="switchShop('${s.id}')"><span class="logo-slot">${s.logo ? `<img src="${s.logo}" alt="">` : esc(initials(s.name))}</span>
+    ${C.shops.map(s => `<button class="crow" onclick="switchShop('${s.id}')">${shopTile(s)}
       <span class="crow-body"><b>${esc(s.name)}</b><small>${s.id === C.shopId ? 'Showing now' : 'Tap to switch'}</small></span></button>`).join('')}`);
 }
-async function switchShop(id){ closeSheet(); C.shopId = id; await loadClientShop(); window.scrollTo(0, 0); }
-function clientProfileSheet(){
+async function switchShop(id){ closeSheet(); if (id === C.shopId) return; C.shopId = id; show('client'); await loadClientShop(); window.scrollTo(0, 0); }
+function renderClientAvatarEdit(){ $('#p-avatar').innerHTML = avatarHTML(C.client.name, draft.avatar, 'lg'); }
+function renderClientMe(){
   draft = { avatar: C.client.avatar };
-  openSheet(`<div class="sheet-head"><h2>Your profile</h2></div>
-    <div class="pic-edit"><span id="p-avatar">${avatarHTML(C.client.name, draft.avatar, 'lg')}</span>
-      <div class="btns"><label class="btn-ghost slim">Change photo<input type="file" accept="image/*" hidden onchange="pickImage(this,256,d=>{draft.avatar=d;$('#p-avatar').innerHTML=avatarHTML(C.client.name,d,'lg')})"></label>
-      <button class="btn-ghost slim" onclick="draft.avatar=null;$('#p-avatar').innerHTML=avatarHTML(C.client.name,null,'lg')">Remove photo</button></div></div>
-    <div class="field"><label for="p-name">Name</label><input id="p-name" value="${esc(C.client.name)}" maxlength="60"></div>
-    <p class="muted small" style="margin-bottom:6px">Signed in as ${fmtPhone(C.client.phone)}</p>
-    <button class="btn" onclick="saveClientProfile(this)">Save profile</button>
-    <div class="section-title">Your shops</div>
-    ${C.shops.map(s => `<div class="srow"><span class="logo-slot">${s.logo ? `<img src="${s.logo}" alt="">` : esc(initials(s.name))}</span><div class="srow-body"><b>${esc(s.name)}</b></div>
-      <button class="ibtn danger" onclick="leaveShop('${s.id}',${esc(JSON.stringify(s.name))})" aria-label="Leave ${esc(s.name)}">${IC.trash}</button></div>`).join('') || '<p class="muted small">None yet.</p>'}
-    <div class="row2" style="margin-top:10px;align-items:flex-end">
-      <div class="field" style="margin:0"><label for="p-code">Join another shop</label><input id="p-code" class="code-input" maxlength="6" placeholder="Shop code"></div>
-      <button class="btn" style="width:auto;margin:0;padding:12px 18px" onclick="joinShop(this,'#p-code')">Join</button>
-    </div>
-    <button class="btn-ghost danger" style="margin-top:18px" onclick="clientSignOut()">Sign out</button>`);
+  renderClientAvatarEdit();
+  $('#p-name').value = C.client.name;
+  $('#p-phone').textContent = 'Signed in as ' + fmtPhone(C.client.phone);
+  $('#p-shops').innerHTML = C.shops.map(s => `<div class="srow">${shopTile(s)}<div class="srow-body"><b>${esc(s.name)}</b>${s.id === C.shopId ? '<small>Showing now</small>' : `<small><a href="#" onclick="event.preventDefault();switchShop('${s.id}')" style="color:var(--accent)">Switch to this shop</a></small>`}</div>
+    <button class="ibtn danger" onclick="leaveShop('${s.id}',${esc(JSON.stringify(s.name))})" aria-label="Leave ${esc(s.name)}">${IC.trash}</button></div>`).join('') || '<p class="muted small">None yet.</p>';
+  renderInstall();
 }
 async function saveClientProfile(btn){
   const name = $('#p-name').value.trim(); if (!name) return toast('Enter your name', 'err');
   await busy(btn, async () => {
     await rpc('client_set_profile', { p_token: C.token, p_name: name, p_avatar: draft.avatar || null });
     C.client.name = name; C.client.avatar = draft.avatar || null;
-    renderClientHeader(); closeSheet(); toast('Profile saved', 'ok');
+    renderClientHeader(); toast('Profile saved', 'ok');
   });
 }
 async function joinShop(btn, sel){
   const code = $(sel).value.trim(); if (code.length !== 6) return toast('Shop codes are 6 characters', 'err');
   await busy(btn, async () => {
     const r = await rpc('client_join_shop', { p_token: C.token, p_code: code });
-    setClientBundle(r.bundle); C.shopId = r.shop_id; closeSheet();
+    setClientBundle(r.bundle); C.shopId = r.shop_id; closeSheet(); $(sel).value = '';
     await enterClient(); toast(`You're now a client of ${shop.name}`, 'ok');
   });
 }
@@ -1058,13 +1243,27 @@ async function leaveShop(id, name){
     closeSheet(); enterClient(); toast(`Left ${name}`);
   } catch (e) { toast(e.message, 'err'); }
 }
+// Install prompt (shown on the Profile tab)
+let deferredInstall = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; renderInstall(); });
+function renderInstall(){
+  const el = $('#c-install'); if (!el || !shop) return;
+  if (isStandalone()) el.innerHTML = '';
+  else if (deferredInstall) el.innerHTML = `<button class="btn-ghost" onclick="doInstall()">${IC.plus} Add ${esc(shop.name)} to your home screen</button>`;
+  else if (isIOS) el.innerHTML = `<p class="hint">To save ${esc(shop.name)} as an app, tap <b>Share</b> then <b>Add to Home Screen</b>.</p>`;
+  else el.innerHTML = '';
+}
+async function doInstall(){ if (!deferredInstall) return; deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; renderInstall(); }
 
-// ─── Chat (both sides) ────────────────────────────────────────
+// ─── Chat (sheet on the barber side, a tab on the client side) ─
+function startClientChat(){
+  chat = { mode: 'client', list: '#cc-list', input: '#cc-text', first: true };
+  $('#cc-list').innerHTML = '<p class="muted small" style="text-align:center;padding:24px 0">Loading…</p>';
+  loadChat(); clearInterval(chatTimer); chatTimer = setInterval(loadChat, 8000);
+}
 function openChat(ctx){
-  chat = { ...ctx, first: true };
-  const head = ctx.mode === 'client'
-    ? `<div class="sheet-head"><span class="logo-slot">${logoHTML()}</span><div><h2>${esc(shop.name)}</h2><p class="sub">Messages go to the barbers at this shop</p></div></div>`
-    : `<div class="sheet-head">${avatarHTML(ctx.name, ctx.avatar)}<div><h2>${esc(ctx.name)}</h2><p class="sub">${fmtPhone(ctx.phone)}</p></div></div>
+  chat = { ...ctx, list: '#chat-list', input: '#chat-text', inSheet: true, first: true };
+  const head = `<div class="sheet-head">${avatarHTML(ctx.name, ctx.avatar)}<div><h2>${esc(ctx.name)}</h2><p class="sub">${fmtPhone(ctx.phone)}</p></div></div>
        ${ctx.phone ? `<div class="row2"><a class="btn-ghost slim" href="tel:+1${ctx.phone}">${IC.phone} Call</a><button class="btn-ghost slim" onclick="openSms('${ctx.phone}','')">${IC.sms} Text from my phone</button></div>` : ''}`;
   openSheet(`${head}<div class="chat-list" id="chat-list"><p class="muted small" style="text-align:center;padding:24px 0">Loading…</p></div>
     <div class="chat-input"><textarea id="chat-text" rows="1" placeholder="Message" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
@@ -1073,27 +1272,32 @@ function openChat(ctx){
 }
 async function loadChat(){
   if (!chat) return;
+  const ctx = chat;
   try {
-    const msgs = chat.mode === 'client'
+    const msgs = ctx.mode === 'client'
       ? await rpc('client_messages', { p_token: C.token, p_shop: C.shopId })
-      : await rpc('barber_thread', { p_token: B.token, p_client: chat.clientId });
-    const el = $('#chat-list'); if (!el || !chat) return;
-    const mine = chat.mode === 'client' ? 'client' : 'barber';
+      : await rpc('barber_thread', { p_token: B.token, p_client: ctx.clientId });
+    const el = $(ctx.list); if (!el || chat !== ctx) return;
+    const mine = ctx.mode === 'client' ? 'client' : 'barber';
+    if (ctx.count != null && msgs.length > ctx.count && msgs[msgs.length - 1].sender !== mine) chime('msg');
+    ctx.count = msgs.length;
     const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
     el.innerHTML = msgs.length ? msgs.map(m => `<div class="bubble ${m.sender === mine ? 'me' : ''}"><p>${esc(m.body)}</p>
         <small>${m.sender === 'barber' && m.barber && (mine === 'client' || m.barber !== B.barber.name) ? esc(m.barber) + ', ' : ''}${fmtStamp(m.created_at)}</small></div>`).join('')
-      : `<p class="muted small" style="text-align:center;padding:24px 0">No messages yet.</p>`;
-    if (nearBottom || chat.first) el.scrollTop = el.scrollHeight;
-    chat.first = false;
+      : `<p class="muted small" style="text-align:center;padding:24px 0">${ctx.mode === 'client' ? `No messages yet. Questions for ${esc(shop.name)}? Ask here.` : 'No messages yet.'}</p>`;
+    if (nearBottom || ctx.first) el.scrollTop = el.scrollHeight;
+    ctx.first = false;
+    if (ctx.mode === 'client' && C.view && C.view.unread) { C.view.unread = 0; C.lastUnread = 0; renderUnread(); }
   } catch {}
 }
 async function sendChat(btn){
-  const t = $('#chat-text'), body = t.value.trim(); if (!body) return;
+  if (!chat) return;
+  const t = $(chat.input), body = t.value.trim(); if (!body) return;
   btn.disabled = true;
   try {
     if (chat.mode === 'client') await rpc('client_send_message', { p_token: C.token, p_shop: C.shopId, p_body: body });
     else await rpc('barber_send_message', { p_token: B.token, p_client: chat.clientId, p_body: body });
-    t.value = ''; t.style.height = 'auto'; chat.first = true; await loadChat();
+    t.value = ''; t.style.height = 'auto'; chat.first = true; chat.count = (chat.count || 0) + 1; await loadChat();
   } catch (e) { toast(e.message, 'err'); }
   btn.disabled = false;
 }
@@ -1148,9 +1352,46 @@ function openSms(phone, body){ location.href = `sms:+1${phone}${body ? '?&body='
 
 // ═════════════════════════ BARBER ═════════════════════════════
 async function loadBarber(token){
-  const me = await rpc('barber_me', { p_token: token });
-  B = { token, barber: me.barber, shop: me.shop }; shop = me.shop;
+  setBarberMe(token, await rpc('barber_me', { p_token: token }));
+}
+function setBarberMe(token, me){
+  B = { token, barber: me.barber, shop: me.shop, shops: me.shops || [] }; shop = me.shop;
   store('cb_btoken', token); applyShop();
+}
+// ── Locations ──
+function locationSheet(){
+  openSheet(`<h2>Your locations</h2><p class="sub">Each location has its own schedule, clients and shop code.</p>
+    ${B.shops.map(s => `<button class="crow" onclick="switchLocation('${s.id}')">${shopTile(s)}
+      <span class="crow-body"><b>${esc(s.name)}</b><small>${s.id === B.shop.id ? 'Showing now' : 'Tap to switch'}${s.is_owner ? '' : ', barber'}</small></span>
+      ${s.id === B.shop.id ? `<span style="color:var(--accent)">${IC.check}</span>` : ''}</button>`).join('')}
+    <button class="btn-ghost" onclick="addLocationSheet()">${IC.plus} Add a location</button>`);
+}
+async function switchLocation(id){
+  closeSheet(); if (id === B.shop.id) return;
+  try {
+    setBarberMe(B.token, await rpc('barber_switch_shop', { p_token: B.token, p_shop: id }));
+    bAppts = []; bClients = []; bThreads = []; seenPending = null; lastUnreadTotal = null;
+    enterBarber(); toast(`Switched to ${shop.name}`, 'ok');
+  } catch (e) { toast(e.message, 'err'); }
+}
+function addLocationSheet(){
+  openSheet(`<h2>Add a location</h2><p class="sub">The new location starts with the same look, hours and services as ${esc(shop.name)}. It gets its own shop code, schedule and clients. You can change everything after.</p>
+    <div class="field"><label for="al-name">Location name</label><input id="al-name" maxlength="40" placeholder="${esc(shop.name)} Uptown"></div>
+    <button class="btn" onclick="addLocation(this)">Create location</button>`);
+  setTimeout(() => $('#al-name') && $('#al-name').focus(), 300);
+}
+async function addLocation(btn){
+  const name = $('#al-name').value.trim(); if (!name) return toast('Name the new location', 'err');
+  await busy(btn, async () => {
+    setBarberMe(B.token, await rpc('barber_add_location', { p_token: B.token, p_name: name }));
+    closeSheet(); bAppts = []; bClients = []; bThreads = []; seenPending = null; lastUnreadTotal = null;
+    enterBarber(); bTab('options');
+    toast(`${name} created. Its shop code is ${B.shop.code}`, 'ok');
+  });
+}
+function renderLocations(){
+  $('#o-locations').innerHTML = B.shops.map(s => `<div class="srow">${shopTile(s)}<div class="srow-body"><b>${esc(s.name)}</b><small>Code ${esc(s.code)}${s.id === B.shop.id ? ', showing now' : ''}</small></div>
+    ${s.id === B.shop.id ? '' : `<button class="btn-ghost slim" style="width:auto;padding:8px 12px" onclick="switchLocation('${s.id}')">Switch</button>`}</div>`).join('');
 }
 function barberOut(){ B = null; store('cb_btoken', null); clearInterval(pollT); closeSheet(); showLogin().then(() => setLoginTab('barber')); }
 async function barberSignOut(){ try { await disablePush(true); } catch {} try { await rpc('barber_logout', { p_token: B.token }); } catch {} barberOut(); }
@@ -1159,16 +1400,21 @@ function enterBarber(){
   $('#b-sub').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
   document.querySelectorAll('.owner-only').forEach(e => e.hidden = !B.barber.is_owner);
   bDate = today(); bAnchor = addDays(today(), -1);
-  bTab('schedule');
+  bTabNow = 'schedule'; bTab('schedule', true);
+  syncSoundSwitches();
   refreshBarber();
   renderBarberNudge(); syncPushSwitch('#b-push', '#b-push-row');
   clearInterval(pollT);
-  pollT = setInterval(() => { if (document.visibilityState === 'visible' && B) { loadAppts(); loadThreads(); } }, 30000);
+  pollT = setInterval(() => { if (document.visibilityState === 'visible' && B) { loadAppts(); loadThreads(); } }, 20000);
 }
 function refreshBarber(manual){ loadAppts(); loadClients(); loadThreads(); if (manual) toast('Refreshed'); }
 async function renderBarberNudge(){ $('#b-nudge').innerHTML = await pushNudgeHTML('barber'); }
-function bTab(t){
-  document.querySelectorAll('#v-barber .screen').forEach(s => s.classList.toggle('on', s.id === 'bs-' + t));
+let bTabNow = 'schedule';
+const B_TABS = ['schedule','messages','clients','blast','options'];
+function bTab(t, quiet){
+  const dir = B_TABS.indexOf(t) >= B_TABS.indexOf(bTabNow) ? 'fwd' : 'back';
+  bTabNow = t;
+  switchScreens('#v-barber', 'bs-' + t, quiet ? '' : dir);
   document.querySelectorAll('#v-barber .nav-item').forEach(n => n.classList.toggle('on', n.dataset.t === t));
   $('#fab').hidden = t !== 'schedule';
   if (t === 'messages') loadThreads();
@@ -1183,6 +1429,13 @@ async function loadAppts(){
   if (!B) return;
   try {
     bAppts = await rpc('barber_appts', { p_token: B.token, p_from: bAnchor, p_to: addDays(bAnchor, 20) });
+    // chime + toast for brand-new requests since the last check
+    const pend = bAppts.filter(a => a.status === 'pending');
+    if (seenPending) {
+      const fresh = pend.filter(a => !seenPending.has(a.id));
+      if (fresh.length) { chime('note'); toast(fresh.length === 1 ? `New request: ${fresh[0].name}, ${whenStr(fresh[0].date, fresh[0].time)}` : `${fresh.length} new appointment requests`, 'ok'); }
+      pend.forEach(a => seenPending.add(a.id));
+    } else seenPending = new Set(pend.map(a => a.id));
     renderStrip(); renderDay(); updateBadges();
   } catch (e) { if (B) toast(e.message, 'err'); }
 }
@@ -1316,7 +1569,13 @@ async function saveNewAppt(btn){
 // ── Messages ──
 async function loadThreads(){
   if (!B) return;
-  try { bThreads = await rpc('barber_threads', { p_token: B.token }); renderThreads(); updateBadges(); } catch {}
+  try {
+    bThreads = await rpc('barber_threads', { p_token: B.token });
+    const total = bThreads.reduce((n, t) => n + Number(t.unread || 0), 0);
+    if (lastUnreadTotal != null && total > lastUnreadTotal && !(chat && chat.inSheet)) { chime('msg'); toast('New message', 'ok'); }
+    lastUnreadTotal = total;
+    renderThreads(); updateBadges();
+  } catch {}
 }
 function renderThreads(){
   $('#b-threads').innerHTML = bThreads.length ? bThreads.map(t => `
@@ -1449,8 +1708,8 @@ function renderOptions(){
     $('#o-banner-on').checked = !!shop.banner_on;
     renderLogoPrev(); renderSwatches(); loadTeam();
   }
-  renderHours(); renderServices();
-  syncPushSwitch('#b-push', '#b-push-row');
+  renderHours(); renderServices(); renderLocations();
+  syncPushSwitch('#b-push', '#b-push-row'); syncSoundSwitches();
 }
 function renderMeAvatar(){ $('#o-me-avatar').innerHTML = avatarHTML(B.barber.name, draft.avatar, 'lg'); }
 async function saveMe(btn){
@@ -1519,16 +1778,21 @@ async function loadTeam(){
   } catch {}
 }
 function addBarberSheet(){
-  openSheet(`<h2>Add barber</h2><p class="sub">They sign in on the Barber tab with this phone number and PIN.</p>
+  openSheet(`<h2>Add barber</h2><p class="sub">They sign in on the Barber tab with this phone number and PIN. If they already work at another of your locations, just enter their phone number.</p>
     <div class="field"><label for="ab-name">Name</label><input id="ab-name"></div>
     <div class="field"><label for="ab-phone">Phone</label><input id="ab-phone" class="phone" inputmode="tel" placeholder="(555) 555-5555"></div>
-    <div class="field"><label for="ab-pin">PIN for them (4–8 digits)</label><input id="ab-pin" inputmode="numeric" maxlength="8"></div>
+    <div class="field"><label for="ab-pin">PIN for them (4–8 digits, not needed if they already have an account)</label><input id="ab-pin" inputmode="numeric" maxlength="8"></div>
     <button class="btn" onclick="addBarber(this)">Add barber</button>`);
 }
 async function addBarber(btn){
   const name = $('#ab-name').value.trim(), phone = digits($('#ab-phone').value), pin = $('#ab-pin').value;
-  if (!name || phone.length !== 10 || !/^\d{4,8}$/.test(pin)) return toast('Enter a name, 10-digit phone and 4–8 digit PIN', 'err');
-  await busy(btn, async () => { await rpc('barber_add_barber', { p_token: B.token, p_name: name, p_phone: phone, p_pin: pin }); closeSheet(); loadTeam(); toast(`${name} added`, 'ok'); });
+  if (phone.length !== 10) return toast('Enter a 10-digit phone number', 'err');
+  if (pin && !/^\d{4,8}$/.test(pin)) return toast('PIN must be 4 to 8 digits', 'err');
+  await busy(btn, async () => {
+    const r = await rpc('barber_add_barber', { p_token: B.token, p_name: name, p_phone: phone, p_pin: pin || null });
+    closeSheet(); loadTeam();
+    toast(r && r.existing ? 'Added. They already had an account, so they sign in with their own PIN.' : `${name} added`, 'ok');
+  });
 }
 async function removeBarber(id, name){
   if (!confirm(`Remove ${name}? They won't be able to sign in.`)) return;
@@ -1558,7 +1822,15 @@ setInterval(() => { if (document.visibilityState === 'visible' && C && $('#v-cli
 
 document.querySelectorAll('.app-version').forEach(e => e.textContent = 'Cutting Board v' + APP_VERSION);
 boot();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  // A push arrived while the app is open: refresh right away (the refresh plays the chime)
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (!e.data || e.data.type !== 'push') return;
+    if (B && $('#v-barber').classList.contains('on')) { loadAppts(); loadThreads(); }
+    if (C && $('#v-client').classList.contains('on')) { refreshClientShop(); if (chat && chat.mode === 'client') loadChat(); }
+  });
+}
 </script>
 </body>
 </html>
