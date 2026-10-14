@@ -1,7 +1,7 @@
 // Cutting Board service worker
 // - Network first, so new versions show right after you push to GitHub
 // - Shows push notifications and opens the app when one is tapped
-const CACHE = 'cutting-board-v3.2'; // match APP_VERSION in index.html
+const CACHE = 'cutting-board-v3.4'; // match APP_VERSION in index.html
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(
