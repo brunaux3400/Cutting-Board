@@ -1,7 +1,8 @@
 // Cutting Board service worker
 // - Network first, so new versions show right after you push to GitHub
-// - Shows push notifications and opens the app when one is tapped
-const CACHE = 'cutting-board-v3.4'; // match APP_VERSION in index.html
+// - Shows push notifications (with the phone's notification sound) and
+//   tells an open copy of the app to refresh and chime right away
+const CACHE = 'cutting-board-v4.0'; // match APP_VERSION in index.html
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(
@@ -24,11 +25,18 @@ self.addEventListener('fetch', e => {
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch { d = { body: e.data && e.data.text() }; }
-  e.waitUntil(self.registration.showNotification(d.title || 'Cutting Board', {
-    body: d.body || '',
-    tag: d.tag,
-    data: { url: d.url || self.registration.scope },
-  }));
+  e.waitUntil(Promise.all([
+    self.registration.showNotification(d.title || 'Cutting Board', {
+      body: d.body || '',
+      tag: d.tag,
+      renotify: true,          // sound/buzz again even if replacing an older one
+      silent: false,           // use the phone's notification sound
+      vibrate: [80, 60, 80],   // Android
+      data: { url: d.url || self.registration.scope },
+    }),
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(wins => wins.forEach(w => w.postMessage({ type: 'push', title: d.title, body: d.body }))),
+  ]));
 });
 
 self.addEventListener('notificationclick', e => {
