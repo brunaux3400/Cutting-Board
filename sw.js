@@ -2,7 +2,7 @@
 // - Network first, so new versions show right after you push to GitHub
 // - Shows push notifications (with the phone's notification sound) and
 //   tells an open copy of the app to refresh and chime right away
-const CACHE = 'cutting-board-v4.0'; // match APP_VERSION in index.html
+const CACHE = 'cutting-board-v4.1'; // match APP_VERSION in index.html
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(
