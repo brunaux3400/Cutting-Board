@@ -404,7 +404,7 @@ html[data-theme="champs"] .card{border-top:2px solid rgba(0,107,182,.55)}
       <div id="c-next"></div>
       <section class="card">
         <h3>Book an appointment</h3>
-        <div class="field"><label for="c-service">Service</label><select id="c-service"></select></div>
+        <div class="field"><label for="c-service">Service</label><select id="c-service" onchange="cSel.time=null;if(cSel.date)loadClientSlots()"></select></div>
         <div class="field" style="margin-bottom:0"><label>Day</label></div>
         <div class="strip" id="c-dates"></div>
         <div id="c-slots"></div>
@@ -536,6 +536,7 @@ html[data-theme="champs"] .card{border-top:2px solid rgba(0,107,182,.55)}
           <div class="field"><label for="bl-close">Until</label><input type="time" id="bl-close"></div>
         </div>
         <div class="field"><label for="bl-msg">Add a note (optional)</label><textarea id="bl-msg" placeholder="Walk-ins welcome today"></textarea></div>
+        <label class="check"><input type="checkbox" id="bl-open-day"> Also open this day for online booking with these hours</label>
         <button class="btn" onclick="previewBlast()">Preview blast</button>
       </div>
     </section>
@@ -589,10 +590,21 @@ html[data-theme="champs"] .card{border-top:2px solid rgba(0,107,182,.55)}
       <div class="section-title">Hours</div>
       <div class="card">
         <div id="o-hours"></div>
-        <div class="field" style="margin-top:10px"><label for="o-slot">Appointment length</label>
-          <select id="o-slot"><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option><option value="90">90 min</option></select>
+        <div class="field" style="margin-top:10px"><label for="o-slot">Start times every</label>
+          <select id="o-slot"><option value="5">5 min</option><option value="10">10 min</option><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select>
+          <small class="muted" style="font-size:12px">How often clients can start an appointment (9:00, 9:15, 9:30…). How long each one takes is set per service below.</small>
         </div>
         <button class="btn" onclick="saveHours(this)">Save hours</button>
+      </div>
+
+      <div class="section-title">Booking ahead</div>
+      <div class="card">
+        <div class="field"><label for="o-ahead">Clients can book up to</label>
+          <select id="o-ahead" onchange="saveAhead(this)"><option value="7">1 week ahead</option><option value="14">2 weeks ahead</option><option value="21">3 weeks ahead</option><option value="30">1 month ahead</option><option value="60">2 months ahead</option><option value="90">3 months ahead</option></select>
+        </div>
+        <div class="srow-body" style="margin:6px 0 2px"><b>Special days</b><small>Open a date that's normally closed (or with different hours), or close a date for a holiday. Clients can book special open days as soon as they fall inside the window above.</small></div>
+        <div id="o-special"></div>
+        <button class="btn-ghost" onclick="specialDaySheet()">Open or close a specific day</button>
       </div>
 
       <div class="section-title">Services</div>
@@ -600,6 +612,7 @@ html[data-theme="champs"] .card{border-top:2px solid rgba(0,107,182,.55)}
         <div id="o-services"></div>
         <div class="row2" style="margin-top:10px;align-items:center">
           <div class="field" style="margin:0"><input id="o-new-svc" placeholder="Add a service" onkeydown="if(event.key==='Enter')addService()"></div>
+          <div class="field" style="margin:0;flex:0 0 96px"><select id="o-new-min" aria-label="Length"></select></div>
           <button class="ibtn" style="width:46px;height:46px" onclick="addService()" aria-label="Add service"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
         </div>
       </div>
@@ -676,7 +689,7 @@ html[data-theme="champs"] .card{border-top:2px solid rgba(0,107,182,.55)}
 //    Leave as-is to run without notifications.
 // ═════════════════════════════════════════════════════════════
 // Bump this every time you upload a new version
-const APP_VERSION = '4.1';
+const APP_VERSION = '4.2';
 
 const SUPABASE_URL = 'https://zvijdvhvmnnigyjvwzuo.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aWpkdmh2bW5uaWd5anZ3enVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MjE5MTgsImV4cCI6MjEwNzQ5NzkxOH0.QxjvU5p-aoXdpJC3D6gcJtMnWsCJjU29mbLrDy4cZkM';
@@ -1151,7 +1164,7 @@ async function loadClientShop(){
   shop = C.view.shop; applyShop();
   C.lastUnread = C.view.unread; C.statusSeen = null;
   $('#c-sub').checked = !!C.view.subscribed;
-  $('#c-service').innerHTML = (shop.services || []).map(s => `<option>${esc(s)}</option>`).join('');
+  $('#c-service').innerHTML = svcOptions();
   renderAnnouncement(); renderUnread(); renderClientNudge();
   cSel.time = null; cSel.date = null;
   renderClientDates(); loadClientAppts();
@@ -1177,34 +1190,50 @@ function renderAnnouncement(){
   const text = b ? b.message.replace(/\n*Book( here)?: https?:\/\/\S+\s*$/i, '') : '';
   $('#c-announce').innerHTML = b ? `<div class="announce"><div class="announce-tag">${IC.send} From the shop, ${timeAgo(b.created_at)}</div><p>${esc(text).replace(/\n/g, '<br>')}</p></div>` : '';
 }
-function slotsFor(date, taken = []){
-  const h = shop.hours && shop.hours[dow(date)]; if (!h) return null;
-  const step = Number(shop.slot_minutes) || 60, open = toMin(h.open), close = toMin(h.close);
+// Services are {name, minutes}; older shops stored plain names
+const svcList = () => (shop.services || []).map(x => typeof x === 'string' ? { name: x, minutes: Number(shop.slot_minutes) || 30 } : x);
+const svcMinutes = name => (svcList().find(x => x.name === name) || {}).minutes || Number(shop.slot_minutes) || 30;
+const shortestSvc = () => Math.min(...svcList().map(x => x.minutes), Number(shop.slot_minutes) || 30);
+const svcOptions = sel => svcList().map(x => `<option value="${esc(x.name)}" ${x.name === sel ? 'selected' : ''}>${esc(x.name)} (${fmtMins(x.minutes)})</option>`).join('');
+function fmtMins(m){ m = Number(m); if (m < 60) return m + ' min'; const h = Math.floor(m / 60), r = m % 60; return h + ' hr' + (r ? ' ' + r + ' min' : ''); }
+// A special day overrides the weekly hours for that date (null = closed)
+function hoursFor(date){
+  const sd = shop.special_days || {};
+  if (Object.prototype.hasOwnProperty.call(sd, date)) return sd[date];
+  return shop.hours && shop.hours[dow(date)];
+}
+// Start times every `step` minutes where [start, start + mins) is free and ends by closing
+function slotsFor(date, busy = [], mins){
+  const h = hoursFor(date); if (!h) return null;
+  const step = Number(shop.slot_minutes) || 15, open = toMin(h.open), close = toMin(h.close);
+  mins = Number(mins) || shortestSvc();
   const now = new Date(), nowM = date === today() ? now.getHours() * 60 + now.getMinutes() : -1;
-  const tk = taken.map(toMin), out = [];
-  for (let m = open; m + step <= close; m += step) {
+  const iv = busy.map(b => typeof b === 'string' ? [toMin(b), toMin(b) + step] : [toMin(b.t), toMin(b.t) + Number(b.m || step)]);
+  const out = [];
+  for (let m = open; m + mins <= close; m += step) {
     if (m <= nowM) continue;
-    out.push({ t: fromMin(m), free: !tk.some(x => Math.abs(x - m) < step) });
+    out.push({ t: fromMin(m), free: !iv.some(([s, e]) => s < m + mins && e > m) });
   }
   return out;
 }
 const isOpenDay = d => { const s = slotsFor(d); return !!(s && s.length); };
+const bookAhead = () => Math.min(Math.max(Number(shop.book_ahead_days) || 21, 1), 180);
 function centerChip(sel){
   const strip = $(sel), on = strip && strip.querySelector('.chip.on'); if (!on) return;
   const sr = strip.getBoundingClientRect(), r = on.getBoundingClientRect();
   strip.scrollLeft += (r.left - sr.left) - (sr.width - r.width) / 2;
 }
 function renderClientDates(){
-  const days = [...Array(21)].map((_, i) => addDays(today(), i));
+  const days = [...Array(bookAhead() + 1)].map((_, i) => addDays(today(), i));
   if (!cSel.date || !isOpenDay(cSel.date)) cSel.date = days.find(isOpenDay) || null;
   $('#c-dates').innerHTML = days.map(d => {
     const open = isOpenDay(d);
     return `<button class="chip ${d === cSel.date ? 'on' : ''}" ${open ? '' : 'disabled'} onclick="pickClientDate('${d}')">
-      <small>${fmtDay(d, { weekday:'short' })}</small><b>${new Date(d + 'T00:00:00').getDate()}</b><small>${open ? fmtDay(d, { month:'short' }) : (shop.hours && shop.hours[dow(d)] ? 'Done' : 'Closed')}</small></button>`;
+      <small>${fmtDay(d, { weekday:'short' })}</small><b>${new Date(d + 'T00:00:00').getDate()}</b><small>${open ? (shop.special_days && shop.special_days[d] ? 'Special' : fmtDay(d, { month:'short' })) : (hoursFor(d) ? 'Done' : 'Closed')}</small></button>`;
   }).join('');
   centerChip('#c-dates');
   if (cSel.date) loadClientSlots();
-  else { $('#c-slots').innerHTML = '<p class="muted small" style="margin:12px 0">No open days in the next 3 weeks.</p>'; updateBookBtn(); }
+  else { $('#c-slots').innerHTML = '<p class="muted small" style="margin:12px 0">No open days available to book yet. Check back soon.</p>'; updateBookBtn(); }
 }
 function pickClientDate(d){ cSel.date = d; cSel.time = null; renderClientDates(); }
 let slotReq = 0;
@@ -1215,11 +1244,11 @@ async function loadClientSlots(){
   try {
     const taken = await rpc('client_taken_slots', { p_token: C.token, p_shop: C.shopId, p_date: d });
     if (id !== slotReq) return;
-    const slots = slotsFor(d, taken) || [], free = slots.filter(s => s.free);
+    const slots = slotsFor(d, taken, svcMinutes($('#c-service').value)) || [], free = slots.filter(s => s.free);
     $('#c-slots').innerHTML = slots.length
       ? `<div class="slots">${slots.map(s => `<button class="slot ${s.t === cSel.time ? 'on' : ''}" data-t="${s.t}" ${s.free ? '' : 'disabled'} onclick="pickSlot('${s.t}')">${fmt12(s.t)}</button>`).join('')}</div>
          ${free.length ? '' : '<p class="muted small">Fully booked. Try another day.</p>'}`
-      : '<p class="muted small" style="margin:12px 0">No times left today.</p>';
+      : '<p class="muted small" style="margin:12px 0">No times left that day for this service.</p>';
   } catch (e) { $('#c-slots').innerHTML = `<p class="muted small" style="margin:12px 0">${esc(e.message)}</p>`; }
 }
 function pickSlot(t){ cSel.time = t; document.querySelectorAll('#c-slots .slot').forEach(b => b.classList.toggle('on', b.dataset.t === t)); updateBookBtn(); }
@@ -1433,13 +1462,13 @@ function calGoogle(){
 }
 function clientCalendar(id){
   const a = (C.appts || []).find(x => x.id === id); if (!a) return;
-  calSheet({ id: a.id, date: a.date, time: a.time, mins: Number(shop.slot_minutes) || 60,
+  calSheet({ id: a.id, date: a.date, time: a.time, mins: a.duration || svcMinutes(a.service),
     title: `${a.service || 'Appointment'} at ${shop.name}`, location: shop.name,
     details: `Your appointment at ${shop.name}. Booked with Cutting Board.` });
 }
 function barberCalendar(id){
   const a = bAppts.find(x => x.id === id); if (!a) return;
-  calSheet({ id: a.id, date: a.date, time: a.time, mins: Number(shop.slot_minutes) || 60,
+  calSheet({ id: a.id, date: a.date, time: a.time, mins: a.duration || svcMinutes(a.service),
     title: `${a.name}: ${a.service || 'Appointment'}`, location: shop.name,
     details: [a.service, a.phone ? 'Phone: ' + fmtPhone(a.phone) : ''].filter(Boolean).join('\n') });
 }
@@ -1537,7 +1566,8 @@ async function loadAppts(){
 }
 const isActive = a => ['pending','confirmed','reschedule'].includes(a.status);
 const takenOn = (d, exclude) => bAppts.filter(a => a.id !== exclude && isActive(a)).flatMap(a => [
-  ...(a.date === d ? [a.time] : []), ...(a.status === 'reschedule' && a.proposed_date === d ? [a.proposed_time] : [])]);
+  ...(a.date === d ? [{ t: a.time, m: a.duration }] : []),
+  ...(a.status === 'reschedule' && a.proposed_date === d ? [{ t: a.proposed_time, m: a.duration }] : [])]);
 function renderStrip(){
   const days = [...Array(21)].map((_, i) => addDays(bAnchor, i));
   $('#b-strip').innerHTML = days.map(d => {
@@ -1559,9 +1589,9 @@ function renderDay(){
   $('#b-stats').innerHTML =
     stat(list.filter(a => a.status === 'confirmed').length, 'Confirmed') +
     stat(list.filter(a => a.status === 'pending').length, 'To confirm') +
-    stat(slots ? slots.filter(s => s.free).length : '–', slots ? 'Open slots' : 'Closed');
+    stat(slots ? slots.filter(s => s.free).length : '–', slots ? 'Open start times' : 'Closed');
   $('#b-list').innerHTML = list.length ? list.map(apptCard).join('')
-    : `<div class="empty">${IC.cal}<p>${slots ? 'No appointments yet. Tap + to add one.' : 'The shop is closed this day.'}</p></div>`;
+    : `<div class="empty">${IC.cal}<p>${slots ? 'No appointments yet. Tap + to add one.' : 'The shop is closed this day. Open it from Options, Special days.'}</p></div>`;
 }
 const bStatus = s => ({ pending:'needs confirming', confirmed:'confirmed', declined:'declined', cancelled:'cancelled', reschedule:'new time sent' }[s] || s);
 function apptCard(a){
@@ -1576,7 +1606,7 @@ function apptCard(a){
     <div class="appt-when"><b>${t.split(' ')[0]}</b><small>${t.split(' ')[1]}</small></div>
     <div class="appt-body">
       <div class="appt-name">${c ? avatarHTML(c.name, c.avatar, 'sm') : ''}${esc(a.name)}</div>
-      <div class="appt-sub">${esc(a.service || '')} <span class="pill ${a.status}">${bStatus(a.status)}</span></div>
+      <div class="appt-sub">${esc(a.service || '')}${a.duration ? ', ' + fmtMins(a.duration) : ''} <span class="pill ${a.status}">${bStatus(a.status)}</span></div>
     </div>
     <div class="appt-actions">${actions}</div></div>
     ${a.status === 'reschedule' ? `<div class="appt-extra muted">Waiting for ${esc(first(a.name))} to accept <b style="color:var(--text)">${whenStr(a.proposed_date, a.proposed_time)}</b></div>` : ''}
@@ -1609,7 +1639,7 @@ async function setStatus(id, status){
 }
 function freeChips(date, exclude){
   const cur = bAppts.find(a => a.id === exclude);
-  const s = (slotsFor(date, takenOn(date, exclude)) || null);
+  const s = (slotsFor(date, takenOn(date, exclude), cur && cur.duration) || null);
   if (s && cur && cur.date === date) s.forEach(x => { if (x.t === cur.time) x.free = false; });
   if (!s) return '<p class="muted small" style="margin:-2px 0 10px">The shop is normally closed this day.</p>';
   const free = s.filter(x => x.free);
@@ -1618,7 +1648,7 @@ function freeChips(date, exclude){
 }
 function rescheduleSheet(id){
   const a = bAppts.find(x => x.id === id); if (!a) return;
-  const s = slotsFor(a.date, takenOn(a.date, id)), f = s && s.find(x => x.free && x.t !== a.time);
+  const s = slotsFor(a.date, takenOn(a.date, id), a.duration), f = s && s.find(x => x.free && x.t !== a.time);
   openSheet(`<h2>Reschedule ${esc(a.name)}</h2><p class="sub">Currently ${whenStr(a.date, a.time)}. They'll get a notification to accept or decline the new time.</p>
     <div class="row2">
       <div class="field"><label for="rs-date">New date</label><input id="rs-date" type="date" value="${a.date}" min="${today()}" onchange="$('#rs-chips').innerHTML=freeChips(this.value,'${id}')"></div>
@@ -1636,7 +1666,7 @@ async function sendReschedule(btn, id){
     closeSheet(); toast('New time sent', 'ok'); loadAppts();
   });
 }
-function nextFree(date){ const s = slotsFor(date, takenOn(date)); const f = s && s.find(x => x.free); return f ? f.t : '10:00'; }
+function nextFree(date, mins){ const s = slotsFor(date, takenOn(date), mins); const f = s && s.find(x => x.free); return f ? f.t : '10:00'; }
 function apptSheet(pre = {}){
   const date = pre.date || bDate;
   openSheet(`<h2>New appointment</h2><p class="sub">Appointments you add are confirmed right away.</p>
@@ -1644,9 +1674,9 @@ function apptSheet(pre = {}){
     <div class="field"><label for="n-phone">Phone (optional)</label><input id="n-phone" class="phone" inputmode="tel" value="${esc(pre.phone ? fmtPhone(pre.phone) : '')}" placeholder="(555) 555-5555"></div>
     <div class="row2">
       <div class="field"><label for="n-date">Date</label><input id="n-date" type="date" value="${date}"></div>
-      <div class="field"><label for="n-time">Time</label><input id="n-time" type="time" step="300" value="${nextFree(date)}"></div>
+      <div class="field"><label for="n-time">Time</label><input id="n-time" type="time" step="300" value="${nextFree(date, (svcList()[0] || {}).minutes)}"></div>
     </div>
-    <div class="field"><label for="n-service">Service</label><select id="n-service">${(shop.services || []).map(s => `<option>${esc(s)}</option>`).join('')}</select></div>
+    <div class="field"><label for="n-service">Service</label><select id="n-service">${svcOptions()}</select></div>
     <button class="btn" onclick="saveNewAppt(this)">Book appointment</button>`);
 }
 function autofillPhone(el){ const c = bClients.find(x => x.name.toLowerCase() === el.value.trim().toLowerCase()); if (c && !$('#n-phone').value) $('#n-phone').value = fmtPhone(c.phone); }
@@ -1758,8 +1788,9 @@ function initBlast(){
 }
 function blastDateChanged(){
   const d = $('#bl-date').value; if (!d) return;
-  const h = shop.hours && shop.hours[dow(d)];
+  const h = hoursFor(d);
   $('#bl-open').value = h ? h.open : '09:00'; $('#bl-close').value = h ? h.close : '18:00';
+  $('#bl-open-day').checked = !h;   // suggest opening it if the day is normally closed
 }
 function buildBlast(){
   const d = $('#bl-date').value || today(), o = $('#bl-open').value, c = $('#bl-close').value, extra = $('#bl-msg').value.trim();
@@ -1775,6 +1806,11 @@ function previewBlast(){
 }
 async function sendBlast(btn){
   await busy(btn, async () => {
+    if ($('#bl-open-day').checked) {
+      const d = $('#bl-date').value, o = $('#bl-open').value, c = $('#bl-close').value;
+      if (toMin(c) <= toMin(o)) throw new Error('Closing time must be after opening');
+      await saveShop({ special_days: { ...(shop.special_days || {}), [d]: { open: o, close: c } } });
+    }
     const r = await rpc('barber_create_blast', { p_token: B.token, p_message: buildBlast() });
     closeSheet(); $('#bl-msg').value = '';
     toast(`Blast sent to ${plural(r.sent_to, 'client')}`, 'ok'); swish();
@@ -1805,7 +1841,7 @@ function renderOptions(){
     $('#o-banner-on').checked = !!shop.banner_on;
     renderLogoPrev(); renderSwatches(); loadTeam();
   }
-  renderHours(); renderServices(); renderLocations();
+  renderHours(); renderServices(); renderLocations(); renderSpecialDays();
   syncPushSwitch('#b-push', '#b-push-row'); syncSoundSwitches();
 }
 function renderMeAvatar(){ $('#o-me-avatar').innerHTML = avatarHTML(B.barber.name, draft.avatar, 'lg'); }
@@ -1853,17 +1889,80 @@ async function saveHours(btn){
   }
   await busy(btn, async () => { await saveShop({ hours, slot_minutes: Number($('#o-slot').value) }); renderDay(); toast('Hours saved', 'ok'); });
 }
+const MIN_CHOICES = [5,10,15,20,25,30,35,40,45,50,60,75,90,105,120,150,180,240];
+const minOptions = sel => [...new Set([...MIN_CHOICES, Number(sel)])].filter(Boolean).sort((a, b) => a - b)
+  .map(m => `<option value="${m}" ${m === Number(sel) ? 'selected' : ''}>${fmtMins(m)}</option>`).join('');
 function renderServices(){
-  $('#o-services').innerHTML = (shop.services || []).map((s, i) =>
-    `<div class="srow"><div class="srow-body"><b>${esc(s)}</b></div><button class="ibtn danger" onclick="removeService(${i})" aria-label="Remove ${esc(s)}">${IC.x}</button></div>`).join('')
+  $('#o-services').innerHTML = svcList().map((s, i) =>
+    `<div class="srow"><div class="srow-body"><b>${esc(s.name)}</b></div>
+      <div class="field" style="margin:0;flex:0 0 104px"><select aria-label="Length of ${esc(s.name)}" onchange="setServiceMinutes(${i}, this.value)">${minOptions(s.minutes)}</select></div>
+      <button class="ibtn danger" onclick="removeService(${i})" aria-label="Remove ${esc(s.name)}">${IC.x}</button></div>`).join('')
     || '<p class="muted small">No services yet. Add one below.</p>';
+  if (!$('#o-new-min').innerHTML) $('#o-new-min').innerHTML = minOptions(30);
+}
+async function setServiceMinutes(i, v){
+  const list = svcList().map(x => ({ ...x })); list[i].minutes = Number(v);
+  try { await saveShop({ services: list }); renderServices(); toast(`${list[i].name} is now ${fmtMins(v)}`, 'ok'); }
+  catch (e) { toast(e.message, 'err'); renderServices(); }
+}
+async function saveAhead(el){
+  try { await saveShop({ book_ahead_days: Number(el.value) }); toast(`Clients can book ${el.selectedOptions[0].text}`, 'ok'); }
+  catch (e) { toast(e.message, 'err'); }
+}
+function renderSpecialDays(){
+  const sel = $('#o-ahead'), v = String(shop.book_ahead_days || 21);
+  if (![...sel.options].some(o => o.value === v)) sel.insertAdjacentHTML('beforeend', `<option value="${v}">${v} days ahead</option>`);
+  sel.value = v;
+  const sd = shop.special_days || {}, days = Object.keys(sd).filter(d => d >= today()).sort();
+  $('#o-special').innerHTML = days.map(d => {
+    const h = sd[d], beyond = d > addDays(today(), bookAhead());
+    return `<div class="srow"><div class="srow-body"><b>${fmtDay(d, { weekday:'short', month:'short', day:'numeric' })}</b>
+      <small>${h ? `Open ${fmt12(h.open)} to ${fmt12(h.close)}` : 'Closed'}${beyond ? ', clients can book it once it\'s within ' + bookAhead() + ' days' : ''}</small></div>
+      <button class="ibtn danger" onclick="removeSpecialDay('${d}')" aria-label="Remove">${IC.x}</button></div>`;
+  }).join('') || '<p class="muted small" style="margin:8px 0">No special days yet.</p>';
+}
+function specialDaySheet(){
+  const d = addDays(today(), 14), h = hoursFor(d) || { open: '09:00', close: '18:00' };
+  openSheet(`<h2>Open or close a day</h2><p class="sub">This replaces the normal weekly hours for that one date.</p>
+    <div class="field"><label for="sd-date">Date</label><input id="sd-date" type="date" min="${today()}" value="${d}" onchange="sdDateChanged()"></div>
+    <div class="seg" style="margin-bottom:12px"><button id="sd-open" class="on" onclick="sdMode(true)">Open</button><button id="sd-closed" onclick="sdMode(false)">Closed</button></div>
+    <div class="row2" id="sd-times">
+      <div class="field"><label for="sd-o">Opens</label><input id="sd-o" type="time" value="${h.open}"></div>
+      <div class="field"><label for="sd-c">Closes</label><input id="sd-c" type="time" value="${h.close}"></div>
+    </div>
+    <p class="muted small" id="sd-note" style="margin-bottom:6px"></p>
+    <button class="btn" onclick="saveSpecialDay(this)">Save</button>`);
+  sdDateChanged();
+}
+function sdMode(open){ $('#sd-open').classList.toggle('on', open); $('#sd-closed').classList.toggle('on', !open); $('#sd-times').hidden = !open; }
+function sdDateChanged(){
+  const d = $('#sd-date').value; if (!d) return;
+  const normal = shop.hours && shop.hours[dow(d)];
+  $('#sd-note').textContent = (normal ? `Normally open ${fmt12(normal.open)} to ${fmt12(normal.close)}.` : 'Normally closed.')
+    + (d > addDays(today(), bookAhead()) ? ` It's more than ${bookAhead()} days out, so clients can book it once it's inside your booking window (or raise the window above).` : '');
+}
+async function saveSpecialDay(btn){
+  const d = $('#sd-date').value, open = $('#sd-open').classList.contains('on'), o = $('#sd-o').value, c = $('#sd-c').value;
+  if (!d) return toast('Pick a date', 'err');
+  if (open && toMin(c) <= toMin(o)) return toast('Closing time must be after opening', 'err');
+  await busy(btn, async () => {
+    await saveShop({ special_days: { ...(shop.special_days || {}), [d]: open ? { open: o, close: c } : null } });
+    closeSheet(); renderSpecialDays(); renderStrip(); renderDay();
+    toast(open ? `${fmtDay(d)} is open for booking` : `${fmtDay(d)} is closed`, 'ok');
+  });
+}
+async function removeSpecialDay(d){
+  const sd = { ...(shop.special_days || {}) }; delete sd[d];
+  try { await saveShop({ special_days: sd }); renderSpecialDays(); renderDay(); toast('Back to normal hours'); }
+  catch (e) { toast(e.message, 'err'); }
 }
 async function addService(){
   const v = $('#o-new-svc').value.trim(); if (!v) return;
-  try { await saveShop({ services: [...(shop.services || []), v] }); $('#o-new-svc').value = ''; renderServices(); } catch (e) { toast(e.message, 'err'); }
+  if (svcList().some(x => x.name.toLowerCase() === v.toLowerCase())) return toast('That service already exists', 'err');
+  try { await saveShop({ services: [...svcList(), { name: v, minutes: Number($('#o-new-min').value) || 30 }] }); $('#o-new-svc').value = ''; renderServices(); } catch (e) { toast(e.message, 'err'); }
 }
 async function removeService(i){
-  const list = [...(shop.services || [])]; list.splice(i, 1);
+  const list = svcList(); list.splice(i, 1);
   try { await saveShop({ services: list }); renderServices(); } catch (e) { toast(e.message, 'err'); }
 }
 async function loadTeam(){
