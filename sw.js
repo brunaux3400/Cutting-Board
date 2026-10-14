@@ -1,6 +1,7 @@
-// Cutting Board service worker: network first, so new versions show up right after you push to GitHub.
-// Falls back to the cached page when offline. Never caches database calls.
-const CACHE = 'cutting-board-v2';
+// Cutting Board service worker
+// - Network first, so new versions show right after you push to GitHub
+// - Shows push notifications and opens the app when one is tapped
+const CACHE = 'cutting-board-v3.1'; // match APP_VERSION in index.html
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(
@@ -18,4 +19,22 @@ self.addEventListener('fetch', e => {
       return res;
     }).catch(() => caches.match(req).then(r => r || caches.match('./')))
   );
+});
+
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch { d = { body: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Cutting Board', {
+    body: d.body || '',
+    tag: d.tag,
+    data: { url: d.url || self.registration.scope },
+  }));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(wins => {
+    for (const w of wins) if ('focus' in w) return w.focus();
+    return self.clients.openWindow(e.notification.data.url);
+  }));
 });
